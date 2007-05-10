@@ -306,15 +306,15 @@ void Set_Mac(void)
 		flags |= FLAG_OLD_MAC_VALID;
 		mactostr(mac,mactmp);
 		mactmp[17]='\0';
-		buart_print("\n\rCurrent mac addres: ");
+		buart_print("\n\rCurrent MAC address: ");
 		buart_print(mactmp);
 		buart_print("\n\r");
-		buart_print("Number of mac address: ");
+		buart_print("Number of MAC address: ");
 		buart_put(macnum+'0');
 	}
 	
 mac_again:	
-	buart_print("\n\rEnter new mac address (AA-AA-AA-AA-AA-AA): ");
+	buart_print("\n\rEnter new MAC address (AA-AA-AA-AA-AA-AA): ");
 	buf[0] = 0;
 	ReadLine(buf, BOOT_LINE_SIZE);
 	
@@ -324,7 +324,7 @@ mac_again:
 			
 		if(i< 6 || mac[0] != 0x00)
 		{
-			buart_print("Either the format of the input mac address or the mac address is incorrect.\n\r");
+			buart_print("Either the format of the input MAC address or the mac address is incorrect.\n\r");
 			goto mac_again;
 		}
 		
@@ -332,7 +332,7 @@ mac_again:
 	}
 
 num_again:
-	buart_print("Enter new number of mac address (between 1-8): ");
+	buart_print("Enter new number of MAC address (between 1-8): ");
 	newmacnum = buart_getchar();
 	buart_put(newmacnum);
 	
@@ -341,7 +341,7 @@ num_again:
 		newmacnum = newmacnum - '0';
 		if(newmacnum < 1 || newmacnum > 8)
 		{
-			buart_print("\n\rNumber of mac adderesses must be in the range [1-8].\n\r");
+			buart_print("\n\rNumber of MAC addresses must be in the range [1-8].\n\r");
 			goto num_again;
 		}
 		
@@ -358,19 +358,19 @@ num_again:
 		
 		if(bsp_SetMac(mac, macnum) != 0)
 		{
-			buart_print("\n\rFailed to change mac address.");
+			buart_print("\n\rFailed to change MAC address.");
 		}
 		else
 		{
 			memcpy(mactmp,cfg->mac,6);
 			ProgramMac(0,mactmp);		// Change current MAC addr.
 			eth_reinit(mactmp);
-			buart_print("\n\rMac address updated successfully.");
+			buart_print("\n\rMAC address updated successfully.");
 		}
 	}
 	else
 	{
-		buart_print("\n\rMac address unchanged.");
+		buart_print("\n\rMAC address unchanged.");
 	}
 }
 
