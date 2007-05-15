@@ -37,9 +37,22 @@
 //#include <linuxld.h>
 
 static UINT32 remote_ip;	// TFTP server ip
+static UINT32 gw_ip;	// TFTP server gateway ip
 static unsigned short remote_port;	// TFTP server port
 static unsigned short remote_block;	// TFTP server data block number
 static int tftpc_read_start;
+
+static UINT8 ostr[20];
+static inline void print_val(UINT8 *str, int val){
+	ostr[8]=0;
+	buart_print("\n\r");
+	buart_print(str);
+	ultoa(val,ostr);	
+	buart_print(" = ");
+    	buart_print(ostr);
+}
+
+
 int tftp_send_ack(int block)
 {
 	struct tftphdr *tftp_ack;
@@ -127,17 +140,21 @@ int tftp_rcv_packet(struct sk_buff *skb)
 	int data_flag,len;
 
 	data_flag = 0;
+	//print_val("0status",data_flag);
 	if(udp_rcv_packet(skb) == 1)
 	{
 		tftp_hdr = (struct tftphdr *)skb->data;
 		if(ntohs(tftp_hdr->th_opcode) == DATA)
 		{
-			if (remote_ip != ip_get_source_ip(skb))
+			//IpAddrToStr(ip_get_source_ip(skb),ostr); buart_print("\n\rip_get_source_ip ");buart_print(ostr);
+			//IpAddrToStr(remote_ip,ostr); buart_print("\n\remote_ip ");buart_print(ostr);
+			if (remote_ip != ip_get_source_ip(skb)) // || gw_ip != ip_get_source_ip(skb))
 			{
 				return data_flag;
 			}
 			
 			remote_port = udp_get_source_port(skb);
+			//print_val("2status",remote_port);
 			
 			if (remote_block == ntohs(tftp_hdr->th_block)) 
 			{
@@ -151,6 +168,8 @@ int tftp_rcv_packet(struct sk_buff *skb)
 				tftp_send_ack(ntohs(tftp_hdr->th_block));
 			else 
 				tftp_send_ack(remote_block);
+			//print_val("3status",remote_block);
+
 		}
 	}
 	return data_flag;
@@ -158,25 +177,25 @@ int tftp_rcv_packet(struct sk_buff *skb)
 
 UINT32 tftpc(char *buf, int buf_size, int boot)
 {
-	UINT32 ticks,servip,total_len;
+	UINT32 ticks,servip, gwip, total_len;
 	char file_boot[15];
 	char file_sys[15];
 	int transmit_flag, pkt_len=0, rrqcount=0;
 	char *working = buf;
 
-	if(get_tftp_param(&servip,file_boot,file_sys) != 0)
+	if(get_tftp_param(&servip,&gwip,file_boot,file_sys) != 0)
 	{
 		buart_print("\n\rTFTP server IP or filenames Error.");
 		return;
 	}
-	
+
+	gw_ip = gwip;
 	transmit_flag = TFTP_START;
 	total_len = 0;
 	if5120turnon();
 
 	if(boot) tftp_send_rrq(servip,file_sys);
 	else 	tftp_send_rrq(servip,file_boot);
-
 	ticks = UpTime();
 	while (1)
 	{
@@ -185,17 +204,21 @@ UINT32 tftpc(char *buf, int buf_size, int boot)
 			total_len = 0;
 			break;
 		}
+		
 		if ((!tftpc_read_start)&&((UpTime()-ticks)>100))
 		{
 			//tftp_send_rrq(servip,servfile);
 			if(boot) tftp_send_rrq(servip,file_sys);
 			else 	tftp_send_rrq(servip,file_boot);
+
 			ticks=UpTime();
 			rrqcount++;
 			if (rrqcount == 5)
 				break;
 		}
+
 		transmit_flag = rcv_imgpkt(working,&pkt_len);
+		//print_val("status",transmit_flag);
 		if (tftpc_read_start)
 		{
 			if (transmit_flag == TFTP_CONTINUE)//Get img packet successfully.
@@ -211,7 +234,7 @@ UINT32 tftpc(char *buf, int buf_size, int boot)
 				if ((UpTime()-ticks) > 5*100)//Timeout.
 				{
 					total_len = 0;
-					//buart_print("\n\rTimeOut..");
+					buart_print("\n\rTimeOut..");
 					break;
 				}
 			}

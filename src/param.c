@@ -426,6 +426,13 @@ int bsp_GetTftpIp(UINT32 *tftpip)
 	return 0;
 }
 
+int bsp_GetGwIp(UINT32 *gwip)
+{
+	if(gwip == NULL) return -1;
+	*gwip = cfg->tftp_param.gw_ip;
+	return 0;
+}
+
 void PrintBspParam(void)
 {
 	UINT32 tftpip;
@@ -492,6 +499,9 @@ void print_tftpc_param(void)
 		buart_print("\n\r\n\rServer IP: ");
 		IpAddrToStr(cfg->tftp_param.server_ip,str);
 		buart_print(str);
+		buart_print("\n\rGateway IP: ");
+		IpAddrToStr(cfg->tftp_param.gw_ip,str);
+		buart_print(str);
 		buart_print("\n\rRemote File bootloader: ");
 		buart_print(cfg->tftp_param.remote_file_boot);
 		buart_print("\n\rRemote File system: ");
@@ -500,11 +510,12 @@ void print_tftpc_param(void)
 	}
 }
 
-int get_tftp_param(UINT32 *servip,char *boot_file, char *sys_file)
+int get_tftp_param(UINT32 *servip,UINT32 *gwip,char *boot_file, char *sys_file)
 {
 	if(servip == NULL || boot_file == NULL || sys_file == NULL) return -1;
 	if(cfg->tftpmagic != TFTPMAGIC) return -1;
 	*servip = cfg->tftp_param.server_ip;
+	*gwip = cfg->tftp_param.gw_ip;
 	strcpy(boot_file,cfg->tftp_param.remote_file_boot);
 	strcpy(sys_file,cfg->tftp_param.remote_file_sys);
 	return 0;
@@ -512,7 +523,7 @@ int get_tftp_param(UINT32 *servip,char *boot_file, char *sys_file)
 
 int set_tftpc_param(void)
 {
-	UINT32 servip;
+	UINT32 servip, gwip;
 	char buf[BOOT_LINE_SIZE+1];
 	char *image = (char *)LINUXLD_DOWNLOAD_START;
 
@@ -538,6 +549,29 @@ servip_again:
 	else
 	{
 		buart_print("Server IP unchanged..\n\r");
+	}
+gwip_again:
+	buf[0] = 0;
+	buart_print("\n\rPlease enter gateway IP : ");
+	ReadLine(buf, BOOT_LINE_SIZE);
+	if(buf[0] != 0)
+	{
+		if(ipscanf(&gwip,buf) != 4)
+		{
+			buart_print("Invalid IP address.\n\r");
+			goto gwip_again;
+		}
+		
+		if(check_ip(gwip,HOST_IP_FLAG))
+		{
+			buart_print("Invalid IP address.\n\r");
+			goto gwip_again;
+		}
+		cfg->tftp_param.gw_ip = gwip;
+	}
+	else
+	{
+		buart_print("Gateway IP unchanged..\n\r");
 	}
 filename_boot:	
 	buf[0] = 0;		

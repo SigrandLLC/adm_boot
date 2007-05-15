@@ -1,4 +1,13 @@
-New import
+Add route support 
 --This line, and those below, will be ignored--
 
-A    .
+M    build/el/NAND_FLASH/nand_bootmain_ram.img
+M    build/el/NAND_FLASH/nand_bootmain_ram.map
+M    build/el/NAND_FLASH/nand_bootmain_ram.elf
+M    build/el/NAND_FLASH/nand_bootmain_ram.bin
+M    include/bsp_cfg.h
+M    src/ip.c
+M    src/tftp.c
+M    src/param.c
+M    bin/el/NAND_FLASH/nandloader_ram.img
+M    bin/el/NAND_FLASH/nandloader_ram.srec

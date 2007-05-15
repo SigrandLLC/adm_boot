@@ -73,6 +73,7 @@ typedef struct TFTP_CFG_S
 {
 	UINT32 local_ip;
 	UINT32 server_ip;
+	UINT32 gw_ip;
 	//char remote_file[15];
 	char remote_file_boot[15];
 	char remote_file_sys[15];

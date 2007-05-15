@@ -33,10 +33,22 @@
 //#include "utils.h"
 
 static UINT32 local_ip = 0;
+static UINT32 gw_ip = 0;
+
+static UINT8 ostr[20];
+static inline void print_val(UINT8 *str, int val){
+	ostr[8]=0;
+	buart_print("\n\r");
+	buart_print(str);
+	ultoa(val,ostr);	
+	buart_print(" = ");
+    	buart_print(ostr);
+}
 
 int ip_init(void)
 {	
 	bsp_GetTftpIp(&local_ip);
+	bsp_GetGwIp(&gw_ip);
 	return 0;
 }
 
@@ -55,7 +67,9 @@ int ip_rcv_packet(struct sk_buff *skb)
 	if (eth_rcv_packet(skb) == 1)
 	{
 		ip_hdr = (struct iphdr *)(skb->data);
-		if (ntohl(ip_hdr->daddr) == local_ip)
+		//IpAddrToStr(ntohl(ip_hdr->daddr),ostr); buart_print("\n\rip_recieve: ip_hdr->daddr ");buart_print(ostr);
+		//IpAddrToStr(ntohl(ip_hdr->saddr),ostr); buart_print("\n\rip_recieve: ip_hdr->saddr ");buart_print(ostr);
+		if (ntohl(ip_hdr->daddr) == local_ip || ntohl(ip_hdr->daddr) == gw_ip)
 		{
 			skb->len = ntohs(ip_hdr->tot_len);
 			skb_pull(skb, sizeof(struct iphdr));
@@ -75,8 +89,12 @@ int ip_send(struct sk_buff *skb, unsigned long ip, unsigned char proto)
 	static unsigned short ip_id = 32;
 	unsigned char dest_eth_addr[ETH_ALEN];
 
-	if (arp_get_eth_addr(ip, dest_eth_addr))
-		return -1;
+	if (arp_get_eth_addr(ip, dest_eth_addr)) {
+		//buart_print("\n\rВefor gw_ip");
+		if(arp_get_eth_addr(gw_ip, dest_eth_addr)) return -1;
+		//buart_print("\n\rAfter gw_ip");
+		//ip = gw_ip;
+	}
 
 	ip_hdr = (struct iphdr *)skb_push(skb, sizeof(struct iphdr));
 
@@ -95,6 +113,9 @@ int ip_send(struct sk_buff *skb, unsigned long ip, unsigned char proto)
 	ip_hdr->check = ip_fast_csum((unsigned char *)ip_hdr,ip_hdr->ihl);
 
 	eth_send(skb, dest_eth_addr, ETH_P_IP);
+
+	//IpAddrToStr(ntohl(ip_hdr->daddr),ostr); buart_print("\n\rip_send: ip_hdr->daddr ");buart_print(ostr);
+	//IpAddrToStr(ntohl(ip_hdr->saddr),ostr); buart_print("\n\rip_send: ip_hdr->saddr ");buart_print(ostr);
 
 	return 0;
 }
