@@ -216,7 +216,7 @@ int tftpc_download_sys(void)
 
     	//erase flash 
     	buart_print("\n\r\n\rEraseing flash.......");
-	if (nf_erase(flash,len,1) != 0) goto fail;
+	if (nf_erase(flash,NAND_FLASH_SIZE-LINUXLD_FLASH_KERNEL_START,1) != 0) goto fail;
     
 ERASE_PASS:
 	buart_print (pass);

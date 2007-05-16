@@ -67,8 +67,6 @@ int ip_rcv_packet(struct sk_buff *skb)
 	if (eth_rcv_packet(skb) == 1)
 	{
 		ip_hdr = (struct iphdr *)(skb->data);
-		//IpAddrToStr(ntohl(ip_hdr->daddr),ostr); buart_print("\n\rip_recieve: ip_hdr->daddr ");buart_print(ostr);
-		//IpAddrToStr(ntohl(ip_hdr->saddr),ostr); buart_print("\n\rip_recieve: ip_hdr->saddr ");buart_print(ostr);
 		if (ntohl(ip_hdr->daddr) == local_ip || ntohl(ip_hdr->daddr) == gw_ip)
 		{
 			skb->len = ntohs(ip_hdr->tot_len);
@@ -90,10 +88,7 @@ int ip_send(struct sk_buff *skb, unsigned long ip, unsigned char proto)
 	unsigned char dest_eth_addr[ETH_ALEN];
 
 	if (arp_get_eth_addr(ip, dest_eth_addr)) {
-		//buart_print("\n\rВefor gw_ip");
 		if(arp_get_eth_addr(gw_ip, dest_eth_addr)) return -1;
-		//buart_print("\n\rAfter gw_ip");
-		//ip = gw_ip;
 	}
 
 	ip_hdr = (struct iphdr *)skb_push(skb, sizeof(struct iphdr));
@@ -114,8 +109,6 @@ int ip_send(struct sk_buff *skb, unsigned long ip, unsigned char proto)
 
 	eth_send(skb, dest_eth_addr, ETH_P_IP);
 
-	//IpAddrToStr(ntohl(ip_hdr->daddr),ostr); buart_print("\n\rip_send: ip_hdr->daddr ");buart_print(ostr);
-	//IpAddrToStr(ntohl(ip_hdr->saddr),ostr); buart_print("\n\rip_send: ip_hdr->saddr ");buart_print(ostr);
 
 	return 0;
 }

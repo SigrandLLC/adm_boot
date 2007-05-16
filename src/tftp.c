@@ -140,21 +140,17 @@ int tftp_rcv_packet(struct sk_buff *skb)
 	int data_flag,len;
 
 	data_flag = 0;
-	//print_val("0status",data_flag);
 	if(udp_rcv_packet(skb) == 1)
 	{
 		tftp_hdr = (struct tftphdr *)skb->data;
 		if(ntohs(tftp_hdr->th_opcode) == DATA)
 		{
-			//IpAddrToStr(ip_get_source_ip(skb),ostr); buart_print("\n\rip_get_source_ip ");buart_print(ostr);
-			//IpAddrToStr(remote_ip,ostr); buart_print("\n\remote_ip ");buart_print(ostr);
 			if (remote_ip != ip_get_source_ip(skb)) // || gw_ip != ip_get_source_ip(skb))
 			{
 				return data_flag;
 			}
 			
 			remote_port = udp_get_source_port(skb);
-			//print_val("2status",remote_port);
 			
 			if (remote_block == ntohs(tftp_hdr->th_block)) 
 			{
@@ -168,7 +164,6 @@ int tftp_rcv_packet(struct sk_buff *skb)
 				tftp_send_ack(ntohs(tftp_hdr->th_block));
 			else 
 				tftp_send_ack(remote_block);
-			//print_val("3status",remote_block);
 
 		}
 	}
