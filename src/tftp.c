@@ -226,7 +226,7 @@ UINT32 tftpc(char *buf, int buf_size, int boot)
 			}
 			else if (transmit_flag == TFTP_NO_DATA)//Cannot get img packet.
 			{
-				if ((UpTime()-ticks) > 5*100)//Timeout.
+				if ((UpTime()-ticks) > 2000)//Timeout.
 				{
 					total_len = 0;
 					buart_print("\n\rTimeOut..");
