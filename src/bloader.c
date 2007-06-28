@@ -180,8 +180,8 @@ static void print_flash_menu(void)
 	buart_print("\n\rFlash Client Menu");	
 	buart_print("\n\r===============================");
 	buart_print("\n\r [P]: Print existent bad blocks ");
-	buart_print("\n\r [S]: Scan flash for new bad blocks");
-	buart_print("\n\r [E]: Erase flash");
+//	buart_print("\n\r [S]: Scan flash for new bad blocks");
+//	buart_print("\n\r [E]: Erase flash");
 	buart_print("\n\r [X]: exit");
 	buart_print("\n\rEnter your option:");
 }
@@ -202,15 +202,15 @@ void flash_client_menu(void)
 				check_for_bad();
 				break;
 
-			case 'S':
-			case 's':
-				find_bad_blocks(LINUXLD_NANDFLASH_KERNEL_START);
-				break;
-
-			case 'E':
-			case 'e':
-				flash_erase(LINUXLD_NANDFLASH_KERNEL_START);
-				break;
+//			case 'S':
+//			case 's':
+//				find_bad_blocks(LINUXLD_NANDFLASH_KERNEL_START);
+//				break;
+//
+//			case 'E':
+//			case 'e':
+//				flash_erase(LINUXLD_NANDFLASH_KERNEL_START);
+//				break;
 				
 			case 'X':
 			case 'x':
