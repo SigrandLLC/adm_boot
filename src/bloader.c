@@ -62,7 +62,6 @@ extern void _icache_sync_all(void);
 static void print_menu()
 {
     buart_print("\n\r"
-                "\n\rSigrand MR16 router:"
                 "\n\r=================================="
                 "\n\rBootloader Menu"		
                 "\n\r [1] Xmodem Download"
@@ -259,7 +258,6 @@ void c_entry(void)
 	bt_name[7] = hexdigit[(i>>4)&0xf];		bt_name[8] = hexdigit[i&0xf];
 	buart_print(bt_name);
 	buart_print("\n\r\n\r");
-	buart_print("\n\rCopyright 2007 Sigrand, Inc.");
 	buart_print("\n\rCPU: Infineon ");buart_print(CPU_NO);buart_put('-');buart_print(CPU_CLOCK);
 	buart_print("\n\rSDRAM: ");buart_print(SDRAM_SIZE);
 	buart_print("\n\rFlash: ");buart_print(FLASH_TYPE);buart_put('-');buart_print(FLASH_SIZE);
