@@ -68,10 +68,10 @@ int set_boot_param(void)
 	buart_print(SET_PARAM);	
 
 	/* Set serial number */
-	Set_Board_SerialNo();
+	//Set_Board_SerialNo();
 
 	/* Set board version */
-	Set_Board_Version();
+	//Set_Board_Version();
 
 	/* Set Mac address */ 	
 	Set_Mac();
@@ -445,20 +445,20 @@ void PrintBspParam(void)
 	buart_print(PRINT_PARAM);
 
 	/* Print serial number */
-	if(bsp_GetBoardSerialNo(buf, BOOT_LINE_SIZE+1) != 0)
-	{
-		buf[0] = 0;
-	}
-	buart_print("\n\rSerial number: ");
-	buart_print(buf);
+//	if(bsp_GetBoardSerialNo(buf, BOOT_LINE_SIZE+1) != 0)
+//	{
+//		buf[0] = 0;
+//	}
+//	buart_print("\n\rSerial number: ");
+//	buart_print(buf);
 
 	/* Print board version */
-	if(bsp_GetBoardVersion(buf, BOOT_LINE_SIZE+1) != 0)
-	{
-		buf[0] = 0;
-	}
-	buart_print("\n\rHardware version: ");
-	buart_print(buf);
+//	if(bsp_GetBoardVersion(buf, BOOT_LINE_SIZE+1) != 0)
+//	{
+//		buf[0] = 0;
+//	}
+//	buart_print("\n\rHardware version: ");
+//	buart_print(buf);
 
 	/* Print Mac address */
 	if(bsp_GetMacBase(buf, &macnum) != 0)
@@ -502,21 +502,23 @@ void print_tftpc_param(void)
 		buart_print("\n\rGateway IP: ");
 		IpAddrToStr(cfg->tftp_param.gw_ip,str);
 		buart_print(str);
-		buart_print("\n\rRemote File bootloader: ");
-		buart_print(cfg->tftp_param.remote_file_boot);
+		//buart_print("\n\rRemote File bootloader: ");
+		//buart_print(cfg->tftp_param.remote_file_boot);
 		buart_print("\n\rRemote File system: ");
 		buart_print(cfg->tftp_param.remote_file_sys);
 		buart_print("\n\r");
 	}
 }
 
-int get_tftp_param(UINT32 *servip,UINT32 *gwip,char *boot_file, char *sys_file)
+//int get_tftp_param(UINT32 *servip,UINT32 *gwip,char *boot_file, char *sys_file)
+int get_tftp_param(UINT32 *servip,UINT32 *gwip, char *sys_file)
 {
-	if(servip == NULL || boot_file == NULL || sys_file == NULL) return -1;
+	//if(servip == NULL || boot_file == NULL || sys_file == NULL) return -1;
+	if(servip == NULL ||  sys_file == NULL) return -1;
 	if(cfg->tftpmagic != TFTPMAGIC) return -1;
 	*servip = cfg->tftp_param.server_ip;
 	*gwip = cfg->tftp_param.gw_ip;
-	strcpy(boot_file,cfg->tftp_param.remote_file_boot);
+	//strcpy(boot_file,cfg->tftp_param.remote_file_boot);
 	strcpy(sys_file,cfg->tftp_param.remote_file_sys);
 	return 0;
 }
@@ -573,21 +575,21 @@ gwip_again:
 	{
 		buart_print("Gateway IP unchanged..\n\r");
 	}
-filename_boot:	
-	buf[0] = 0;		
-	buart_print("Enter remote bootloader file name : ");
-	ReadLine(buf, BOOT_LINE_SIZE);
-	if(buf[0] != 0)
-	{
-		if(strlen(buf) > BSP_IFNAME_MAX_LEN) 
-		{
-			buart_print("Ifname is too long. Maximum name length is 15 characters.\n\r");
-			goto filename_boot;
-		}
-		strcpy(cfg->tftp_param.remote_file_boot, buf);
-	}
-	else
-		buart_print("Remote file unchanged.\n\r");
+//filename_boot:	
+//	buf[0] = 0;		
+//	buart_print("Enter remote bootloader file name : ");
+//	ReadLine(buf, BOOT_LINE_SIZE);
+//	if(buf[0] != 0)
+//	{
+//		if(strlen(buf) > BSP_IFNAME_MAX_LEN) 
+//		{
+//			buart_print("Ifname is too long. Maximum name length is 15 characters.\n\r");
+//			goto filename_boot;
+//		}
+//		strcpy(cfg->tftp_param.remote_file_boot, buf);
+//	}
+//	else
+//		buart_print("Remote file unchanged.\n\r");
 
 filename_sys:	
 	buf[0] = 0;		

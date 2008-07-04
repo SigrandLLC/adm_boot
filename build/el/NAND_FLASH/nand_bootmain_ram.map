@@ -206,7 +206,7 @@ LOAD ./lib/el/libnosys.a
 .plt
  *(.plt)
 
-.text           0x0000000080801000     0xb6a4
+.text           0x0000000080801000     0xb598
                 0x0000000080801000                _ftext = .
  *(.text .stub .text.* .gnu.linkonce.t.*)
  .text          0x0000000080801000       0xd8 ./build/el/NAND_FLASH/nand_ldrinit.o
@@ -372,92 +372,92 @@ LOAD ./lib/el/libnosys.a
                 0x000000008080736c                udp_skb_reserve
                 0x0000000080807228                udp_init
                 0x0000000080807398                udp_get_source_port
- .text          0x00000000808073c4      0xf90 ./build/el/NAND_FLASH/param.o
+ .text          0x00000000808073c4      0xe84 ./build/el/NAND_FLASH/param.o
                 0x0000000080807a80                check_ip
                 0x00000000808073c4                boot_param_init
                 0x0000000080807590                bsp_SetBoardVersion
                 0x0000000080807ae4                Set_TFTP_IP
                 0x0000000080807c0c                set_boot_param
-                0x0000000080808088                set_tftpc_param
-                0x0000000080807da0                PrintBspParam
+                0x0000000080807fe4                set_tftpc_param
+                0x0000000080807d90                PrintBspParam
                 0x00000000808077f4                bsp_GetMacBase
-                0x0000000080808000                get_tftp_param
+                0x0000000080807f80                get_tftp_param
                 0x0000000080807710                bsp_SetMac
-                0x0000000080807d80                bsp_GetGwIp
+                0x0000000080807d70                bsp_GetGwIp
                 0x0000000080807848                Set_Mac
                 0x0000000080807410                bsp_SetBoardSerialNo
                 0x0000000080807678                Set_Board_Version
                 0x0000000080807474                bsp_GetBoardSerialNo
                 0x00000000808075f4                bsp_GetBoardVersion
-                0x0000000080807f28                print_tftpc_param
+                0x0000000080807ec0                print_tftpc_param
                 0x00000000808074f8                Set_Board_SerialNo
-                0x0000000080807d4c                bsp_GetTftpIp
- .text          0x0000000080808354       0xb0 ./build/el/NAND_FLASH/nf.o
-                0x000000008080835c                nf_write
-                0x00000000808083dc                nf_read
-                0x0000000080808354                nf_erase
-                0x0000000080808380                nf_write_boot
- .text          0x0000000080808404     0x1fb4 ./lib/el/libz.a(inflate.o)
-                0x000000008080a1ec                inflateCopy
-                0x000000008080874c                inflate
-                0x000000008080a1b4                inflateSyncPoint
-                0x0000000080809fa8                inflateGetHeader
-                0x00000000808085f4                inflateInit_
-                0x0000000080808474                inflatePrime
-                0x0000000080808404                inflateReset
-                0x000000008080a05c                inflateSync
-                0x0000000080809e90                inflateSetDictionary
-                0x0000000080809e24                inflateEnd
-                0x00000000808084d4                inflateInit2_
- .text          0x000000008080a3b8      0x508 ./lib/el/libz.a(inftrees.o)
-                0x000000008080a3b8                inflate_table
- .text          0x000000008080a8c0      0x510 ./lib/el/libz.a(inffast.o)
-                0x000000008080a8c0                inflate_fast
- .text          0x000000008080add0      0x430 ./lib/el/libz.a(adler32.o)
-                0x000000008080add0                adler32
-                0x000000008080b140                adler32_combine
- .text          0x000000008080b200      0x59c ./lib/el/libz.a(crc32.o)
-                0x000000008080b20c                crc32
-                0x000000008080b6a0                crc32_combine
-                0x000000008080b200                get_crc_table
- .text          0x000000008080b79c       0x44 ./lib/el/libz.a(zutil.o)
-                0x000000008080b79c                zlibVersion
-                0x000000008080b7a8                zlibCompileFlags
-                0x000000008080b7d8                zcfree
-                0x000000008080b7b0                zError
-                0x000000008080b7d0                zcalloc
- .text          0x000000008080b7e0       0x18 ./lib/el/libc.a(malloc.o)
-                0x000000008080b7e0                malloc
-                0x000000008080b7ec                free
- .text          0x000000008080b7f8      0x734 ./lib/el/libc.a(mallocr.o)
-                0x000000008080b7f8                _malloc_r
- .text          0x000000008080bf2c       0x30 ./lib/el/libc.a(memcpy.o)
-                0x000000008080bf2c                memcpy
- .text          0x000000008080bf5c       0x2c ./lib/el/libc.a(memset.o)
-                0x000000008080bf5c                memset
- .text          0x000000008080bf88       0x10 ./lib/el/libc.a(mlock.o)
-                0x000000008080bf90                __malloc_unlock
-                0x000000008080bf88                __malloc_lock
- .text          0x000000008080bf98       0x74 ./lib/el/libc.a(rand.o)
-                0x000000008080bfac                rand
-                0x000000008080bf98                srand
- .text          0x000000008080c00c       0x4c ./lib/el/libc.a(sbrkr.o)
-                0x000000008080c00c                _sbrk_r
- .text          0x000000008080c058       0x20 ./lib/el/libc.a(strcpy.o)
-                0x000000008080c058                strcpy
- .text          0x000000008080c078       0x18 ./lib/el/libc.a(strlen.o)
-                0x000000008080c078                strlen
- .text          0x000000008080c090       0x44 ./lib/el/libc.a(strncpy.o)
-                0x000000008080c090                strncpy
- .text          0x000000008080c0d4      0x3ac ./lib/el/libc.a(freer.o)
-                0x000000008080c1f8                _free_r
-                0x000000008080c0d4                _malloc_trim_r
- .text          0x000000008080c480      0x200 ./lib/el/libc.a(reent.o)
-                0x000000008080c480                cleanup_glue
-                0x000000008080c4c8                _reclaim_reent
-                0x000000008080c5dc                _wrapup_reent
- .text          0x000000008080c680       0x24 ./lib/el/libnosys.a(sbrk.o)
-                0x000000008080c680                sbrk
+                0x0000000080807d3c                bsp_GetTftpIp
+ .text          0x0000000080808248       0xb0 ./build/el/NAND_FLASH/nf.o
+                0x0000000080808250                nf_write
+                0x00000000808082d0                nf_read
+                0x0000000080808248                nf_erase
+                0x0000000080808274                nf_write_boot
+ .text          0x00000000808082f8     0x1fb4 ./lib/el/libz.a(inflate.o)
+                0x000000008080a0e0                inflateCopy
+                0x0000000080808640                inflate
+                0x000000008080a0a8                inflateSyncPoint
+                0x0000000080809e9c                inflateGetHeader
+                0x00000000808084e8                inflateInit_
+                0x0000000080808368                inflatePrime
+                0x00000000808082f8                inflateReset
+                0x0000000080809f50                inflateSync
+                0x0000000080809d84                inflateSetDictionary
+                0x0000000080809d18                inflateEnd
+                0x00000000808083c8                inflateInit2_
+ .text          0x000000008080a2ac      0x508 ./lib/el/libz.a(inftrees.o)
+                0x000000008080a2ac                inflate_table
+ .text          0x000000008080a7b4      0x510 ./lib/el/libz.a(inffast.o)
+                0x000000008080a7b4                inflate_fast
+ .text          0x000000008080acc4      0x430 ./lib/el/libz.a(adler32.o)
+                0x000000008080acc4                adler32
+                0x000000008080b034                adler32_combine
+ .text          0x000000008080b0f4      0x59c ./lib/el/libz.a(crc32.o)
+                0x000000008080b100                crc32
+                0x000000008080b594                crc32_combine
+                0x000000008080b0f4                get_crc_table
+ .text          0x000000008080b690       0x44 ./lib/el/libz.a(zutil.o)
+                0x000000008080b690                zlibVersion
+                0x000000008080b69c                zlibCompileFlags
+                0x000000008080b6cc                zcfree
+                0x000000008080b6a4                zError
+                0x000000008080b6c4                zcalloc
+ .text          0x000000008080b6d4       0x18 ./lib/el/libc.a(malloc.o)
+                0x000000008080b6d4                malloc
+                0x000000008080b6e0                free
+ .text          0x000000008080b6ec      0x734 ./lib/el/libc.a(mallocr.o)
+                0x000000008080b6ec                _malloc_r
+ .text          0x000000008080be20       0x30 ./lib/el/libc.a(memcpy.o)
+                0x000000008080be20                memcpy
+ .text          0x000000008080be50       0x2c ./lib/el/libc.a(memset.o)
+                0x000000008080be50                memset
+ .text          0x000000008080be7c       0x10 ./lib/el/libc.a(mlock.o)
+                0x000000008080be84                __malloc_unlock
+                0x000000008080be7c                __malloc_lock
+ .text          0x000000008080be8c       0x74 ./lib/el/libc.a(rand.o)
+                0x000000008080bea0                rand
+                0x000000008080be8c                srand
+ .text          0x000000008080bf00       0x4c ./lib/el/libc.a(sbrkr.o)
+                0x000000008080bf00                _sbrk_r
+ .text          0x000000008080bf4c       0x20 ./lib/el/libc.a(strcpy.o)
+                0x000000008080bf4c                strcpy
+ .text          0x000000008080bf6c       0x18 ./lib/el/libc.a(strlen.o)
+                0x000000008080bf6c                strlen
+ .text          0x000000008080bf84       0x44 ./lib/el/libc.a(strncpy.o)
+                0x000000008080bf84                strncpy
+ .text          0x000000008080bfc8      0x3ac ./lib/el/libc.a(freer.o)
+                0x000000008080c0ec                _free_r
+                0x000000008080bfc8                _malloc_trim_r
+ .text          0x000000008080c374      0x200 ./lib/el/libc.a(reent.o)
+                0x000000008080c374                cleanup_glue
+                0x000000008080c3bc                _reclaim_reent
+                0x000000008080c4d0                _wrapup_reent
+ .text          0x000000008080c574       0x24 ./lib/el/libnosys.a(sbrk.o)
+                0x000000008080c574                sbrk
  *(.text.*personality*)
  *(.gnu.warning)
  *(.mips16.fn.*)
@@ -465,63 +465,63 @@ LOAD ./lib/el/libnosys.a
 
 .fini
  *(.fini)
-                0x000000008080c6a4                PROVIDE (__etext, .)
-                0x000000008080c6a4                PROVIDE (_etext, .)
-                0x000000008080c6a4                PROVIDE (etext, .)
+                0x000000008080c598                PROVIDE (__etext, .)
+                0x000000008080c598                PROVIDE (_etext, .)
+                0x000000008080c598                PROVIDE (etext, .)
 
-.rodata         0x000000008080c6a4     0x3f62
+.rodata         0x000000008080c598     0x3ef2
  *(.rodata .rodata.* .gnu.linkonce.r.*)
  .rodata.str1.4
-                0x000000008080c6a4      0x3b3 ./build/el/NAND_FLASH/bloader_ram.o
+                0x000000008080c598      0x3b3 ./build/el/NAND_FLASH/bloader_ram.o
                                         0x3b8 (size before relaxing)
- *fill*         0x000000008080ca57        0x1 00
- .rodata        0x000000008080ca58       0x18 ./build/el/NAND_FLASH/bloader_ram.o
+ *fill*         0x000000008080c94b        0x1 00
+ .rodata        0x000000008080c94c       0x18 ./build/el/NAND_FLASH/bloader_ram.o
  .rodata.str1.4
-                0x000000008080ca70      0x179 ./build/el/NAND_FLASH/linuxld.o
+                0x000000008080c964      0x179 ./build/el/NAND_FLASH/linuxld.o
                                         0x180 (size before relaxing)
- *fill*         0x000000008080cbe9        0x3 00
- .rodata        0x000000008080cbec       0x20 ./build/el/NAND_FLASH/nand.o
+ *fill*         0x000000008080cadd        0x3 00
+ .rodata        0x000000008080cae0       0x20 ./build/el/NAND_FLASH/nand.o
  .rodata.str1.4
-                0x000000008080cc0c      0x47c ./build/el/NAND_FLASH/nand.o
+                0x000000008080cb00      0x47c ./build/el/NAND_FLASH/nand.o
                                         0x490 (size before relaxing)
- .rodata        0x000000008080d088      0x100 ./build/el/NAND_FLASH/nand_ecc.o
+ .rodata        0x000000008080cf7c      0x100 ./build/el/NAND_FLASH/nand_ecc.o
  .rodata.str1.4
-                0x000000008080d188        0x3 ./build/el/NAND_FLASH/utils.o
+                0x000000008080d07c        0x3 ./build/el/NAND_FLASH/utils.o
                                           0x4 (size before relaxing)
- *fill*         0x000000008080d18b        0x1 00
+ *fill*         0x000000008080d07f        0x1 00
  .rodata.str1.4
-                0x000000008080d18c       0xa7 ./build/el/NAND_FLASH/if_5120.o
+                0x000000008080d080       0xa7 ./build/el/NAND_FLASH/if_5120.o
                                          0xb0 (size before relaxing)
- *fill*         0x000000008080d233        0x1 00
- .rodata        0x000000008080d234       0x40 ./build/el/NAND_FLASH/uartdrv.o
-                0x000000008080d234                rate_tab
+ *fill*         0x000000008080d127        0x1 00
+ .rodata        0x000000008080d128       0x40 ./build/el/NAND_FLASH/uartdrv.o
+                0x000000008080d128                rate_tab
  .rodata.str1.4
-                0x000000008080d274       0x3c ./build/el/NAND_FLASH/uartdrv.o
+                0x000000008080d168       0x3c ./build/el/NAND_FLASH/uartdrv.o
  .rodata.str1.4
-                0x000000008080d2b0       0x60 ./build/el/NAND_FLASH/tftp.o
+                0x000000008080d1a4       0x60 ./build/el/NAND_FLASH/tftp.o
  .rodata.str1.4
-                0x000000008080d310      0x631 ./build/el/NAND_FLASH/param.o
-                                        0x638 (size before relaxing)
- *fill*         0x000000008080d941        0x3 00
- .rodata        0x000000008080d944      0x91c ./lib/el/libz.a(inflate.o)
+                0x000000008080d204      0x5c1 ./build/el/NAND_FLASH/param.o
+                                        0x5c8 (size before relaxing)
+ *fill*         0x000000008080d7c5        0x3 00
+ .rodata        0x000000008080d7c8      0x91c ./lib/el/libz.a(inflate.o)
  .rodata.str1.4
-                0x000000008080e260      0x1bf ./lib/el/libz.a(inflate.o)
+                0x000000008080e0e4      0x1bf ./lib/el/libz.a(inflate.o)
                                         0x1c0 (size before relaxing)
- *fill*         0x000000008080e41f        0x1 00
- .rodata        0x000000008080e420      0x130 ./lib/el/libz.a(inftrees.o)
-                0x000000008080e420                inflate_copyright
+ *fill*         0x000000008080e2a3        0x1 00
+ .rodata        0x000000008080e2a4      0x130 ./lib/el/libz.a(inftrees.o)
+                0x000000008080e2a4                inflate_copyright
  .rodata.str1.4
-                0x000000008080e550        0x0 ./lib/el/libz.a(inffast.o)
+                0x000000008080e3d4        0x0 ./lib/el/libz.a(inffast.o)
                                          0x54 (size before relaxing)
- .rodata        0x000000008080e550     0x2000 ./lib/el/libz.a(crc32.o)
+ .rodata        0x000000008080e3d4     0x2000 ./lib/el/libz.a(crc32.o)
  .rodata.str1.4
-                0x0000000080810550       0x86 ./lib/el/libz.a(zutil.o)
+                0x00000000808103d4       0x86 ./lib/el/libz.a(zutil.o)
                                          0x88 (size before relaxing)
- *fill*         0x00000000808105d6        0x2 00
- .rodata        0x00000000808105d8       0x2c ./lib/el/libz.a(zutil.o)
-                0x00000000808105dc                z_errmsg
+ *fill*         0x000000008081045a        0x2 00
+ .rodata        0x000000008081045c       0x2c ./lib/el/libz.a(zutil.o)
+                0x0000000080810460                z_errmsg
  .rodata.str1.4
-                0x0000000080810604        0x2 ./lib/el/libc.a(impure.o)
+                0x0000000080810488        0x2 ./lib/el/libc.a(impure.o)
                                           0x4 (size before relaxing)
 
 .rodata1
@@ -542,7 +542,7 @@ LOAD ./lib/el/libnosys.a
 .gcc_except_table
  *(.gcc_except_table)
  *(.gcc_except_table.*)
-                0x0000000080810606                . = .
+                0x000000008081048a                . = .
 
 .eh_frame
  *(.eh_frame)
@@ -557,22 +557,22 @@ LOAD ./lib/el/libnosys.a
 .tbss
  *(.tbss .tbss.* .gnu.linkonce.tb.*)
  *(.tcommon)
-                0x0000000080810608                . = ALIGN (0x4)
-                0x0000000080810608                PROVIDE (__preinit_array_start, .)
+                0x000000008081048c                . = ALIGN (0x4)
+                0x000000008081048c                PROVIDE (__preinit_array_start, .)
 
 .preinit_array
  *(.preinit_array)
-                0x0000000080810608                PROVIDE (__preinit_array_end, .)
-                0x0000000080810608                PROVIDE (__init_array_start, .)
+                0x000000008081048c                PROVIDE (__preinit_array_end, .)
+                0x000000008081048c                PROVIDE (__init_array_start, .)
 
 .init_array
  *(.init_array)
-                0x0000000080810608                PROVIDE (__init_array_end, .)
-                0x0000000080810608                PROVIDE (__fini_array_start, .)
+                0x000000008081048c                PROVIDE (__init_array_end, .)
+                0x000000008081048c                PROVIDE (__fini_array_start, .)
 
 .fini_array
  *(.fini_array)
-                0x0000000080810608                PROVIDE (__fini_array_end, .)
+                0x000000008081048c                PROVIDE (__fini_array_end, .)
 
 .ctors
  *crtbegin*.o(.ctors)
@@ -593,113 +593,113 @@ LOAD ./lib/el/libnosys.a
  *(.data.rel.ro.local)
  *(.data.rel.ro*)
 
-.data           0x0000000080810608      0x860
-                0x0000000080810608                _fdata = .
+.data           0x0000000080810490      0x860
+                0x0000000080810490                _fdata = .
  *(.data .data.* .gnu.linkonce.d.*)
- .data          0x0000000080810608       0x24 ./build/el/NAND_FLASH/bloader_ram.o
-                0x0000000080810608                bt_name
-                0x0000000080810618                hexdigit
- .data          0x000000008081062c       0x34 ./build/el/NAND_FLASH/nand.o
- .data          0x0000000080810660      0x408 ./lib/el/libc.a(mallocr.o)
-                0x0000000080810660                __malloc_av_
- .data          0x0000000080810a68      0x400 ./lib/el/libc.a(impure.o)
+ .data          0x0000000080810490       0x24 ./build/el/NAND_FLASH/bloader_ram.o
+                0x0000000080810490                bt_name
+                0x00000000808104a0                hexdigit
+ .data          0x00000000808104b4       0x34 ./build/el/NAND_FLASH/nand.o
+ .data          0x00000000808104e8      0x408 ./lib/el/libc.a(mallocr.o)
+                0x00000000808104e8                __malloc_av_
+ .data          0x00000000808108f0      0x400 ./lib/el/libc.a(impure.o)
  *(.gnu.linkonce.d.*personality*)
 
 .data1
  *(.data1)
-                0x0000000080810e68                . = .
-                0x0000000080818e60                _gp = (ALIGN (0x10) + 0x7ff0)
+                0x0000000080810cf0                . = .
+                0x0000000080818ce0                _gp = (ALIGN (0x10) + 0x7ff0)
 
 .got
  *(.got.plt)
  *(.got)
 
-.sdata          0x0000000080810e68       0x38
+.sdata          0x0000000080810cf0       0x38
  *(.sdata .sdata.* .gnu.linkonce.s.*)
- .sdata         0x0000000080810e68       0x14 ./build/el/NAND_FLASH/linuxld.o
-                0x0000000080810e68                fail
-                0x0000000080810e6c                pass
-                0x0000000080810e70                loader_heap
- .sdata         0x0000000080810e7c        0x4 ./build/el/NAND_FLASH/nand.o
-                0x0000000080810e7c                base
- .sdata         0x0000000080810e80        0x4 ./build/el/NAND_FLASH/uartdrv.o
-                0x0000000080810e80                rate_option
- .sdata         0x0000000080810e84        0x8 ./build/el/NAND_FLASH/arp.o
- .sdata         0x0000000080810e8c        0x2 ./build/el/NAND_FLASH/ip.o
- *fill*         0x0000000080810e8e        0x2 00
- .sdata         0x0000000080810e90        0x8 ./lib/el/libc.a(mallocr.o)
-                0x0000000080810e90                __malloc_sbrk_base
-                0x0000000080810e94                __malloc_trim_threshold
- .sdata         0x0000000080810e98        0x8 ./lib/el/libc.a(impure.o)
-                0x0000000080810e98                _global_impure_ptr
-                0x0000000080810e9c                _impure_ptr
+ .sdata         0x0000000080810cf0       0x14 ./build/el/NAND_FLASH/linuxld.o
+                0x0000000080810cf0                fail
+                0x0000000080810cf4                pass
+                0x0000000080810cf8                loader_heap
+ .sdata         0x0000000080810d04        0x4 ./build/el/NAND_FLASH/nand.o
+                0x0000000080810d04                base
+ .sdata         0x0000000080810d08        0x4 ./build/el/NAND_FLASH/uartdrv.o
+                0x0000000080810d08                rate_option
+ .sdata         0x0000000080810d0c        0x8 ./build/el/NAND_FLASH/arp.o
+ .sdata         0x0000000080810d14        0x2 ./build/el/NAND_FLASH/ip.o
+ *fill*         0x0000000080810d16        0x2 00
+ .sdata         0x0000000080810d18        0x8 ./lib/el/libc.a(mallocr.o)
+                0x0000000080810d18                __malloc_sbrk_base
+                0x0000000080810d1c                __malloc_trim_threshold
+ .sdata         0x0000000080810d20        0x8 ./lib/el/libc.a(impure.o)
+                0x0000000080810d20                _global_impure_ptr
+                0x0000000080810d24                _impure_ptr
 
 .lit8
  *(.lit8)
 
 .lit4
  *(.lit4)
-                0x0000000080810ea0                _edata = .
-                0x0000000080810ea0                PROVIDE (edata, .)
-                0x0000000080810ea0                __bss_start = .
-                0x0000000080810ea0                _fbss = .
+                0x0000000080810d28                _edata = .
+                0x0000000080810d28                PROVIDE (edata, .)
+                0x0000000080810d28                __bss_start = .
+                0x0000000080810d28                _fbss = .
 
-.sbss           0x0000000080810ea0       0x70
-                0x0000000080810ea0                PROVIDE (__sbss_start, .)
-                0x0000000080810ea0                PROVIDE (___sbss_start, .)
+.sbss           0x0000000080810d28       0x70
+                0x0000000080810d28                PROVIDE (__sbss_start, .)
+                0x0000000080810d28                PROVIDE (___sbss_start, .)
  *(.dynsbss)
  *(.sbss .sbss.* .gnu.linkonce.sb.*)
- .sbss          0x0000000080810ea0        0x4 ./build/el/NAND_FLASH/irqlib.o
- .sbss          0x0000000080810ea4        0x4 ./build/el/NAND_FLASH/timer.o
- .sbss          0x0000000080810ea8        0x4 ./build/el/NAND_FLASH/except.o
- .sbss          0x0000000080810eac        0x8 ./build/el/NAND_FLASH/if_5120.o
- .sbss          0x0000000080810eb4        0x8 ./build/el/NAND_FLASH/uartdrv.o
-                0x0000000080810eb4                orcnt
-                0x0000000080810eb8                errcnt
- .sbss          0x0000000080810ebc       0x10 ./build/el/NAND_FLASH/tftp.o
- *fill*         0x0000000080810ecc        0x4 00
- .sbss          0x0000000080810ed0       0x10 ./build/el/NAND_FLASH/eth.o
- .sbss          0x0000000080810ee0        0x4 ./build/el/NAND_FLASH/arp.o
- .sbss          0x0000000080810ee4        0x8 ./build/el/NAND_FLASH/ip.o
- .sbss          0x0000000080810eec        0x4 ./build/el/NAND_FLASH/param.o
- .sbss          0x0000000080810ef0        0xc ./lib/el/libc.a(mallocr.o)
-                0x0000000080810ef8                __malloc_top_pad
-                0x0000000080810ef4                __malloc_max_sbrked_mem
-                0x0000000080810ef0                __malloc_max_total_mem
- .sbss          0x0000000080810efc        0x4 ./lib/el/libnosys.a(sbrk.o)
+ .sbss          0x0000000080810d28        0x4 ./build/el/NAND_FLASH/irqlib.o
+ .sbss          0x0000000080810d2c        0x4 ./build/el/NAND_FLASH/timer.o
+ .sbss          0x0000000080810d30        0x4 ./build/el/NAND_FLASH/except.o
+ .sbss          0x0000000080810d34        0x8 ./build/el/NAND_FLASH/if_5120.o
+ .sbss          0x0000000080810d3c        0x8 ./build/el/NAND_FLASH/uartdrv.o
+                0x0000000080810d3c                orcnt
+                0x0000000080810d40                errcnt
+ .sbss          0x0000000080810d44       0x10 ./build/el/NAND_FLASH/tftp.o
+ *fill*         0x0000000080810d54        0x4 00
+ .sbss          0x0000000080810d58       0x10 ./build/el/NAND_FLASH/eth.o
+ .sbss          0x0000000080810d68        0x4 ./build/el/NAND_FLASH/arp.o
+ .sbss          0x0000000080810d6c        0x8 ./build/el/NAND_FLASH/ip.o
+ .sbss          0x0000000080810d74        0x4 ./build/el/NAND_FLASH/param.o
+ .sbss          0x0000000080810d78        0xc ./lib/el/libc.a(mallocr.o)
+                0x0000000080810d80                __malloc_top_pad
+                0x0000000080810d7c                __malloc_max_sbrked_mem
+                0x0000000080810d78                __malloc_max_total_mem
+ .sbss          0x0000000080810d84        0x4 ./lib/el/libnosys.a(sbrk.o)
  *(.scommon)
- .scommon       0x0000000080810f00        0x4 ./build/el/NAND_FLASH/bloader_ram.o
-                0x0000000080810f00                _heap_h
- .scommon       0x0000000080810f04        0x4 ./build/el/NAND_FLASH/memlib.o
-                0x0000000080810f04                AvilMemHead
- .scommon       0x0000000080810f08        0x4 ./build/el/NAND_FLASH/eth.o
-                0x0000000080810f08                EthPktQueue
- .scommon       0x0000000080810f0c        0x4 ./lib/el/libc.a(reent.o)
-                0x0000000080810f0c                errno
-                0x0000000080810f10                PROVIDE (__sbss_end, .)
-                0x0000000080810f10                PROVIDE (___sbss_end, .)
+ .scommon       0x0000000080810d88        0x4 ./build/el/NAND_FLASH/bloader_ram.o
+                0x0000000080810d88                _heap_h
+ .scommon       0x0000000080810d8c        0x4 ./build/el/NAND_FLASH/memlib.o
+                0x0000000080810d8c                AvilMemHead
+ .scommon       0x0000000080810d90        0x4 ./build/el/NAND_FLASH/eth.o
+                0x0000000080810d90                EthPktQueue
+ .scommon       0x0000000080810d94        0x4 ./lib/el/libc.a(reent.o)
+                0x0000000080810d94                errno
+                0x0000000080810d98                PROVIDE (__sbss_end, .)
+                0x0000000080810d98                PROVIDE (___sbss_end, .)
 
-.bss            0x0000000080810f10      0x494
+.bss            0x0000000080810d98      0x494
  *(.dynbss)
  *(.bss .bss.* .gnu.linkonce.b.*)
- .bss           0x0000000080810f10      0x200 ./build/el/NAND_FLASH/nand.o
- .bss           0x0000000080811110       0xc8 ./build/el/NAND_FLASH/irqlib.o
- .bss           0x00000000808111d8       0x80 ./build/el/NAND_FLASH/except.o
-                0x00000000808111d8                mips_int_tab
- .bss           0x0000000080811258       0x18 ./build/el/NAND_FLASH/tftp.o
- .bss           0x0000000080811270       0xd0 ./build/el/NAND_FLASH/arp.o
- .bss           0x0000000080811340       0x18 ./build/el/NAND_FLASH/ip.o
- .bss           0x0000000080811358       0x28 ./lib/el/libc.a(mallocr.o)
-                0x0000000080811358                __malloc_current_mallinfo
+ .bss           0x0000000080810d98      0x200 ./build/el/NAND_FLASH/nand.o
+ .bss           0x0000000080810f98       0xc8 ./build/el/NAND_FLASH/irqlib.o
+ .bss           0x0000000080811060       0x80 ./build/el/NAND_FLASH/except.o
+                0x0000000080811060                mips_int_tab
+ .bss           0x00000000808110e0       0x18 ./build/el/NAND_FLASH/tftp.o
+ .bss           0x00000000808110f8       0xd0 ./build/el/NAND_FLASH/arp.o
+ .bss           0x00000000808111c8       0x18 ./build/el/NAND_FLASH/ip.o
+ .bss           0x00000000808111e0       0x28 ./lib/el/libc.a(mallocr.o)
+                0x00000000808111e0                __malloc_current_mallinfo
  *(COMMON)
- COMMON         0x0000000080811380       0x14 ./build/el/NAND_FLASH/linuxld.o
-                0x0000000080811380                ostr
- COMMON         0x0000000080811394       0x10 ./build/el/NAND_FLASH/uartdrv.o
-                0x0000000080811394                uart
-                0x00000000808113a4                . = ALIGN (0x4)
-                0x00000000808113a4                . = ALIGN (0x4)
-                0x00000000808113a4                _end = .
-                0x00000000808113a4                PROVIDE (end, .)
+ COMMON         0x0000000080811208       0x14 ./build/el/NAND_FLASH/linuxld.o
+                0x0000000080811208                ostr
+ COMMON         0x000000008081121c       0x10 ./build/el/NAND_FLASH/uartdrv.o
+                0x000000008081121c                uart
+                0x000000008081122c                . = ALIGN (0x4)
+                0x000000008081122c                . = ALIGN (0x4)
+                0x000000008081122c                _end = .
+                0x000000008081122c                PROVIDE (end, .)
 
 .stab
  *(.stab)

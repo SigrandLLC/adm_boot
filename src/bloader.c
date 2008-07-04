@@ -68,8 +68,8 @@ static void print_menu()
                 "\n\r [2] TFTP Download"
                 "\n\r [3] Print Boot Params"
                 "\n\r [4] Set Boot Params"
-                "\n\r [5] Check flash"
-                "\n\r [6] Exit\n"
+            //    "\n\r [5] Check flash"
+                "\n\r [5] Exit\n"
                 "\n\rPlease enter your number:");
 }
 
@@ -80,9 +80,9 @@ static void print_tftpc_menu(void)
 {
 	buart_print("\n\rTFTP Client Menu");	
 	buart_print("\n\r===============================");
-	buart_print("\n\r [B]: Update bootloader ");
+//	buart_print("\n\r [B]: Update bootloader ");
 	buart_print("\n\r [S]: Update system ");
-	buart_print("\n\r [A]: Update all ");
+//	buart_print("\n\r [A]: Update all ");
 	buart_print("\n\r [P]: Set parameters");
 	buart_print("\n\r [X]: exit");
 	buart_print("\n\rEnter your option:");
@@ -100,21 +100,21 @@ void tftp_client_menu(void)
 		buart_put(key);
 		switch(key)
 		{
-			case 'B':
-			case 'b':
-				tftpc_download_boot();
-				break;
+			//case 'B':
+			//case 'b':
+			//	tftpc_download_boot();
+			//	break;
 
 			case 'S':
 			case 's':
 				tftpc_download_sys();
 				break;
 
-			case 'A':
-			case 'a':
-				tftpc_download_boot();
-				tftpc_download_sys();
-				break;
+			//case 'A':
+			//case 'a':
+			//	tftpc_download_boot();
+			//	tftpc_download_sys();
+			//	break;
 				
 			case 'P':
 			case 'p':
@@ -136,7 +136,7 @@ static void print_xmodem_menu(void)
 {
 	buart_print("\n\rXmodem Client Menu");	
 	buart_print("\n\r===============================");
-	buart_print("\n\r [B]: Update bootloader ");
+	//buart_print("\n\r [B]: Update bootloader ");
 	buart_print("\n\r [S]: Update system ");
 	buart_print("\n\r [X]: Exit");
 	buart_print("\n\rEnter your option:");
@@ -153,10 +153,10 @@ void xmodem_client_menu(void)
 		buart_put(key);
 		switch(key)
 		{
-			case 'B':
-			case 'b':
-				update_bootloader();
-				break;
+			//case 'B':
+			//case 'b':
+			//	update_bootloader();
+			//	break;
 
 			case 'S':
 			case 's':
@@ -349,11 +349,11 @@ main_menu:
         	set_boot_param();
         	break;
 
-        case '5':
-		flash_client_menu();
-		break;
+        //case '5':
+	//	flash_client_menu();
+	//	break;
         
-        case '6':
+        case '5':
 		boot_linux();
            	break;
         default:
