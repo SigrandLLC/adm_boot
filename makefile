@@ -17,19 +17,19 @@ BOARD_NOR_FLASH_SIZE = 0x200000
 
 
 #============================ Compilers ==============================
-CROSS_TOOLS = /home/vadim/openwrt/cross/bin/mipsisa32-elf
-AS	= $(CROSS_TOOLS)-as
-CC	= $(CROSS_TOOLS)-gcc
-LD	= $(CROSS_TOOLS)-ld
-AR      = $(CROSS_TOOLS)-ar
+CROSS_TOOLS ?= mipsel-linux
+AS	?= $(CROSS_TOOLS)-as
+CC	?= $(CROSS_TOOLS)-gcc
+LD	?= $(CROSS_TOOLS)-ld
+AR	?= $(CROSS_TOOLS)-ar
 
 
 #============================ Tools ==================================
 RM	= rm
 MV	= mv
 CP	= cp
-OBJ_TO_COPY = $(CROSS_TOOLS)-objcopy
-OBJ_DUMP    = $(CROSS_TOOLS)-objdump
+OBJ_TO_COPY ?= $(CROSS_TOOLS)-objcopy
+OBJ_DUMP    ?= $(CROSS_TOOLS)-objdump
 
 
 #=======================  Endian dependance  =========================
