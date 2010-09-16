@@ -19,10 +19,10 @@
 ;    Project : ADM5120
 ;    Creator : David Weng
 ;    File    : adm5120.h
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 
@@ -269,7 +269,7 @@
 #define SM_MEM_WIDTH_32BIT						0x00000002
 #define SM_MEM_WIDTH_16BIT						0x00000001
 #define SM_MEM_WIDTH_8BIT						0x00000000
-	
+
 #define MPMC_SM_CONFIG_MASK						0x001801cb
 
 
@@ -370,7 +370,7 @@
 #define INT_LVL_PCI_1							7	/* PCI 1 */
 #define INT_LVL_PCI_2							8	/* PCI 2 */
 #define INT_LVL_SWITCH							9	/* Switch */
-#define INT_LVL_MAX								INT_LVL_SWITCH	
+#define INT_LVL_MAX								INT_LVL_SWITCH
 
 /* interrupts */
 #define IRQ_TIMER								(0x1 << INT_LVL_TIMER)
@@ -405,7 +405,7 @@
 #define Global_St_REG							0x0010
 #define PHY_st_REG								0x0014
 #define Port_st_REG								0x0018
-#define Mem_control_REG							0x001C	
+#define Mem_control_REG							0x001C
 #define SW_conf_REG								0x0020
 #define CPUp_conf_REG							0x0024
 #define Port_conf0_REG							0x0028
@@ -464,7 +464,7 @@
 #define Recv_HWaddr_REG							0x00E8
 #define Recv_LWaddr_REG							0x00EC
 
-// Timer Control 
+// Timer Control
 #define Timer_int_REG							0x00F0
 #define Timer_REG								0x00F4
 

@@ -17,12 +17,12 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : ADM5120
-;    Creator : 
+;    Creator :
 ;    File    : memlib.c
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 #include <ctype.h>
@@ -60,10 +60,10 @@ void *MemAlloc(UINT32 NumOfByte, UINT32 clear)
 	s = mips_int_lock();
 
 	MemEnd = AvilMemHead + NumOfByte;
-	
-	if(MemEnd & (MEM_ALIGN - 1)) 
+
+	if(MemEnd & (MEM_ALIGN - 1))
 		MemEnd = (MemEnd + MEM_ALIGN -1) & ~(MEM_ALIGN - 1);
-		
+
 	if(MemEnd >= MEM_HEAP_PAEND)
 	{
 		mips_int_unlock(s);
@@ -105,14 +105,14 @@ void *SharedMemAlloc(UINT32 NumOfByte, UINT32 clear)
 	// Align the start address to cache line boundry
 	if(AvilMemHead & (SHARED_MEM_ALIGN - 1))
 		AvilMemHead = (AvilMemHead + SHARED_MEM_ALIGN - 1) & ~(SHARED_MEM_ALIGN - 1);
-	
+
 	MemEnd = AvilMemHead + NumOfByte;
 
 	// !! Always keep the shared memory block aligned on cache line boundry
 	if(MemEnd & (SHARED_MEM_ALIGN - 1))
 		MemEnd = (MemEnd + SHARED_MEM_ALIGN - 1) & ~(SHARED_MEM_ALIGN - 1);
-		
-	if(MemEnd >= MEM_HEAP_PAEND)	
+
+	if(MemEnd >= MEM_HEAP_PAEND)
 	{
 		mips_int_unlock(s);
 		return NULL;

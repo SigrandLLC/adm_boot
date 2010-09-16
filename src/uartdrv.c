@@ -22,7 +22,7 @@
 ;    Abstract: Serial driver controller
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 #include <mips4kc.h>
@@ -87,20 +87,20 @@ int InitUart(int port, int rate)
 
 	/* Set default line mode */
 	UART_REG_WRITE(&uart, UART_LCR_H_REG, UART_WLEN_8BITS|UART_ENABLE_FIFO);
-	
+
 	/* Enable uart port */
 	UART_REG_WRITE(&uart, UART_CR_REG, UART_PORT_EN);
 }
 
 
 /*--------------------------------------------------------------
-* ROUTINE NAME - buart_init		                            
+* ROUTINE NAME - buart_init
 *---------------------------------------------------------------
 * FUNCTION:  This function is used to initialize the uart channel
 *            but leaves the interrupt disabled
-* INPUT:	
+* INPUT:
 * OUTPUT:
-* RETURN:	
+* RETURN:
 *--------------------------------------------------------------*/
 void    buart_init ()
 {
@@ -112,13 +112,13 @@ void    buart_init ()
 
 
 /*--------------------------------------------------------------
-* ROUTINE NAME - buart_init		                            
+* ROUTINE NAME - buart_init
 *---------------------------------------------------------------
 * FUNCTION:  This function is used to initialize the uart channel
 *            but leaves the interrupt disabled
-* INPUT:	
+* INPUT:
 * OUTPUT:
-* RETURN:	
+* RETURN:
 *--------------------------------------------------------------*/
 void buart_set_baud (int baud_rate)
 {
@@ -128,8 +128,8 @@ void buart_set_baud (int baud_rate)
 	for(i=0; i < rate_option; i++)
 		if(rate_tab[i].rate == baud_rate) break;
 	if(i == rate_option) return;
-	
-	uart.baudrate = baud_rate; 
+
+	uart.baudrate = baud_rate;
 
 	/* Save lcr_h */
 	lcr_h = UART_REG_READ(&uart, UART_LCR_H_REG);
@@ -144,16 +144,16 @@ void buart_set_baud (int baud_rate)
 
 
 /*--------------------------------------------------------------
-* ROUTINE NAME - buart_read		                            
+* ROUTINE NAME - buart_read
 *---------------------------------------------------------------
 * FUNCTION: This function read one byte from the uart channel
 *           if the one byte is in the receive buffer of this
 *           chanel or -1 if nothing received.
 *
-* INPUT:        	
+* INPUT:
 * OUTPUT:
 * RETURN:   -1      -- BUSY
-*           else    -- byte received 
+*           else    -- byte received
 *--------------------------------------------------------------*/
 static int buart_read ()
 {
@@ -177,7 +177,7 @@ static int buart_read ()
 			orcnt ++;
 			UART_REG_WRITE(&uart, UART_ECR_REG, uartsr);
 		}
-		
+
 		return (data & 0xff);
 	}
 
@@ -186,17 +186,17 @@ static int buart_read ()
 
 
 /*--------------------------------------------------------------
-* ROUTINE NAME - buart_write		                            
+* ROUTINE NAME - buart_write
 *---------------------------------------------------------------
 * FUNCTION: This function writes one byte to the uart channel
 *           if the chanel is ready or return -1 or the channel
 *           is busy.
 *
 * INPUT:    out_byte    -- byte to send
-*    	
+*
 * OUTPUT:
 * RETURN:	0   -- OK
-*          -1   -- BUSY 
+*          -1   -- BUSY
 *--------------------------------------------------------------*/
 static int buart_write (char c)
 {
@@ -205,7 +205,7 @@ static int buart_write (char c)
 	uartfr = UART_REG_READ(&uart, UART_FR_REG);
 
 	if(!(uartfr & UART_TX_FIFO_EMPTY)) return -1;
-	
+
 	UART_REG_WRITE(&uart, UART_DR_REG, (UINT32) c);
 
     return 0;
@@ -215,10 +215,10 @@ static int buart_write (char c)
 /*----------------------------------------------------------------------
 * ROUTINE NAME - buart_print
 *-----------------------------------------------------------------------
-* DESCRIPTION: This routine outs a string to the io port 
+* DESCRIPTION: This routine outs a string to the io port
 *
 * INPUT:    *ptr    -- string to print
-*	
+*
 *----------------------------------------------------------------------*/
 void    buart_print (char *str)
 {
@@ -238,7 +238,7 @@ void    buart_print (char *str)
 * DESCRIPTION: This routine out a char to the io port and confirm OK
 *
 * INPUT:    out_char    -- character to print
-*	
+*
 *----------------------------------------------------------------------*/
 void    buart_put (char c)
 {
@@ -252,7 +252,7 @@ void    buart_put (char c)
 /*----------------------------------------------------------------------
 * ROUTINE NAME - buart_get
 *-----------------------------------------------------------------------
-* DESCRIPTION:  This routine receives a byte from the console with a 
+* DESCRIPTION:  This routine receives a byte from the console with a
 *               timeout value specified.
 *
 * INPUT:    timeout -- timeout in second
@@ -270,7 +270,7 @@ int buart_get (int timeout)
 
     // time-out set, block read
     ticks = UpTime();
-    while ((int)(UpTime() - ticks) < (timeout * 100)) 
+    while ((int)(UpTime() - ticks) < (timeout * 100))
     {
         if ((c = buart_read()) != -1)
              return c;
@@ -309,13 +309,13 @@ void ReadLine(char *buf, int num)
 	{
 GETKEY:
 		userKey = buart_getchar();
-		
+
 		if(esc_cnt)
 		{
 			esc_cnt --;
 			goto GETKEY;
 		}
-		
+
 		if (userKey == 0x0d || userKey == 0x0a)
 		{
 			readBuf[i] = 0;
@@ -357,7 +357,7 @@ GETKEY:
 	else
 	{
 		cpNum = num;
-		
+
 		// truncate the input string.
 		buf[num-1] = 0;
 	}

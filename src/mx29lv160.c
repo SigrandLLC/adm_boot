@@ -68,10 +68,10 @@ FLASH_DESC mx29lv160_dev =
 
 
 /*----------------------------------------------------------------------
- * ROUTINE NAME - disable_write                            
+ * ROUTINE NAME - disable_write
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	Disable writing to the flash main blocks  
+*	Disable writing to the flash main blocks
 *----------------------------------------------------------------------*/
 static void disable_write()
 {
@@ -91,10 +91,10 @@ static void disable_write()
 
 
 /*----------------------------------------------------------------------
- * ROUTINE NAME - enable_write                          
+ * ROUTINE NAME - enable_write
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	Enable writing to the flash main blocks  
+*	Enable writing to the flash main blocks
 *----------------------------------------------------------------------*/
 static void enable_write()
 {
@@ -109,7 +109,7 @@ static void enable_write()
 
 
 // Hardware profile generator ...
-    return;              
+    return;
 }
 
 
@@ -117,7 +117,7 @@ static void enable_write()
 * ROUTINE NAME - mx29lv160_erase_block
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	The routine is called by NV RAM driver or the image updating module 
+*	The routine is called by NV RAM driver or the image updating module
 *   to erase the blocks, whereafter this block can accept new data
 *   written.
 *
@@ -156,7 +156,7 @@ static int mx29lv160_erase_block(struct FLASH_DESC_S *cp, char *flash)
 
         /* When Erase operation is completed, DQ7 will produce 1 "1".
 		   and  DQ6 stops toggling. */
-        if ((val & 0x80) == 0x80) 
+        if ((val & 0x80) == 0x80)
         {
 			// Check DQ6 toggle
 			unsigned short s_val;
@@ -164,7 +164,7 @@ static int mx29lv160_erase_block(struct FLASH_DESC_S *cp, char *flash)
 			// Read the second time.
 			s_val = *block;
 
-			if ((s_val & 0x80) && 
+			if ((s_val & 0x80) &&
 				(s_val & 0x40) == (val & 0x40))
 			{
 	            *block = 0xf0;	 /* Do reset */
@@ -198,7 +198,7 @@ static int mx29lv160_erase_block(struct FLASH_DESC_S *cp, char *flash)
 * ROUTINE NAME - flash_erase
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	The routine is called by NV RAM driver or the image updating module 
+*	The routine is called by NV RAM driver or the image updating module
 *   to erase the blocks, whereafter this block can accept new data
 *   written.
 *
@@ -243,7 +243,7 @@ static int mx29lv160_erase(struct FLASH_DESC_S *cp, char *flash, int size)
 *-----------------------------------------------------------------------
 * DESCRIPTION:
 *	The routine is called by NV RAM driver to read NV data.
-*   
+*
 *
 * INPUT:
 *	flash   -- Address of the block to read.
@@ -258,7 +258,7 @@ static int mx29lv160_read(struct FLASH_DESC_S *cp, char *flash, char *dst, int s
 
 	/* Convert size in byte to size in word.*/
 	size = (size+1)/2;
-	
+
     /***********************/
     /* Read data           */
     /***********************/
@@ -275,7 +275,7 @@ static int mx29lv160_read(struct FLASH_DESC_S *cp, char *flash, char *dst, int s
 * ROUTINE NAME - mx29lv160_write
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	The routine is called by NV RAM driver or the image updating module 
+*	The routine is called by NV RAM driver or the image updating module
 *   to update the date content.
 *
 * INPUT:
@@ -309,8 +309,8 @@ static int mx29lv160_write(struct FLASH_DESC_S *cp, char *flash, char *src, int 
         *p555 = 0xaa;
         *p2aa = 0x55;
         *p555 = 0xa0;
-        *block = *data;  
-        
+        *block = *data;
+
         j = 0;
         while (1)
         {
@@ -354,7 +354,7 @@ exit_write:
  * ROUTINE NAME - mx29lv160_init
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	Disable writing to the flash main blocks  
+*	Disable writing to the flash main blocks
 *----------------------------------------------------------------------*/
 int mx29lv160_init()
 {

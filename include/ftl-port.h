@@ -27,7 +27,7 @@ typedef unsigned int	size_t;
 //
 struct nand_oobinfo {
 	int	useecc;
-	int	eccpos[8];	
+	int	eccpos[8];
 };
 
 //

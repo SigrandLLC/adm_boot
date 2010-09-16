@@ -19,10 +19,10 @@
 ;    Project : ADM5120
 ;    Creator : David Weng
 ;    File    : if_5120.c
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 #include <ctype.h>
@@ -42,7 +42,7 @@
 
 
 /********************  Some Constants *****************/
-#define NUM_TX_H_DESC		0	// Number of the Transmitting descriptors of high priority 
+#define NUM_TX_H_DESC		0	// Number of the Transmitting descriptors of high priority
 #define NUM_TX_L_DESC		16	// Number of the Transmitting descriptors of low priority
 #define NUM_RX_H_DESC		0	// Number of the Receiving descriptors of high priority
 #define NUM_RX_L_DESC		32	// Number of the Receiving descriptors of low priority
@@ -54,7 +54,7 @@
 #define PKT_BUFFER_SIZE		1792	// Size of the packet buffer.
 									// This number should be a multiply of CACHE_LINE_SIZE.
 
-#define PKT_BUFFER_ALIGN	(ADM5120_CACHE_LINE_SIZE - 1)	 
+#define PKT_BUFFER_ALIGN	(ADM5120_CACHE_LINE_SIZE - 1)
 
 #define DEF_CTRL_FLAG		(PKT_HARDWARE_CRC | SW_ONEBUF_PER_DESC)
 
@@ -75,7 +75,7 @@
 					}												\
 				}
 
-				
+
 #define ENQUEUE_TX_PACKET_AT_FRONT(_h, _t, _Pkt) {					\
 					if(_Pkt != NULL)								\
 					{												\
@@ -140,7 +140,7 @@ static int DrvAllocateResource(void)
 	ifp->NumTxDescH = NUM_TX_H_DESC;
 	ifp->NumTxDescL = NUM_TX_L_DESC;
 	ifp->NumFreePkt = NUM_FREE_PKT;
-	
+
 	ifp->CtrlFlag = DEF_CTRL_FLAG;
 	ifp->Buf1Off = DEF_BUF1_OFFSET;
 	ifp->Buf1Len = DEF_BUF1_LEN;
@@ -149,22 +149,22 @@ static int DrvAllocateResource(void)
 	//  Allocate HwTxDesc/HwRxDesc
 	memsz = sizeof(TX_DESC_T) * (ifp->NumTxDescH + ifp->NumTxDescL) + TX_DESC_ALIGN;
 	if((membk = (UINT32) SharedMemAlloc(memsz, TRUE)) == 0) return -1;
-	
+
 	if(membk & (TX_DESC_ALIGN-1))
 		ifp->HwTxDescH = (TX_DESC_T *) ((membk + TX_DESC_ALIGN - 1) & ~(TX_DESC_ALIGN - 1));
 	else
 		ifp->HwTxDescH = (TX_DESC_T *) membk;
-				
+
 	ifp->HwTxDescL = &ifp->HwTxDescH[ifp->NumTxDescH];
 
 	memsz = sizeof(RX_DESC_T) * (ifp->NumRxDescH + ifp->NumRxDescL) + RX_DESC_ALIGN;
 	if((membk = (UINT32) SharedMemAlloc(memsz, TRUE)) == 0) return -1;
-	
+
 	if(membk & (RX_DESC_ALIGN-1))
 		ifp->HwRxDescH = (RX_DESC_T *) ((membk + RX_DESC_ALIGN - 1) & ~(RX_DESC_ALIGN - 1));
 	else
 		ifp->HwRxDescH = (RX_DESC_T *) membk;
-		
+
 	ifp->HwRxDescL = &ifp->HwRxDescH[ifp->NumRxDescH];
 
 
@@ -180,7 +180,7 @@ static int DrvAllocateResource(void)
 	// Allocate Buffer pool
 	ifp->BufPool = MemAlloc(PKT_BUFFER_SIZE*TotalPktRequired + PKT_BUFFER_ALIGN, FALSE);
 	// Align to PKT_BUFFER_ALIGN boundry
-	if((UINT32) ifp->BufPool & PKT_BUFFER_ALIGN) 
+	if((UINT32) ifp->BufPool & PKT_BUFFER_ALIGN)
 		ifp->BufPool = (UINT8 *)(((UINT32) ifp->BufPool + PKT_BUFFER_ALIGN) & (~PKT_BUFFER_ALIGN));
 
 	// Initialize Packet Descriptors
@@ -230,7 +230,7 @@ static int DrvAllocateResource(void)
 			ifp->HwRxDescH[i].buf2cntl = 0;
 
 		ifp->HwRxDescH[i].buflen = Pkt->buf1len;
-		ifp->HwRxDescH[i].buf1cntl = OWN_BIT | 
+		ifp->HwRxDescH[i].buf1cntl = OWN_BIT |
 			((UINT32) (Pkt->Buf+Pkt->buf1off) & BUF_ADDR_MASK);
 	}
 	ifp->HwRxDescH[--i].buf1cntl |= END_OF_RING;
@@ -248,7 +248,7 @@ static int DrvAllocateResource(void)
 			ifp->HwRxDescL[i].buf2cntl = 0;
 
 		ifp->HwRxDescL[i].buflen = Pkt->buf1len;
-		ifp->HwRxDescL[i].buf1cntl = OWN_BIT | 
+		ifp->HwRxDescL[i].buf1cntl = OWN_BIT |
 			((UINT32) (Pkt->Buf+Pkt->buf1off) & BUF_ADDR_MASK);
 	}
 	ifp->HwRxDescL[--i].buf1cntl |= END_OF_RING;
@@ -264,10 +264,10 @@ static int DrvAllocateResource(void)
 	// Initialize Rx/Tx Indices
 	ifp->RxIdxH = ifp->RxIdxL = 0;
 	ifp->TxIdxH_Head = ifp->TxIdxH_Tail = ifp->TxIdxL_Head = ifp->TxIdxL_Tail = 0;
-	
+
 	// Initialize the Tx queues
 	ifp->TxH_QueueHead = ifp->TxH_QueueTail = ifp->TxL_QueueHead = ifp->TxL_QueueTail = NULL;
-	
+
 	return 0;
 }
 
@@ -277,14 +277,14 @@ static int DrvAllocateResource(void)
 int ProgramMac(int vlan, UINT8 *Mac)
 {
 	UINT32 Reg0, Reg1;
-	
+
 	if(vlan<0 || vlan>6) return -1;
 
 	Reg0 = (((UINT32) Mac[1]<<24) + ((UINT32) Mac[0]<<16)) | (vlan << SW_MAC_VLANID_SHIFT)
 			| SW_MAC_AGE_VALID | SW_MAC_WRITE | SW_MAC_VLANID_EN;
 
 	Reg1 = ((UINT32) Mac[5]<<24) + ((UINT32) Mac[4]<<16)+ ((UINT32)Mac[3]<<8) + Mac[2];
-	
+
 
 	ADM5120_SW_REG(MAC_wt1_REG) = Reg1;
 	ADM5120_SW_REG(MAC_wt0_REG) = Reg0;
@@ -298,9 +298,9 @@ int ProgramMac(int vlan, UINT8 *Mac)
 /* ProcessRxHInt:																  */
 /**********************************************************************************/
 static int ProcessRxHInt(void)
-{	
+{
 	buart_print("\n\rNot support High priority receive and send!!");
-	return FALSE;	
+	return FALSE;
 }
 
 
@@ -314,7 +314,7 @@ static int ProcessRxLInt(void)
 	RX_DESC_T *RxDesc;
 	PORT_STAT *pstat;
 
-	
+
 	idx = ifp->RxIdxL;
 	RxDesc = &ifp->HwRxDescL[idx];
 	while(!(RxDesc->buf1cntl & OWN_BIT))
@@ -325,7 +325,7 @@ static int ProcessRxLInt(void)
 			ifp->RxL_PktCnt += LoopCnt;
 			return TRUE;
 		}
-		
+
 		// Store the received packet
 		Pkt = ifp->DrvRxDescL[idx].Pkt;
 		if((RxStatus = RxDesc->status) == 0)
@@ -348,7 +348,7 @@ static int ProcessRxLInt(void)
 		FreePkt->Next = NULL;
 
 		// Set the descriptor and release it to switch
-		RxDesc->status = 0;					
+		RxDesc->status = 0;
 		if(FreePkt->buf2len != 0)
 		{
 			RxDesc->buf2cntl = BUF2_EN |
@@ -366,7 +366,7 @@ static int ProcessRxLInt(void)
 			dcache_invalidate_block(Pkt->Buf + Pkt->buf1off, Pkt->PktLen);
 		}
 		else
-		{	
+		{
 			dcache_invalidate_block(Pkt->Buf+Pkt->buf1off, Pkt->buf1len);
 			dcache_invalidate_block(Pkt->Buf+Pkt->buf2off, Pkt->PktLen-Pkt->buf1len);
 		}
@@ -394,14 +394,14 @@ static int ProcessRxLInt(void)
         IndicateRxPacketL(Pkt);
 
 		if(++idx >= ifp->NumRxDescL)  idx = 0;
-		
+
 		if(++LoopCnt > ifp->NumRxDescL) break;
 		RxDesc = &ifp->HwRxDescL[idx];
 	}
 	ifp->RxIdxL = idx;
 	ifp->RxL_PktCnt += LoopCnt;
 
-	return FALSE;	
+	return FALSE;
 }
 
 /**********************************************************************************/
@@ -448,7 +448,7 @@ void SendPacketsL(PDRV_PACKET_DESC Pkt)
 	UINT8 *buf;
 	char str[]="XXXXXXXXXXXX";
 	char protocol[]="XXXX";
-	
+
 
 	if(ifp->TxL_QueueHead != NULL)  //The txL Queue has already some packet, send them first..
 	{
@@ -465,7 +465,7 @@ void SendPacketsL(PDRV_PACKET_DESC Pkt)
 		if(IdxNext == ifp->TxIdxL_Tail)
 		{
 			ifp->TxL_FullCnt ++;
-			break; 		
+			break;
 		}
 		TxDesc = &ifp->HwTxDescL[Idx];
 
@@ -492,12 +492,12 @@ void SendPacketsL(PDRV_PACKET_DESC Pkt)
 		Pkt->Dst = (ADM5120_SW_REG(PHY_st_REG) & PORT_LINK_MASK)<<8;
 		buf = Pkt->Buf + Pkt->buf2off;
 		TxDesc->pktcntl = (Pkt->PktLen << PKT_LEN_SHIFT) | Pkt->Dst;
-		
-		TxDesc->buf1cntl = (TxDesc->buf1cntl & END_OF_RING) | OWN_BIT 
+
+		TxDesc->buf1cntl = (TxDesc->buf1cntl & END_OF_RING) | OWN_BIT
 			| ((UINT32) (Pkt->Buf + Pkt->buf1off) & BUF_ADDR_MASK);
 
 		Idx = IdxNext;
-		
+
 		if(++TxCnt >= ifp->NumTxDescL) Pkt = NULL;
 		else
 			DEQUEUE_TX_PACKET(ifp->TxL_QueueHead, ifp->TxL_QueueTail, Pkt);
@@ -518,11 +518,11 @@ void SendPacketsL(PDRV_PACKET_DESC Pkt)
 {
 	UINT32 link_change, link_status;
 	int i=0;
-	
+
 	buart_print("+P");
-	
+
 	link_status = ADM5120_SW_REG(PHY_st_REG) & PORT_LINK_MASK;
-	
+
 	// Flip PORT_MII_LINK_DOWN bit.
 	link_status ^= PORT_MII_LINKFAIL;
 	link_change = link_status ^ ifp->link_status;
@@ -535,12 +535,12 @@ void SendPacketsL(PDRV_PACKET_DESC Pkt)
 			if(link_status & (1 << i))
 				buart_put('u');
 			else
-				buart_put('d');				
+				buart_put('d');
 		}
 		link_change>>=1;
 		i++;
 	}
-	
+
 }
 */
 
@@ -563,7 +563,7 @@ inline void SetPktAlign(PDRV_PACKET_DESC Pkt)
 	if(ifp->CtrlFlag & SW_TWOBUF_PER_DESC)
 	{
 		// Two buffer per descriptor
-		
+
 		// Set Buffer1 length
 		if(ifp->Buf1Len == BUF1_LEN_RAND)
 			Pkt->buf1len = BUF1_LEN_MIN + (rand() & BUF1_LEN_RAND_MAX);
@@ -576,7 +576,7 @@ inline void SetPktAlign(PDRV_PACKET_DESC Pkt)
 			Pkt->buf2off = buf2off + (rand() & BUF2_OFFSET_MAX);
 		else
 			Pkt->buf2off = buf2off + ifp->Buf2Off;
-			
+
 		// Set buffer 2 length
 		Pkt->buf2len = PKT_BUFFER_SIZE - Pkt->buf2off;
 
@@ -609,20 +609,20 @@ int if5120_init(void)
 
     // Per port PHY reset and enable auto-negotiation.
 	ADM5120_SW_REG(PHY_cntl2_REG) |= SW_PHY_AN_MASK | SW_PHY_NORMAL_MASK;
-    
+
 	//Enable MII AN monitor via MDIO.(Dumb Mode)
 	ADM5120_SW_REG(Port_conf2_REG) |= SW_GMII_AN_EN;
-	
+
 	// Allocate the driver context
 	ifp = (PAM5120CONTEXT) MemAlloc(sizeof(AM5120CONTEXT), TRUE);
 	if(ifp == NULL) return -1;
-	
+
 	// Disable Switch Interrupts
 	ADM5120_SW_REG(SW_Int_mask_REG) = 0xFFFFFFF;
 
 	// Set Phy control values
 	ADM5120_SW_REG(PHY_cntl4_REG) = PHY_VOLT23 | PHY_ROMCODE_25;
-	
+
 	if(DrvAllocateResource() != 0)
 		buart_print("\n\rSwitch allocate resource error.");
 
@@ -637,12 +637,12 @@ int if5120_init(void)
 		ADM5120_SW_REG(CPUp_conf_REG) = CPU_PORT_DEFAULT;
 	else
 		ADM5120_SW_REG(CPUp_conf_REG) = CPU_PORT_DEFAULT | SW_PADING_CRC;
-    
+
     // Daniel fix
-	// Disable all port, enable MC, BP and FC 
+	// Disable all port, enable MC, BP and FC
 	ADM5120_SW_REG(Port_conf0_REG) = SW_DISABLE_PORT_MASK |SW_EN_MC_MASK |
                                     SW_EN_BP_MASK | SW_EN_FC_MASK;
-	
+
 	// Init VLAN group Regs, VLAN_GI & VLAN_GII
 	reg1 = PORT_ALL;
 	reg2 = PORT_NONE;
@@ -674,7 +674,7 @@ int if5120_init(void)
 	ADM5120_SW_REG(CPUp_conf_REG) = reg1;
 
 	// Enable VLAN0 port
-	reg1 = ADM5120_SW_REG(Port_conf0_REG) & (~PORT_DISABLE_MASK); 
+	reg1 = ADM5120_SW_REG(Port_conf0_REG) & (~PORT_DISABLE_MASK);
 	ADM5120_SW_REG(Port_conf0_REG) = reg1;
 
 	// Clear Watchdog 1 counter
@@ -708,7 +708,7 @@ void if5120shutdown(void)
     mips_int_unlock(s);
 
 	for(i=0; i<1000000; i++);
-	
+
 }
 
 /**********************************************************************************/
@@ -718,7 +718,7 @@ void if5120turnon(void)
 {
 	int i, s;
 	UINT32 reg;
-	
+
     s = mips_int_lock();
 	// Re-enable ports
 	reg = ADM5120_SW_REG(Port_conf0_REG) & ~SW_DISABLE_PORT_MASK;
@@ -740,7 +740,7 @@ PDRV_PACKET_DESC Am5120_GetFreePkt(void)
 	PDRV_PACKET_DESC Pkt = NULL;
 	int s;
     s = mips_int_lock();
-	
+
 	if(ifp->FreePktList != NULL)
 	{
 		Pkt = ifp->FreePktList;
@@ -748,7 +748,7 @@ PDRV_PACKET_DESC Am5120_GetFreePkt(void)
 		ifp->FreePktCnt--;
 		Pkt->Next = NULL;
 	}
-	
+
     mips_int_unlock(s);
 	return Pkt;
 }
@@ -758,11 +758,11 @@ void Am5120_RefreePkt(PDRV_PACKET_DESC Pkt)
 	int irq_state;
 
 	irq_state = mips_int_lock();
-	
+
 	Pkt->Next = ifp->FreePktList;
 	ifp->FreePktList = Pkt;
 	ifp->FreePktCnt++;
-	
+
 	mips_int_unlock(irq_state);
 }
 
@@ -784,7 +784,7 @@ void Am5120Isr(int intLev)
 	// Ack all interrupts
 	IntReg = ADM5120_SW_REG(SW_Int_st_REG);
 	ADM5120_SW_REG(SW_Int_st_REG) = IntReg;
-	
+
 	IntReg = ifp->IntStatus | (IntReg & AM5120_INT_MASK);
 	while(IntReg && LoopCnt<MAX_INT_LOOP_CNT)
 	{
@@ -794,12 +794,12 @@ void Am5120Isr(int intLev)
 		if(IntReg & TX_H_INT)	;//ProcessTxHInt(ifp);
 		if(IntReg & TX_L_INT)	ProcessTxLInt();
 		if(IntReg & RX_H_INT)
-		{	
+		{
 			if(ProcessRxHInt() != 0)
 				RxFull |= RX_H_FULL_INT;
 		}
 		if(IntReg & RX_L_INT)
-		{	
+		{
 			if(ProcessRxLInt() != 0)
 				RxFull |= RX_L_FULL_INT;
 		}
@@ -816,19 +816,19 @@ void Am5120Isr(int intLev)
 	ifp->IntStatus = IntReg | RxFull;
 
 	// If the rx H/L descriptor is still full, mask  its interrupt temporarily.
-	// If it is not masked, the interrupt will be asserted immediately after 
+	// If it is not masked, the interrupt will be asserted immediately after
 	// the switch's IRQ being re-enabled. This will block the system from doing
-	// anything other than servicing the switch's ISR/DSR routine. However, the 
+	// anything other than servicing the switch's ISR/DSR routine. However, the
 	// ISR/DSR is waiting the system to return some of its buffers for receiving.
 	// A dead lock situation is entered.
 	IntMask = ~ifp->IntMask | RxFull;
-	
-	
+
+
 	// Enable switch interrupts
 	ADM5120_SW_REG(SW_Int_mask_REG) = IntMask;
 
 	ifp->IntCnt ++;
-	
+
 }
 
 

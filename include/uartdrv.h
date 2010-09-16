@@ -19,10 +19,10 @@
 ;    Project : Am5106/5107
 ;    Creator : David Weng
 ;    File    : uartdrv.h
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 

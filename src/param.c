@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : param.c
 ;    Abstract: defines the specific items that loader nedded.
 ;
@@ -60,12 +60,12 @@ int boot_param_init(void)
 /*		Main Parameter																	 */
 /*****************************************************************************************/
 int set_boot_param(void)
-{	
+{
 	UINT8 macaddr[6];
 	char *image = (char *)LINUXLD_DOWNLOAD_START;
-	
+
 	/* Print Item */
-	buart_print(SET_PARAM);	
+	buart_print(SET_PARAM);
 
 	/* Set serial number */
 	//Set_Board_SerialNo();
@@ -73,7 +73,7 @@ int set_boot_param(void)
 	/* Set board version */
 	//Set_Board_Version();
 
-	/* Set Mac address */ 	
+	/* Set Mac address */
 	Set_Mac();
 
 	/* Set bootloader ip */
@@ -86,7 +86,7 @@ int set_boot_param(void)
         return -1;
     }
     memcpy(image, (char *)cfg, sizeof(BOARD_CFG_T));
-	
+
 	/* Write back new parameter to flash */
 	if (nf_erase((char *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
 		buart_print("\n\rErase flash error.");
@@ -101,20 +101,20 @@ int set_boot_param(void)
 	//buart_getchar();
 }
 
-/******************************************/ 
+/******************************************/
 /*			Board Serial NO				  */
 /******************************************/
 
 int bsp_SetBoardSerialNo(UINT8 *s)
 {
 	int len;
-	
+
 	if(s == NULL) return -1;
 	if((len=strlen(s)) > BSP_STR_LEN) return -1;
-	
+
 	cfg->idmagic = ID_MAGIC;
 	strncpy(cfg->serial, s, BSP_STR_LEN+1);
-	
+
 	return 0;
 }
 
@@ -127,7 +127,7 @@ int bsp_GetBoardSerialNo(UINT8 *buf, int buflen)
 
 	if(cfg->idmagic != ID_MAGIC) return -1;
 	if((len = strlen(cfg->serial)) > buflen) return -1;
-	
+
 	strcpy(buf, cfg->serial);
 	return 0;
 }
@@ -136,7 +136,7 @@ int bsp_GetBoardSerialNo(UINT8 *buf, int buflen)
 void Set_Board_SerialNo(void)
 {
 	char buf[BOOT_LINE_SIZE+1];
-	
+
 	if(bsp_GetBoardSerialNo(buf, BOOT_LINE_SIZE+1) == 0)
 	{
 		buart_print("Current Serial Number: ");
@@ -163,20 +163,20 @@ void Set_Board_SerialNo(void)
 	}
 }
 
-/******************************************/ 
+/******************************************/
 /*			Board Version				  */
 /******************************************/
 
 int bsp_SetBoardVersion(UINT8 *s)
 {
 	int len;
-	
+
 	if(s == NULL) return -1;
 	if((len=strlen(s)) > BSP_STR_LEN) return -1;
-	
+
 	cfg->vermagic = VER_MAGIC;
 	strncpy(cfg->ver, s, BSP_STR_LEN+1);
-		
+
 	return 0;
 }
 
@@ -188,7 +188,7 @@ int bsp_GetBoardVersion(UINT8 *buf, int buflen)
 
 	if(cfg->vermagic != VER_MAGIC) return -1;
 	if((len = strlen(cfg->ver)) > buflen) return -1;
-	
+
 	strcpy(buf, cfg->ver);
 	return 0;
 }
@@ -196,8 +196,8 @@ int bsp_GetBoardVersion(UINT8 *buf, int buflen)
 void Set_Board_Version(void)
 {
 	char buf[BOOT_LINE_SIZE+1];
-	
-	
+
+
 	if(bsp_GetBoardVersion(buf, BOOT_LINE_SIZE+1) == 0)
 	{
 		buart_print("Current hardware version: ");
@@ -224,7 +224,7 @@ void Set_Board_Version(void)
 	}
 }
 
-/******************************************/ 
+/******************************************/
 /*			Board MAC Addr				  */
 /******************************************/
 
@@ -232,7 +232,7 @@ int bsp_SetMac(UINT8 *mac, int macnum)
 {
 	int len, i;
 	UINT32 sum;
-	
+
 	if((mac == NULL) || (macnum < 1) || (macnum > BSP_MAX_MAC_NUM))
 		return -1;
 
@@ -240,8 +240,8 @@ int bsp_SetMac(UINT8 *mac, int macnum)
 	if(mac[0] != 0) return -1;
 
 	cfg->macmagic = MAC_MAGIC;
-	
-	// have to use memcpy here. 
+
+	// have to use memcpy here.
 	memcpy(cfg->mac, mac, 6);
 	cfg->mac[7] = cfg->mac[8] = 0;
 	cfg->macnum = macnum;
@@ -262,12 +262,12 @@ int bsp_SetMac(UINT8 *mac, int macnum)
 			break;
 		}
 	}
-	
+
 	if(i == 2) return ERROR;
 
-	// have to use memcpy here. 
+	// have to use memcpy here.
 	memcpy(cfg->mac, mac, 6);
-	
+
 	return 0;
 }
 
@@ -277,14 +277,14 @@ int bsp_GetMacBase(UINT8 *buf, int *macnum)
 	int len;
 
 	if(buf == NULL) return -1;
-	
+
 	if(cfg->macmagic != MAC_MAGIC) return -1;
-	
-	// have to use memcpy here. 
+
+	// have to use memcpy here.
 	memcpy(buf, cfg->mac, 6);
 
 	*macnum = (int) cfg->macnum;
-	
+
 	return 0;
 }
 
@@ -299,8 +299,8 @@ void Set_Mac(void)
 	#define FLAG_OLD_MAC_VALID		1
 	#define FLAG_MAC_MODIFIED		2
 	#define FLAG_MAC_NUM_MODIFIED	4
-	
-		
+
+
 	if(bsp_GetMacBase(mac, &macnum) == 0)
 	{
 		flags |= FLAG_OLD_MAC_VALID;
@@ -312,22 +312,22 @@ void Set_Mac(void)
 		buart_print("Number of MAC address: ");
 		buart_put(macnum+'0');
 	}
-	
-mac_again:	
+
+mac_again:
 	buart_print("\n\rEnter new MAC address (AA-AA-AA-AA-AA-AA): ");
 	buf[0] = 0;
 	ReadLine(buf, BOOT_LINE_SIZE);
-	
+
 	if(buf[0] != 0)
 	{
 		i = macscanf(mac,buf);
-			
+
 		if(i< 6 || mac[0] != 0x00)
 		{
 			buart_print("Either the format of the input MAC address or the mac address is incorrect.\n\r");
 			goto mac_again;
 		}
-		
+
 		flags |= FLAG_MAC_MODIFIED;
 	}
 
@@ -335,7 +335,7 @@ num_again:
 	buart_print("Enter new number of MAC address (between 1-8): ");
 	newmacnum = buart_getchar();
 	buart_put(newmacnum);
-	
+
 	if (!((newmacnum == 0x0d)||(newmacnum == 0x0a)))
 	{
 		newmacnum = newmacnum - '0';
@@ -344,7 +344,7 @@ num_again:
 			buart_print("\n\rNumber of MAC addresses must be in the range [1-8].\n\r");
 			goto num_again;
 		}
-		
+
 		macnum = newmacnum;
 		flags |= FLAG_MAC_NUM_MODIFIED;
 	}
@@ -355,7 +355,7 @@ num_again:
 		{
 			macnum = 1;
 		}
-		
+
 		if(bsp_SetMac(mac, macnum) != 0)
 		{
 			buart_print("\n\rFailed to change MAC address.");
@@ -415,7 +415,7 @@ loip_again:
 }
 
 
-/******************************************/ 
+/******************************************/
 /*		Print Main Param				  */
 /******************************************/
 int bsp_GetTftpIp(UINT32 *tftpip)
@@ -440,7 +440,7 @@ void PrintBspParam(void)
 	unsigned char mactmp[]="00-00-00-00-00-00-";
 	unsigned char ipstr[]="xxx.xxx.xxx.xxx";
 	int macnum;
-	
+
 	/* Print Item */
 	buart_print(PRINT_PARAM);
 
@@ -540,7 +540,7 @@ servip_again:
 			buart_print("Invalid IP address.\n\r");
 			goto servip_again;
 		}
-		
+
 		if(check_ip(servip,HOST_IP_FLAG))
 		{
 			buart_print("Invalid IP address.\n\r");
@@ -563,7 +563,7 @@ gwip_again:
 			buart_print("Invalid IP address.\n\r");
 			goto gwip_again;
 		}
-		
+
 		if(check_ip(gwip,HOST_IP_FLAG))
 		{
 			buart_print("Invalid IP address.\n\r");
@@ -575,13 +575,13 @@ gwip_again:
 	{
 		buart_print("Gateway IP unchanged..\n\r");
 	}
-//filename_boot:	
-//	buf[0] = 0;		
+//filename_boot:
+//	buf[0] = 0;
 //	buart_print("Enter remote bootloader file name : ");
 //	ReadLine(buf, BOOT_LINE_SIZE);
 //	if(buf[0] != 0)
 //	{
-//		if(strlen(buf) > BSP_IFNAME_MAX_LEN) 
+//		if(strlen(buf) > BSP_IFNAME_MAX_LEN)
 //		{
 //			buart_print("Ifname is too long. Maximum name length is 15 characters.\n\r");
 //			goto filename_boot;
@@ -591,13 +591,13 @@ gwip_again:
 //	else
 //		buart_print("Remote file unchanged.\n\r");
 
-filename_sys:	
-	buf[0] = 0;		
+filename_sys:
+	buf[0] = 0;
 	buart_print("Enter remote system file name : ");
 	ReadLine(buf, BOOT_LINE_SIZE);
 	if(buf[0] != 0)
 	{
-		if(strlen(buf) > BSP_IFNAME_MAX_LEN) 
+		if(strlen(buf) > BSP_IFNAME_MAX_LEN)
 		{
 			buart_print("Ifname is too long. Maximum name length is 15 characters.\n\r");
 			goto filename_sys;
@@ -608,7 +608,7 @@ filename_sys:
 		buart_print("Remote file unchanged.\n\r");
 
 	cfg->tftpmagic = TFTPMAGIC;
-	
+
     /* Before Write back, backup original content */
     if (nf_read(image, (char *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
     {
@@ -616,7 +616,7 @@ filename_sys:
         return -1;
     }
     memcpy(image, (char *)cfg, sizeof(BOARD_CFG_T));
-	
+
 	/* Write back new parameter to flash */
 	if (nf_erase((char *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
 		buart_print("\n\rErase flash error.");
@@ -630,7 +630,7 @@ filename_sys:
 /*************************************************************************************/
 /*AuxiliaryItem																 */
 /*************************************************************************************/
-/******************************************/ 
+/******************************************/
 /*		Check Correct IP 				  */
 /******************************************/
 
@@ -642,12 +642,12 @@ int check_ip(UINT32 ipcheck,int flag)
 		if(ipcheck == 0)
 			return 1;
 	}
-	
+
 	if(flag == NETMASK_FLAG)
 	{
 		if(ipcheck == 0)
 			return 1;
-	
+
 		reg3 = (ipcheck>>24) & 0xff;
 		reg2 = (ipcheck>>16) & 0xff;
 		reg1 = (ipcheck>>8) & 0xff;

@@ -43,7 +43,7 @@ static  FLASH_DESC *chips = 0;
 *-----------------------------------------------------------------------
 * DESCRIPTION:
 *	The routine is intialize the flash driver
-*   
+*
 *----------------------------------------------------------------------*/
 int flash_init()
 {
@@ -66,7 +66,7 @@ int flash_init()
 *-----------------------------------------------------------------------
 * DESCRIPTION:
 *	The routine is intialize the flash driver
-*   
+*
 *----------------------------------------------------------------------*/
 int flash_add(FLASH_DESC *dev)
 {
@@ -79,7 +79,7 @@ int flash_add(FLASH_DESC *dev)
         /* Already installed */
         if (cp == dev)
             return 0;
-    
+
         if (cp->next == 0)
             break;
         else
@@ -90,7 +90,7 @@ int flash_add(FLASH_DESC *dev)
         chips = dev;
     else
         cp->next = dev;
-    
+
     return 0;
 }
 
@@ -100,7 +100,7 @@ int flash_add(FLASH_DESC *dev)
 *-----------------------------------------------------------------------
 * DESCRIPTION:
 *	The routine is to check the range of the input data
-*   
+*
 * INPUT:
 *   cp      -- flash control block
 *	flash   -- Address of the block to read.
@@ -135,7 +135,7 @@ static int flash_fit (struct FLASH_DESC_S *cp, unsigned long addr, int *size)
 
         case 32:
             *size = ((*size + 3)/4)*4;
-        
+
         default:
             break;
         }
@@ -150,7 +150,7 @@ static int flash_fit (struct FLASH_DESC_S *cp, unsigned long addr, int *size)
 *-----------------------------------------------------------------------
 * DESCRIPTION:
 *	The routine is called by NV RAM driver to read NV data.
-*   
+*
 *
 * INPUT:
 *	flash   -- Address of the block to read.
@@ -161,7 +161,7 @@ int flash_read(char *dst, char *flash, int cells)
 {
     int size = cells;
     register int rc;
-    register FLASH_DESC *cp = chips;    
+    register FLASH_DESC *cp = chips;
 
     //if (flash_sem.lock)
       //  sem_wait(&flash_sem);
@@ -194,7 +194,7 @@ int flash_read(char *dst, char *flash, int cells)
 * ROUTINE NAME - flash_write
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	The routine is called by NV RAM driver or the image updating module 
+*	The routine is called by NV RAM driver or the image updating module
 *   to update the date content.
 *
 * INPUT:
@@ -206,7 +206,7 @@ int flash_write(char *flash, char *src, int cells)
 {
     int size = cells;
     register int rc;
-    register FLASH_DESC *cp = chips;    
+    register FLASH_DESC *cp = chips;
 
     //if (flash_sem.lock)
       //  sem_wait(&flash_sem);
@@ -239,7 +239,7 @@ int flash_write(char *flash, char *src, int cells)
 * ROUTINE NAME - flash_erase
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	The routine is called by NV RAM driver or the image updating module 
+*	The routine is called by NV RAM driver or the image updating module
 *   to erase the blocks, whereafter this block can accept new data
 *   written.
 *
@@ -251,7 +251,7 @@ int flash_erase(char *flash, int cells)
 {
     int size = cells;
     register int rc;
-    register FLASH_DESC *cp = chips;    
+    register FLASH_DESC *cp = chips;
 
     //if (flash_sem.lock)
       //  sem_wait(&flash_sem);

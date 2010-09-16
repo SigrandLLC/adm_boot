@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : eth.h
 ;    Abstract: defines the specific items that loader nedded.
 ;
@@ -35,7 +35,7 @@
 
 /*
  *	IEEE 802.3 Ethernet magic constants.  The frame sizes omit the preamble
- *	and FCS/CRC (frame check sequence). 
+ *	and FCS/CRC (frame check sequence).
  */
 
 #define ETH_ALEN	6		/* Octets in one ethernet addr	 */
@@ -73,7 +73,7 @@
 /*
  *	This is an Ethernet frame header.
  */
- 
+
 struct ethhdr
 {
 	unsigned char	h_dest[ETH_ALEN];	/* destination eth addr	*/

@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : tftp.h
 ;    Abstract: defines the specific items that loader nedded.
 ;

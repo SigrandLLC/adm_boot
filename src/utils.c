@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : utils.c
 ;    Abstract: defines the specific items that loader nedded.
 ;
@@ -63,7 +63,7 @@ for(i=0;i<8;i++)
 	tmp=((num>>(32-(i+1)*4))&0x0000000f);
 	if (tmp>=0xa && tmp<=0xf)
 		tmp=tmp+55;
-	else 
+	else
 		tmp=tmp+48;
 	str[i]=(char)tmp;
 	}
@@ -79,7 +79,7 @@ for(i=0;i<2;i++)
 	tmp=((num>>(8-(i+1)*4))&0x0f);
 	if (tmp>=0xa && tmp<=0xf)
 		tmp=tmp+55;
-	else 
+	else
 		tmp=tmp+48;
 	str[i]=(char)tmp;
 	}
@@ -118,7 +118,7 @@ int macscanf(char *mac,char *buf)
 		else
 			break;
 		tmp = (s<<4)&0xf0;
-		
+
 		s=buf[i*3+1];
 		if (s >= '0' && s <= '9')
 			s = s - '0';
@@ -129,7 +129,7 @@ int macscanf(char *mac,char *buf)
 		else
 			break;
 		tmp = tmp | (s & 0x0f);
-		
+
 		mac[i] = (UINT8) tmp;
 	}
 	return i;
@@ -207,6 +207,6 @@ void IpAddrToStr(UINT32 tmp_ip,char *str)
 		else
 			j=0;
 	}
-	
+
 }
 

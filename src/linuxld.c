@@ -19,10 +19,10 @@
 ;    Project : Common plateform
 ;    Creator : Sumei Chung
 ;    File    : loader.C
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 #include <ctype.h>
@@ -81,7 +81,7 @@ void jump_low_map();
 
 void flash_erase(UINT32 start)
 {
-	buart_print("\n\rEraseing flash.......\n\r");	
+	buart_print("\n\rEraseing flash.......\n\r");
 	nand_erase((UINT8 *)start, NAND_FLASH_SIZE-start,1);
 }
 
@@ -100,7 +100,7 @@ void check_for_bad()
 void find_bad_blocks(UINT32 start)
 {
 	buart_print("\n\rScaning flash.......\n\r");
-	scan_bad_blocks((UINT8 *)start);	
+	scan_bad_blocks((UINT8 *)start);
 }
 
 create_bad_blocks()
@@ -121,21 +121,21 @@ int update_bootloader()
        		goto fail;
     	else
        		buart_print (pass);
-    
+
    	/* erase flash */
 	buart_print("\n\rEraseing flash.......");
     	if (nf_erase(flash , len, 1) != 0)
      	  	goto fail;
 	else
 		buart_print (pass);
-	
+
 	/* write flash */
     	buart_print("\n\rProgramming flash....");
 	if (nf_write_boot(flash, image, len) != 0)
         goto fail;
 	else
 		buart_print (pass);
-	
+
     	goto ok;
 
 fail:
@@ -152,7 +152,7 @@ int tftpc_download_boot(void)
    	char *image	= (char *)LINUXLD_DOWNLOAD_START;
  	char lenstr[9];
 	UINT32	len;
-	
+
 	buart_print("\n\rStarting the TFTP download(ESC to stop)..");
 	if ((len = tftpc(image, LINUXLD_FLASH_LOADER_SIZE,0)) == 0)
 		goto fail;
@@ -168,21 +168,21 @@ int tftpc_download_boot(void)
 	//buart_print("  Starting address: ");
 	//buart_print(lenstr);
 
-    	//erase flash 
+    	//erase flash
     	buart_print("\n\r\n\rEraseing flash.......");
 	if (nf_erase(flash,len,1) != 0) goto fail;
-    
+
 ERASE_PASS:
 	buart_print (pass);
-   
+
     	//write flash
    	buart_print("\n\rProgramming flash....");
 	if (nf_write_boot(flash, image, len) != 0) goto fail;
-	
+
 WRITE_PASS:
 	buart_print (pass);
 	goto ok;
-    
+
 fail:
 	jump_low_map();
     	buart_print(fail);
@@ -198,7 +198,7 @@ int tftpc_download_sys(void)
    	char *image	= (char *)LINUXLD_DOWNLOAD_START;
  	char lenstr[9];
 	UINT32	len;
-	
+
 	buart_print("\n\rStarting the TFTP download(ESC to stop)..");
 	if ((len = tftpc(image, LINUXLD_FLASH_KERNEL_SIZE,1)) == 0)
 		goto fail;
@@ -214,21 +214,21 @@ int tftpc_download_sys(void)
 	buart_print("  Starting address: ");
 	buart_print(lenstr);
 
-    	//erase flash 
+    	//erase flash
     	buart_print("\n\r\n\rEraseing flash.......");
 	if (nf_erase(flash,NAND_FLASH_SIZE-LINUXLD_FLASH_KERNEL_START,1) != 0) goto fail;
-    
+
 ERASE_PASS:
 	buart_print (pass);
-   
+
     	//write flash
    	buart_print("\n\rProgramming flash....");
 	if (nf_write(flash, image, len) != 0) goto fail;
-	
+
 WRITE_PASS:
 	buart_print (pass);
 	goto ok;
-    
+
 fail:
 	jump_low_map();
     	buart_print(fail);
@@ -253,25 +253,25 @@ int xmodem_download(void)
         goto fail;
     else
         buart_print (pass);
-    
+
     /* erase flash */
     buart_print("\n\rEraseing flash.......");
-    
+
     if (nf_erase(flash , len,1) != 0)
         goto fail;
-    
+
 ERASE_PASS:
 	buart_print (pass);
-   
+
     /* write flash */
     buart_print("\n\rProgramming flash....");
-    
+
 	if (nf_write(flash, image, len) != 0)
         goto fail;
-	
+
 WRITE_PASS:
         buart_print (pass);
-    
+
     goto ok;
 
 fail:
@@ -295,7 +295,7 @@ void boot_linux()
 		// decompressing
 	buart_print("\n\rKernel decompress ... ");	//okay!");
 	status = ungzip((unsigned char *)LINUXLD_DOWNLOAD_START);
-	
+
 	if (status != Z_OK)    // failed in unzipping
 	{
 		buart_print(fail);
@@ -322,30 +322,30 @@ int ungzip(unsigned char *zimg)
 	if((zimg[0] != gz_magic[0]) || (zimg[1] != gz_magic[1]))
 		return (Z_DATA_ERROR);
 
-	if(zimg[2] != Z_DEFLATED) return (Z_DATA_ERROR);	
+	if(zimg[2] != Z_DEFLATED) return (Z_DATA_ERROR);
 
 	gzflags = zimg[3];
-	
+
 	// Skip the gzip header
 	zimg += 10;
 
-    if ((gzflags & EXTRA_FIELD) != 0) 
+    if ((gzflags & EXTRA_FIELD) != 0)
     {  	 /* skip the extra field */
 		i =  (*zimg++) + (*zimg++)<<8 ;
 		while ((i-- != 0) && (*zimg++) != Z_EOF);
     }
-    
-    if ((gzflags & ORIG_NAME) != 0) 
+
+    if ((gzflags & ORIG_NAME) != 0)
     {  	/* skip the original file name */
 		while (*zimg++ != Z_EOF);
     }
-    
-    if ((gzflags & COMMENT) != 0) 
+
+    if ((gzflags & COMMENT) != 0)
     {   /* skip the .gz file comment */
 		while (*zimg++ != Z_EOF);
     }
-    
-    if ((gzflags & HEAD_CRC) != 0) 
+
+    if ((gzflags & HEAD_CRC) != 0)
     {  /* skip the header crc */
 		zimg += 2;
     }
@@ -362,22 +362,22 @@ int ungzip(unsigned char *zimg)
     {
     	return err;
     }
-    
+
     d_stream.next_out = (char *)LINUXLD_KERNEL_START; // address of decompress image
 	d_stream.avail_out = LINUXLD_KERNEL_SIZE; // size of decompress space
     if((err = inflate(&d_stream, Z_NO_FLUSH)) != Z_STREAM_END)
     {
     	return err;
     }
-    
-    err = inflateEnd(&d_stream); 
+
+    err = inflateEnd(&d_stream);
 
   	return err;
 }
 
 
-/* 
- *  Because there is no OS support, the memory management functions in 
+/*
+ *  Because there is no OS support, the memory management functions in
  *  STD C libray cann't be used. To overcome the problem, a very simple
  *  memory management skime is implemented here.
  */
@@ -385,19 +385,19 @@ void * calloc(size_t items, size_t size)
 {
 	size_t memsize = items * size;
 	size_t bkstart;
-	
+
 	/* Make sure the memory block is always aligned on 4-byte boundry*/
 	if (loader_heap & 0x03)
 		loader_heap = (loader_heap+3) & ~0x03;
-		
+
 	bkstart = loader_heap;
 	loader_heap += memsize;
-		
+
 	return (void *) bkstart;
 }
 
 
-/* 
+/*
  * dummy function
  */
 /*void free(void *ptr)
@@ -411,7 +411,7 @@ void * calloc(size_t items, size_t size)
 void jump_up_map()
 {
     int i;
-    
+
     /* Set GPIO[3](CS) to high */
     for (i = 0; i < 10000; i++);
     ADM5120_SW_REG(GPIO_conf0_REG) = 0x080800f7;
@@ -426,7 +426,7 @@ void jump_up_map()
  void jump_low_map()
 {
     int i;
-    
+
     /* Set GPIO[3](CS) to low */
     for (i = 0; i < 10000; i++);
     ADM5120_SW_REG(GPIO_conf0_REG) = 0x3ff;

@@ -19,10 +19,10 @@
 ;    Project : ADM5120
 ;    Creator : David Weng
 ;    File    : if_5120.h
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 
@@ -153,7 +153,7 @@ typedef struct TX_DESC_S
 // Port status
 #define PORT_DISABLED		0
 #define PORT_ENABLED		1
-	
+
 #define PORT_DISABLE_MASK	0x3f
 #define PORT_ALL			0x7f
 #define PORT_NONE			0x00
@@ -175,7 +175,7 @@ typedef struct TX_DESC_S
 
 #define BUF_GUARD_BAND		(BUF1_GUARD_BAND + ADM5120_CACHE_LINE_SIZE - 1)
 
-/*************************************************************/	
+/*************************************************************/
 #define ETH_CRC_LEN			4			// Ethernet CRC Length
 
 
@@ -234,11 +234,11 @@ typedef struct _AM5120_CONTEXT_
 	UINT32 IntMask;
 	UINT32 IntStatus;
 	UINT32 link_status;
-	
+
 	UINT32 CtrlFlag;
 
 	UINT32 DropFlag;
-	
+
 	UINT32	NumRxDescH;
 	UINT32  NumRxDescL;
 	UINT32  NumTxDescH;
@@ -269,10 +269,10 @@ typedef struct _AM5120_CONTEXT_
 
 	PDRV_PACKET_DESC TxH_QueueHead;
 	PDRV_PACKET_DESC TxH_QueueTail;
-	
+
 	PDRV_PACKET_DESC TxL_QueueHead;
 	PDRV_PACKET_DESC TxL_QueueTail;
-	
+
 	UINT32 TxL_PktCnt;
 	UINT32 TxL_FullCnt;
 
@@ -284,14 +284,14 @@ typedef struct _AM5120_CONTEXT_
 	UINT32 RxL_UCCnt;
 	UINT32 RxL_MCCnt;
 	UINT32 RxL_BCCnt;
-	
+
 	UINT32 RxH_PktCnt;
 	UINT32 RxH_UCCnt;
 	UINT32 RxH_MCCnt;
 	UINT32 RxH_BCCnt;
 
 	UINT32 IntCnt;
-	
+
 	PORT_STAT portstat[MAX_PORT_NUMBER];
 
 	UINT16 Buf1Off;

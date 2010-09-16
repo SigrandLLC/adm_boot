@@ -19,10 +19,10 @@
 ;    Project : ADM5120
 ;    Creator : David Weng
 ;    File    : except.h
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 

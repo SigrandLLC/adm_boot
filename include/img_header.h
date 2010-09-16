@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common plateform
-;    Creator : 
+;    Creator :
 ;    File    : img_header.h
 ;    Abstract: define the data structure for the file image.c
 ;
@@ -72,11 +72,11 @@ enum IMAGE_TYPE_ID_E
 
 
 typedef struct
-{   
+{
     unsigned long   start0;
-    unsigned long   start1;			
+    unsigned long   start1;
     march_t			arch_id;
-    char            version[4];  
+    char            version[4];
     unsigned long   type;
     unsigned long   comp_file_len;
     unsigned long   comp_file_sum;

@@ -19,10 +19,10 @@
 ;    Project : Am5120
 ;    Creator : David Weng
 ;    File    : eth.c
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 #include <ctype.h>
@@ -76,7 +76,7 @@ void IndicateRxPacketL(PDRV_PACKET_DESC Pkt)
 
 //	Pkt->Next = NULL;
 
-	if(EthPktQueue->iqL_head == NULL) 
+	if(EthPktQueue->iqL_head == NULL)
 	{
 		EthPktQueue->iqL_head = EthPktQueue->iqL_tail = Pkt;
 	}
@@ -140,7 +140,7 @@ int eth_rcv(struct sk_buff *skb)
 	UINT32 srcport, srcvlan;
 	UINT8 *buf;
 	int irq_state;
-	
+
    	irq_state = mips_int_lock();
     Pkt = EthPktQueue->iqL_head;
 	if(EthPktQueue->iqL_head != NULL)
@@ -172,9 +172,9 @@ int eth_rcv_packet(struct sk_buff *skb)
 {
 	struct ethhdr *eth_hdr;
 	int ip_protocol;
-	
+
 	ip_protocol = 0;
-	if (eth_rcv(skb) != -1) 
+	if (eth_rcv(skb) != -1)
 	{
 		ip_protocol = -1;
 		eth_hdr = (struct ethhdr *)(skb->data);

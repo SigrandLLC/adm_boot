@@ -19,10 +19,10 @@
 ;    Project : ADM5120
 ;    Creator : David Weng
 ;    File    : hw5120cfg.h
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 
@@ -83,7 +83,7 @@
 // Asyn page mode	[legal value are OPTION_DISABLE and OPTION_ENABLE]
 #define HWPF_5120_SMEM0_PAGE_MODE					OPTION_DISABLE
 
-// Chip select to Output enable wait state: 
+// Chip select to Output enable wait state:
 //		(HWPF_5120_SMEM0_CS_TO_OE_WAIT) wait state will be inserted.
 // Unit: clock, range [0-15]
 #define HWPF_5120_SMEM0_CS_TO_OE_WAIT				0
@@ -92,7 +92,7 @@
 // Unit: clock, range [0-31]
 #define HWPF_5120_SMEM0_READ_WAIT					9
 
-// Chip select to Write enable wait state: 
+// Chip select to Write enable wait state:
 //		(HWPF_5120_SMEM0_CS_TO_WE_WAIT + 1) wait state will be inserted.
 // Unit: clock, range [0-15]
 #define HWPF_5120_SMEM0_CS_TO_WE_WAIT				0
@@ -105,7 +105,7 @@
 // Unit: clock, range [0-15]
 #define HWPF_5120_SMEM0_TURN_WAIT					5
 
-	
+
 
 //******************************************************
 // Size of static memory bank 1 (Unit: Byte)
@@ -132,7 +132,7 @@
 // Asyn page mode	[legal value are OPTION_DISABLE and OPTION_ENABLE]
 #define HWPF_5120_SMEM1_PAGE_MODE					OPTION_DISABLE
 
-// Chip select to Output enable wait state: 
+// Chip select to Output enable wait state:
 //		(HWPF_5120_SMEM1_CS_TO_OE_WAIT) wait state will be inserted.
 // Unit: clock, range [0-15]
 #define HWPF_5120_SMEM1_CS_TO_OE_WAIT				0
@@ -142,7 +142,7 @@
 #define HWPF_5120_SMEM1_READ_WAIT					9
 
 
-// Chip select to Write enable wait state: 
+// Chip select to Write enable wait state:
 //		(HWPF_5120_SMEM1_CS_TO_WE_WAIT + 1) wait state will be inserted.
 // Unit: clock, range [0-15]
 #define HWPF_5120_SMEM1_CS_TO_WE_WAIT				0
@@ -206,7 +206,7 @@
 #define HWPF_5120_SDRAM1_DEV_DATA_WIDTH				BOARD_SDRAM1_DEV_DATA_WIDTH
 
 
-//******************************************** SDRAM access timing parameters 
+//******************************************** SDRAM access timing parameters
 // SDRAM refresh time. (Time unit: 16 SDRAM clock)
 // Assume 100M Hz clock, refresh time 15.625 us
 #define HWPF_5120_SDRAM_RFTIME						85
@@ -293,7 +293,7 @@
 // Asyn page mode	[legal value are OPTION_DISABLE and OPTION_ENABLE]
 #define HWPF_5120_EXTIO0_PAGE_MODE					OPTION_DISABLE
 
-// Chip select to Output enable wait state: 
+// Chip select to Output enable wait state:
 //		(HWPF_5120_SMEM0_CS_TO_OE_WAIT) wait state will be inserted.
 // Unit: clock, range [0-15]
 #define HWPF_5120_EXTIO0_CS_TO_OE_WAIT				0
@@ -302,7 +302,7 @@
 // Unit: clock, range [0-31]
 #define HWPF_5120_EXTIO0_READ_WAIT					3
 
-// Chip select to Write enable wait state: 
+// Chip select to Write enable wait state:
 //		(HWPF_5120_EXTIO0_CS_TO_WE_WAIT + 1) wait state will be inserted.
 // Unit: clock, range [0-15]
 #define HWPF_5120_EXTIO0_CS_TO_WE_WAIT				0
@@ -342,7 +342,7 @@
 // Asyn page mode	[legal value are OPTION_DISABLE and OPTION_ENABLE]
 #define HWPF_5120_EXTIO1_PAGE_MODE					OPTION_DISABLE
 
-// Chip select to Output enable wait state: 
+// Chip select to Output enable wait state:
 //		(HWPF_5120_SMEM0_CS_TO_OE_WAIT) wait state will be inserted.
 // Unit: clock, range [0-15]
 #define HWPF_5120_EXTIO1_CS_TO_OE_WAIT				0
@@ -351,7 +351,7 @@
 // Unit: clock, range [0-31]
 #define HWPF_5120_EXTIO1_READ_WAIT					9
 
-// Chip select to Write enable wait state: 
+// Chip select to Write enable wait state:
 //		(HWPF_5120_EXTIO0_CS_TO_WE_WAIT + 1) wait state will be inserted.
 // Unit: clock, range [0-15]
 #define HWPF_5120_EXTIO1_CS_TO_WE_WAIT				0
@@ -619,7 +619,7 @@
 #if (HWPF_5120_SMEM1_EN == OPTION_ENABLE)
 
 #if (HWPF_5120_SMEM1_NAND == OPTION_ENABLE)
-	// NAND FLASH  
+	// NAND FLASH
 #define SMEM1_BANK_SIZE							ROM_SIZE_512KBYTES
 #define SMEM1_BUS_WIDTH							SM_MEM_WIDTH_8BIT
 #define SMEM1_PB								SM_PB
@@ -740,7 +740,7 @@
 
 //===========================================================================
 // ++++++++++++++++++++++   SDRAM bank0 start   ++++++++++++++++++++++
-// SDRAM bank 0 configuration 
+// SDRAM bank 0 configuration
 #ifndef HWPF_5120_SDRAM0_CAS_LATENCY
 #error HWPF_5120_SDRAM0_CAS_LATENCY must be defined first!!
 #endif
@@ -792,7 +792,7 @@
 	#define SDRAM0_BURST_LEN						SDRAM_BTLEN_8
 	#define MPMC_SDRAM0_AM14						0
 
-	
+
 	#if HWPF_5120_SDRAM0_DEV_SIZE == 16
 		#define MPMC_SDRAM0_AM11_9					0
 		#if HWPF_5120_SDRAM0_DEV_DATA_WIDTH == 8
@@ -887,7 +887,7 @@
 	// 32 bits Bus
 	#define SDRAM0_BURST_LEN						SDRAM_BTLEN_4
 	#define MPMC_SDRAM0_AM14						(0x1<<14)
-	
+
 	#if HWPF_5120_SDRAM0_DEV_SIZE == 16
 		#define MPMC_SDRAM0_AM11_9					0
 		#if HWPF_5120_SDRAM0_DEV_DATA_WIDTH == 8
@@ -1107,7 +1107,7 @@
 	#define SDRAM1_BURST_LEN						SDRAM_BTLEN_8
 	#define MPMC_SDRAM1_AM14						0
 
-	
+
 	#if HWPF_5120_SDRAM1_DEV_SIZE == 16
 		#define MPMC_SDRAM1_AM11_9					0
 		#if HWPF_5120_SDRAM1_DEV_DATA_WIDTH == 8
@@ -1202,7 +1202,7 @@
 	// 32 bits Bus
 	#define SDRAM1_BURST_LEN						SDRAM_BTLEN_4
 	#define MPMC_SDRAM1_AM14						(0x1<<14)
-	
+
 	#if HWPF_5120_SDRAM1_DEV_SIZE == 16
 		#define MPMC_SDRAM1_AM11_9					0
 		#if HWPF_5120_SDRAM1_DEV_DATA_WIDTH == 8
@@ -1412,7 +1412,7 @@
 
 //===========================================================================
 // ++++++++++++++++++++   Ext I/O bank0 start   ++++++++++++++++++++
-// Ext I/O bank 0 configuration 
+// Ext I/O bank 0 configuration
 #if (HWPF_5120_EXTIO0_EN == OPTION_ENABLE)
 
 #if (HWPF_5120_EXTIO0_INT_POLARITY == 0)
@@ -1508,7 +1508,7 @@
 // +++++++++++++++++++++   Ext I/O bank0 end   +++++++++++++++++++++
 
 // ++++++++++++++++++++   Ext I/O bank1 start   ++++++++++++++++++++
-// Ext I/O bank 1 configuration 
+// Ext I/O bank 1 configuration
 #if (HWPF_5120_EXTIO1_EN == OPTION_ENABLE)
 
 #if (HWPF_5120_EXTIO1_INT_POLARITY == 0)
@@ -1607,7 +1607,7 @@
 
 //===========================================================================
 // ++++++++++++++++++++   GPIO start   ++++++++++++++++++++
-// GPIO configuration 
+// GPIO configuration
 
 #if (HWPF_5120_GPIO0_MODE == GPIO0_INPUT_MODE)
 	#undef HWPF_5120_GPIO0_DEFOUT
@@ -1714,7 +1714,7 @@
 											| HWPF_5120_GPIO5_MODE		\
 											| HWPF_5120_GPIO6_MODE		\
 											| HWPF_5120_GPIO7_MODE )
-											
+
 #define HWPF_5120_GPIO_CFG0_OUTEN			((~(HWPF_5120_GPIO_CFG0_MODE << 16)) & GPIO_CONF0_OUTEN_MASK)
 
 #define HWPF_5120_GPIO_CFG0_OUT				( HWPF_5120_GPIO0_DEFOUT	\
@@ -1725,7 +1725,7 @@
 											| HWPF_5120_GPIO5_DEFOUT	\
 											| HWPF_5120_GPIO6_DEFOUT	\
 											| HWPF_5120_GPIO7_DEFOUT )
-											
+
 #define HWPF_5120_GPIO_CFG0					( HWPF_5120_GPIO_CFG0_OUT		\
 											| HWPF_5120_GPIO_CFG0_OUTEN		\
 											| HWPF_5120_GPIO_CFG0_MODE )
@@ -1737,18 +1737,18 @@
 
 //===========================================================================
 // ++++++++++++++++++++   Port0 LED start   ++++++++++++++++++++
-// Port0 LED configuration 
+// Port0 LED configuration
 #if (HWPF_5120_P0_LED0_MODE < 0) || (HWPF_5120_P0_LED0_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P0_LED0_MODE is invalid!!!
-#endif 
+#endif
 
 #if (HWPF_5120_P0_LED1_MODE < 0) || (HWPF_5120_P0_LED1_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P0_LED1_MODE is invalid!!!
-#endif 
+#endif
 
 #if (HWPF_5120_P0_LED2_MODE < 0) || (HWPF_5120_P0_LED2_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P0_LED2_MODE is invalid!!!
-#endif 
+#endif
 
 #define HPWF_5120_P0_LED_CFG						( (HWPF_5120_P0_LED0_MODE << PORT_LED0_SHIFT) \
 													| (HWPF_5120_P0_LED1_MODE << PORT_LED1_SHIFT) \
@@ -1757,18 +1757,18 @@
 // ++++++++++++++++++++   Port0 LED end   ++++++++++++++++++++
 
 // ++++++++++++++++++++   Port1 LED start   ++++++++++++++++++++
-// Port1 LED configuration 
+// Port1 LED configuration
 #if (HWPF_5120_P1_LED0_MODE < 0) || (HWPF_5120_P1_LED0_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P1_LED0_MODE is invalid!!!
-#endif 
+#endif
 
 #if (HWPF_5120_P1_LED1_MODE < 0) || (HWPF_5120_P1_LED1_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P0_LED1_MODE is invalid!!!
-#endif 
+#endif
 
 #if (HWPF_5120_P1_LED2_MODE < 0) || (HWPF_5120_P1_LED2_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P1_LED2_MODE is invalid!!!
-#endif 
+#endif
 
 #define HPWF_5120_P1_LED_CFG						( (HWPF_5120_P1_LED0_MODE << PORT_LED0_SHIFT) \
 													| (HWPF_5120_P1_LED1_MODE << PORT_LED1_SHIFT) \
@@ -1777,18 +1777,18 @@
 // ++++++++++++++++++++   Port1 LED end   ++++++++++++++++++++
 
 // ++++++++++++++++++++   Port2 LED start   ++++++++++++++++++++
-// Port2 LED configuration 
+// Port2 LED configuration
 #if (HWPF_5120_P2_LED0_MODE < 0) || (HWPF_5120_P2_LED0_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P2_LED0_MODE is invalid!!!
-#endif 
+#endif
 
 #if (HWPF_5120_P2_LED1_MODE < 0) || (HWPF_5120_P2_LED1_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P2_LED1_MODE is invalid!!!
-#endif 
+#endif
 
 #if (HWPF_5120_P2_LED2_MODE < 0) || (HWPF_5120_P2_LED2_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P2_LED2_MODE is invalid!!!
-#endif 
+#endif
 
 #define HPWF_5120_P2_LED_CFG						( (HWPF_5120_P2_LED0_MODE << PORT_LED0_SHIFT) \
 													| (HWPF_5120_P2_LED1_MODE << PORT_LED1_SHIFT) \
@@ -1797,18 +1797,18 @@
 // ++++++++++++++++++++   Port2 LED end   ++++++++++++++++++++
 
 // ++++++++++++++++++++   Port3 LED start   ++++++++++++++++++++
-// Port3 LED configuration 
+// Port3 LED configuration
 #if (HWPF_5120_P3_LED0_MODE < 0) || (HWPF_5120_P3_LED0_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P3_LED0_MODE is invalid!!!
-#endif 
+#endif
 
 #if (HWPF_5120_P3_LED1_MODE < 0) || (HWPF_5120_P3_LED1_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P3_LED1_MODE is invalid!!!
-#endif 
+#endif
 
 #if (HWPF_5120_P3_LED2_MODE < 0) || (HWPF_5120_P3_LED2_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P3_LED2_MODE is invalid!!!
-#endif 
+#endif
 
 #define HPWF_5120_P3_LED_CFG						( (HWPF_5120_P3_LED0_MODE << PORT_LED0_SHIFT) \
 													| (HWPF_5120_P3_LED1_MODE << PORT_LED1_SHIFT) \
@@ -1817,18 +1817,18 @@
 // ++++++++++++++++++++   Port3 LED end   ++++++++++++++++++++
 
 // ++++++++++++++++++++   Port4 LED start   ++++++++++++++++++++
-// Port4 LED configuration 
+// Port4 LED configuration
 #if (HWPF_5120_P4_LED0_MODE < 0) || (HWPF_5120_P4_LED0_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P0_LED0_MODE is invalid!!!
-#endif 
+#endif
 
 #if (HWPF_5120_P4_LED1_MODE < 0) || (HWPF_5120_P4_LED1_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P4_LED1_MODE is invalid!!!
-#endif 
+#endif
 
 #if (HWPF_5120_P4_LED2_MODE < 0) || (HWPF_5120_P4_LED2_MODE > GPIOL_100MLINK_ACT_LED)
 #error The value of HWPF_5120_P4_LED2_MODE is invalid!!!
-#endif 
+#endif
 
 #define HPWF_5120_P4_LED_CFG						( (HWPF_5120_P4_LED0_MODE << PORT_LED0_SHIFT) \
 													| (HWPF_5120_P4_LED1_MODE << PORT_LED1_SHIFT) \

@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : arp.h
 ;    Abstract: defines the specific items that loader nedded.
 ;

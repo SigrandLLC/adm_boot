@@ -19,10 +19,10 @@
 ;    Project : Common plateform
 ;    Creator :
 ;    File    : loader.C
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 #include <mips4kc.h>
@@ -57,13 +57,13 @@ void *_heap_h;
 extern void _icache_sync_all(void);
 
 /*
- * This routine prints the main menu 
+ * This routine prints the main menu
  */
 static void print_menu()
 {
     buart_print("\n\r"
                 "\n\r=================================="
-                "\n\rBootloader Menu"		
+                "\n\rBootloader Menu"
                 "\n\r [1] Xmodem Download"
                 "\n\r [2] TFTP Download"
                 "\n\r [3] Print Boot Params"
@@ -74,11 +74,11 @@ static void print_menu()
 }
 
 /*
- * This routine is the C entry pointer of the loader 
+ * This routine is the C entry pointer of the loader
  */
 static void print_tftpc_menu(void)
 {
-	buart_print("\n\rTFTP Client Menu");	
+	buart_print("\n\rTFTP Client Menu");
 	buart_print("\n\r===============================");
 //	buart_print("\n\r [B]: Update bootloader ");
 	buart_print("\n\r [S]: Update system ");
@@ -91,7 +91,7 @@ static void print_tftpc_menu(void)
 void tftp_client_menu(void)
 {
 	char key;
-	UINT32 ticks;	
+	UINT32 ticks;
 	while (1)
 	{
 		print_tftpc_param();
@@ -115,16 +115,16 @@ void tftp_client_menu(void)
 			//	tftpc_download_boot();
 			//	tftpc_download_sys();
 			//	break;
-				
+
 			case 'P':
 			case 'p':
-				set_tftpc_param();				
+				set_tftpc_param();
 				break;
 
 			case 'X':
 			case 'x':
 				return;
-				
+
 			default:
 				break;
 		}
@@ -134,7 +134,7 @@ void tftp_client_menu(void)
 
 static void print_xmodem_menu(void)
 {
-	buart_print("\n\rXmodem Client Menu");	
+	buart_print("\n\rXmodem Client Menu");
 	buart_print("\n\r===============================");
 	//buart_print("\n\r [B]: Update bootloader ");
 	buart_print("\n\r [S]: Update system ");
@@ -145,7 +145,7 @@ static void print_xmodem_menu(void)
 void xmodem_client_menu(void)
 {
 	char key;
-	UINT32 ticks;	
+	UINT32 ticks;
 	while (1)
 	{
 		print_xmodem_menu();
@@ -166,7 +166,7 @@ void xmodem_client_menu(void)
 			case 'X':
 			case 'x':
 				return;
-				
+
 			default:
 				break;
 		}
@@ -176,7 +176,7 @@ void xmodem_client_menu(void)
 
 static void print_flash_menu(void)
 {
-	buart_print("\n\rFlash Client Menu");	
+	buart_print("\n\rFlash Client Menu");
 	buart_print("\n\r===============================");
 	buart_print("\n\r [P]: Print existent bad blocks ");
 //	buart_print("\n\r [S]: Scan flash for new bad blocks");
@@ -188,7 +188,7 @@ static void print_flash_menu(void)
 void flash_client_menu(void)
 {
 	char key;
-	UINT32 ticks;	
+	UINT32 ticks;
 	while (1)
 	{
 		print_flash_menu();
@@ -210,11 +210,11 @@ void flash_client_menu(void)
 //			case 'e':
 //				flash_erase(LINUXLD_NANDFLASH_KERNEL_START);
 //				break;
-				
+
 			case 'X':
 			case 'x':
 				return;
-				
+
 			default:
 				break;
 		}
@@ -231,14 +231,14 @@ void c_entry(void)
     unsigned long   tick1,tick2;
     void    (*funcptr)( int );
 	int countdown=3;
-	
+
     /* initialize uart, timer and flash */
     buart_init();
-	
+
 	//init mem space
 	memlib_init();
-	
-	//init Timer		
+
+	//init Timer
 	InitTimer();
 #ifdef NOR_FLASH
 	#if (HWPF_5120_SMEM0_BANK_SIZE == 0x200000)
@@ -266,7 +266,7 @@ void c_entry(void)
 	buart_print("\n\rCreation Date: ");buart_print("17.04.2007");//buart_print(CREATE_DATE);
 	buart_print("\n\r\n\rPress <space> key tree times to enter boot menu..");
 	buart_print("\n\r");
-	
+
     /* wait 3 second for back door */
     buart_put(countdown + '0');
     tick1 = UpTime();
@@ -301,7 +301,7 @@ void c_entry(void)
 
 	/* boot Linux kernel */
 	boot_linux();
-	
+
     /* go back door */
 main_menu:
 	// Read the Network configuration data.
@@ -344,7 +344,7 @@ main_menu:
         case '3':
         	PrintBspParam();
         	break;
-        	
+
         case '4':
         	set_boot_param();
         	break;
@@ -352,7 +352,7 @@ main_menu:
         //case '5':
 	//	flash_client_menu();
 	//	break;
-        
+
         case '5':
 		boot_linux();
            	break;

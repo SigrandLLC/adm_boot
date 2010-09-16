@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : udp.c
 ;    Abstract: defines the specific items that loader nedded.
 ;
@@ -80,7 +80,7 @@ unsigned short udp_get_source_port(struct sk_buff *skb)
 {
 	struct udphdr *udp_hdr;
 	udp_hdr = (struct udphdr *)(skb->buf + ETH_HLEN + sizeof(struct iphdr));
-	
+
 	return ntohs(udp_hdr->source);
 }
 

@@ -44,7 +44,7 @@ extern "C" {
       0x2000        +------------------------------------+	LINUXLD_KERNEL_START
                     |     Linux Kernel                   |
                     |       Code & Data Segment          |
-                    |       (6 MB)                       |   
+                    |       (6 MB)                       |
                     |                                    |
                     |                                    |
       0x600000      +------------------------------------+	LINUXLD_MEMPOOL_STATR
@@ -52,14 +52,14 @@ extern "C" {
                     |       (2 MB)                       |
                     |                                    |
       0x800000      +------------------------------------+	LINUXLD_LOADER_START
-                    |     Boot loader                    | 
+                    |     Boot loader                    |
                     |       Code & Data Segement         |
-                    |       (64 KB)                      | 
+                    |       (64 KB)                      |
       0x810000      +------------------------------------+
                     |	  Reserve Area (64KB)			 |
                     |									 |
       0x820000      +------------------------------------+	LINUXLD_DOWNLOAD_START
-                    |     Download Buffer                |       
+                    |     Download Buffer                |
                     |       (4 MB)                       |
                     |                                    |
                     |                                    |
@@ -97,7 +97,7 @@ extern "C" {
                     |     Linux Kernel (4MB)               |
                     ~                                    ~
                     ~                                    ~
-                    |                                    |   
+                    |                                    |
                     |                                    |
                     +------------------------------------+
 *********************************************************************************************/
@@ -123,7 +123,7 @@ extern "C" {
 					|						  |
 					|	Linux kernel (4MB)	  |
 					|						  |
-					+-------------------------+	
+					+-------------------------+
 *********************************************************************************************/
 
 #define LINUXLD_NANDFLASH_LOADER_SIZE		0x14000
@@ -146,7 +146,7 @@ extern "C" {
 	#define LINUXLD_FLASH_BOOTPARAM_SIZE	LINUXLD_NORFLASH_BOOTPARAM_SIZE
 	//#define LINUXLD_FLASH_LINUXNV_SIZE	LINUXLD_NORFLASH_LINUXNV_SIZE
 	#define LINUXLD_FLASH_KERNEL_SIZE	LINUXLD_NORFLASH_KERNEL_SIZE
-	
+
 	#define LINUXLD_FLASH_LOADER_START	LINUXLD_NORFLASH_LOADER_START
 	#define LINUXLD_FLASH_BOOTPARAM_START	LINUXLD_NORFLASH_BOOTPARAM_START
 	#define LINUXLD_FLASH_KERNEL_START	LINUXLD_NORFLASH_KERNEL_START

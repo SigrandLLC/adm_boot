@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : ip.c
 ;    Abstract: defines the specific items that loader nedded.
 ;
@@ -40,13 +40,13 @@ static inline void print_val(UINT8 *str, int val){
 	ostr[8]=0;
 	buart_print("\n\r");
 	buart_print(str);
-	ultoa(val,ostr);	
+	ultoa(val,ostr);
 	buart_print(" = ");
     	buart_print(ostr);
 }
 
 int ip_init(void)
-{	
+{
 	bsp_GetTftpIp(&local_ip);
 	bsp_GetGwIp(&gw_ip);
 	return 0;
@@ -122,7 +122,7 @@ void ip_skb_reserve(struct sk_buff *skb)
 unsigned long ip_get_source_ip(struct sk_buff *skb)
 {
 	struct iphdr *ip_hdr;
-	
+
 	ip_hdr = (struct iphdr *)(skb->buf + ETH_HLEN);
 	return ntohl(ip_hdr->saddr);
 }

@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : checksum.h
 ;    Abstract: defines the specific items that loader nedded.
 ;
@@ -46,7 +46,7 @@ static inline unsigned short int csum_fold(unsigned int sum)
 
 	return sum;
 }
- 
+
 /*
  *	This is a version of ip_compute_csum() optimized for IP headers,
  *	which always checksum on 4 octet boundaries.

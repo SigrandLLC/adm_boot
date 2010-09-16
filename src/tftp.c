@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : Tftp.c
 ;    Abstract: defines the specific items that loader nedded.
 ;
@@ -47,7 +47,7 @@ static inline void print_val(UINT8 *str, int val){
 	ostr[8]=0;
 	buart_print("\n\r");
 	buart_print(str);
-	ultoa(val,ostr);	
+	ultoa(val,ostr);
 	buart_print(" = ");
     	buart_print(ostr);
 }
@@ -85,7 +85,7 @@ int tftp_send_rrq(UINT32 servip, char *filename)
 	*opCode = htons(RRQ);
 	temp += 2;
 
-	// remote file name 
+	// remote file name
 	fileNameLen = strlen(filename);
 	strncpy(temp, filename, fileNameLen);
 	temp += fileNameLen;
@@ -99,7 +99,7 @@ int tftp_send_rrq(UINT32 servip, char *filename)
 
 	// stuff byte
 	*temp = 0;
-	
+
 	// Opcode + filename + one stuff + "octet" + one stuff, the format of rrq.
 	rrqlen = 2 + fileNameLen + 1 + strlen("octet") + 1;
 	skb.len = rrqlen;
@@ -149,10 +149,10 @@ int tftp_rcv_packet(struct sk_buff *skb)
 			{
 				return data_flag;
 			}
-			
+
 			remote_port = udp_get_source_port(skb);
-			
-			if (remote_block == ntohs(tftp_hdr->th_block)) 
+
+			if (remote_block == ntohs(tftp_hdr->th_block))
 			{
 				tftpc_read_start=1;
 				skb_pull(skb, sizeof(struct tftphdr));
@@ -160,9 +160,9 @@ int tftp_rcv_packet(struct sk_buff *skb)
 				remote_block++;
 				data_flag = 1;
 			}
-			else if (remote_block > ntohs(tftp_hdr->th_block)) 
+			else if (remote_block > ntohs(tftp_hdr->th_block))
 				tftp_send_ack(ntohs(tftp_hdr->th_block));
-			else 
+			else
 				tftp_send_ack(remote_block);
 
 		}
@@ -199,7 +199,7 @@ UINT32 tftpc(char *buf, int buf_size, int boot)
 			total_len = 0;
 			break;
 		}
-		
+
 		if ((!tftpc_read_start)&&((UpTime()-ticks)>100))
 		{
 			//tftp_send_rrq(servip,servfile);
@@ -236,7 +236,7 @@ UINT32 tftpc(char *buf, int buf_size, int boot)
 			else if (transmit_flag == TFTP_END)//transmit successfully.
 			{
 				working += pkt_len;
-				total_len += pkt_len;				
+				total_len += pkt_len;
 				break;
 			}
 		}
@@ -252,22 +252,22 @@ void tftp_init(void)
     remote_port = TFTP;
     remote_block = 1;
     tftpc_read_start = 0;
-    
+
 	//Init socket buffer
 	skb_init();
-	
+
 	//Init Ethernet protocol.
 	eth_init();
-	
+
 	//Init ARP protocol
 	arp_init();
-	
+
 	//Init IP protocol
 	ip_init();
-	
+
 	//Init UDP protocol
 	udp_init();
-	
+
 	//Init Data Receive Queue
 	if(InitEthPktQueue() !=0)
 	{
@@ -278,4 +278,4 @@ void tftp_init(void)
 	//Shutdown Switch Until TFTP Download Start.
 	if5120shutdown();
 }
-	
+

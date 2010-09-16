@@ -44,14 +44,14 @@ static struct nand_oobinfo  oobinfo_buf = {	// init'ed by ProChao
 	{0, 1, 2, 3, 6, 7}
 };
 
-static u_char  databuf[NAND_PAGE_SIZE], oobbuf[NAND_PAGE_OOB_SIZE] = 
+static u_char  databuf[NAND_PAGE_SIZE], oobbuf[NAND_PAGE_OOB_SIZE] =
 { 0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x85,0x19,0x03,0x20,0x08,0x00,0x00,0x00 };
 
 static inline void print_val(UINT8 *str, int val){
 	ostr[8]=0;
 	buart_print("\n\r");
 	buart_print(str);
-	ultoa(val,ostr);	
+	ultoa(val,ostr);
 	buart_print(" = ");
     	buart_print(ostr);
 }
@@ -59,20 +59,20 @@ static inline void print_val1(UINT8 *str, int val){
 	ostr[8]=0;
 	buart_print("\r");
 	buart_print(str);
-	ultoa(val,ostr);	
+	ultoa(val,ostr);
 	buart_print(" = ");
     	buart_print(ostr);
 }
 static inline void print_ver(int i, int flash, int buf){
 	ostr[8]=0;
 	buart_print("\n\r");
-	ultoa(i,ostr);	
+	ultoa(i,ostr);
     	buart_print(ostr);
 	buart_print(" ");
-	ultoa(flash,ostr);	
+	ultoa(flash,ostr);
     	buart_print(ostr);
 	buart_print(" ");
-	ultoa(buf,ostr);	
+	ultoa(buf,ostr);
     	buart_print(ostr);
 }
 
@@ -173,7 +173,7 @@ static void nand_command( UINT command, UINT32 column, UINT32 page_addr)
 	if (command == NAND_CMD_SEQIN)
 	{
 		if (column >= NAND_PAGE_SIZE)
-		{	// OOB area 
+		{	// OOB area
 			column -= NAND_PAGE_SIZE;
 			readcmd = NAND_CMD_READOOB;
 		} else if (column < 256)
@@ -248,13 +248,13 @@ static int nand_verify_buf( const UINT8 *buf, int len)
 }
 
 static int read_status()
-{ 
+{
 	UINT8 status;
 	int j=0;
 	nand_command( NAND_CMD_STATUS, -1, -1);
-	while( !( (status=nand_read_byte()) & 0x40 ) ); 
+	while( !( (status=nand_read_byte()) & 0x40 ) );
 	if(status & 0x01) return -1;
-	return 0;		
+	return 0;
 }
 
 /* Appropriate chip should already be selected */
@@ -348,7 +348,7 @@ static int nand_write_page( const UINT8 *data, UINT32 page,UINT32 len)
 	nand_write_buf( data_poi, NAND_PAGE_SIZE);
 	/* Write out OOB data */
     	nand_write_buf( oobbuf, NAND_PAGE_OOB_SIZE);
-	
+
 	/* Send command to actually program the data */
 	nand_command( NAND_CMD_PAGEPROG, -1, -1);
 	/* call wait ready function */
@@ -381,8 +381,8 @@ int nand_erase_block(UINT32 page)
 	nand_command(NAND_CMD_ERASE2,-1, -1);
 	if( read_status() ){
 		print_val("nand_erase_block: Erase ERROR, block", page*NAND_PAGE_SIZE);
-		return -1;			
-	}	
+		return -1;
+	}
 	return 0;
 }
 
@@ -390,7 +390,7 @@ static int nand_write_boot_page( const UINT8 *data_poi, UINT32 page)
 {
 	int    status, j;
 	for (j = 0; j < 10000; j++);
-	//buart_print("");	
+	//buart_print("");
 	//print_val("Writing, page", page*NAND_PAGE_SIZE);
 	nand_command( NAND_CMD_SEQIN, 0x00, page);
 	nand_write_buf( data_poi, NAND_PAGE_SIZE + NAND_PAGE_OOB_SIZE);
@@ -405,7 +405,7 @@ static int nand_write_boot_page( const UINT8 *data_poi, UINT32 page)
 	}
 	/* Send command to read back the page */
 	nand_command( NAND_CMD_READ0, 0x00, page);
-	
+
 	/* Loop through and verify the data */
 	if (nand_verify_buf( data_poi, NAND_PAGE_SIZE + NAND_PAGE_OOB_SIZE))
 	{
@@ -506,7 +506,7 @@ int nand_write_ecc( UINT8 *to, UINT32 len, UINT32 *retlen, const UINT8 * buf)
 
 	/* Loop until all data is written */
 	while (written < len)
-	{	
+	{
 		// before doing write, checking if this block is bad block or not ?
 		// 32-pages per block, determine the 1st page
 		page1st = (page / NAND_BLK_PER_PAGE) * NAND_BLK_PER_PAGE;
@@ -570,7 +570,7 @@ int nand_write_boot( UINT8 *to, UINT32 len, UINT32 *retlen, const UINT8 * buf)
 	//nand_block_bad( page);
 	/* Loop until all data is written */
 	while (written < len)
-	{	
+	{
 		// Write error. Marking this block as is bad block
 		if (nand_write_boot_page( &buf[written], page)){
 			print_val("nand_write_boot: New bad block detected ", page*NAND_PAGE_SIZE);
@@ -608,10 +608,10 @@ int nand_erase(UINT8 *addr, UINT32 len, UINT32 scan)
 
 	/* Loop until all data is written */
 	while (written < len)
-	{	
+	{
 		if(scan){
 			while(nand_block_bad( page))
-			{	
+			{
 				print_val("nand_erase: Bad block detected ", page*NAND_PAGE_SIZE);
 				// move forward to the 1st page of next block
 				page += NAND_BLK_PER_PAGE;
@@ -661,7 +661,7 @@ void scan_bad_blocks(UINT8 *addr)
 	for(i=page; i< page_num; i+= NAND_BLK_PER_PAGE){
 		print_val1("block",i*NAND_PAGE_SIZE);
 		while(nand_block_bad( i))
-		{	
+		{
 			print_val("nand_erase: Bad block detected ", i*NAND_PAGE_SIZE);
 			//buart_print("\n\r");
 			// move forward to the 1st page of next block
@@ -670,7 +670,7 @@ void scan_bad_blocks(UINT8 *addr)
 		if(nand_erase_block(i)){
 			buart_print("\n\rNew bad block detected!\n\r");
 			//buart_print("\n\r");
-			nand_mark_bad_block(i);	
+			nand_mark_bad_block(i);
 		}
 		for(j=0; j < NAND_BLK_PER_PAGE;j++){
 			page = j+i;
@@ -678,7 +678,7 @@ void scan_bad_blocks(UINT8 *addr)
 				buart_print("\n\rNew bad block detected!\n\r");
 				//buart_print("\n\r");
 				nand_mark_bad_block((page / NAND_BLK_PER_PAGE) * NAND_BLK_PER_PAGE);
-				break;	
+				break;
 			}
 		}
 	}

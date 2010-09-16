@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : udp.h
 ;    Abstract: defines the specific items that loader nedded.
 ;
@@ -30,7 +30,7 @@
 #define __UDP_H
 
 #define TFTP 0x45
-#define UDPPORT 0xD3C 
+#define UDPPORT 0xD3C
 /*
  *	This structure defines an udp header.
  */

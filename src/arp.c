@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : arp.c
 ;    Abstract: defines the specific items that loader nedded.
 ;
@@ -134,16 +134,16 @@ int arp_get_eth_addr(unsigned long ip, unsigned char *ha)
 {
 	int i;
 
-	for (i = 0; i < ARP_CACHE_SIZE; i++) 
+	for (i = 0; i < ARP_CACHE_SIZE; i++)
 	{
-		if (htonl(ip) == arp_cache[i].ar_ip) 
+		if (htonl(ip) == arp_cache[i].ar_ip)
 		{
 			memcpy(ha, arp_cache[i].ar_ha, ETH_ALEN);
 			break;
 		}
 	}
 
-	if (i == ARP_CACHE_SIZE) 
+	if (i == ARP_CACHE_SIZE)
 	{
 		arp_send_req(ip);
 		return -1;

@@ -16,13 +16,13 @@
 ;
 ;------------------------------------------------------------------------------
 ;
-;   Project : 
+;   Project :
 ;   Creator :
 ;   File    : bconfig.h    -- boot config include file for loader
-;   Abstract: 
+;   Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 #if __cplusplus
@@ -36,7 +36,7 @@ extern "C" {
 
 #define BOOT_COLD               2
 
-//#define _runCode                HWPF_POST_START     
+//#define _runCode                HWPF_POST_START
 
 
 #endif /* _BCONFIG_H_ */

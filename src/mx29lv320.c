@@ -16,7 +16,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common plateform
-;    Creator : 
+;    Creator :
 ;    File    : mx29lv320.c
 ;    Abstract:
 ;
@@ -40,23 +40,23 @@ static  int mx29lv320_write(struct FLASH_DESC_S *cp, char *flash, char *src, int
 
 unsigned long mx29lv320_blocks[] =
 {
-    0x00000000, 0x00002000, 0x00004000, 0x00006000, 
+    0x00000000, 0x00002000, 0x00004000, 0x00006000,
     0x00008000, 0x0000A000, 0x0000C000, 0x0000E000,
-    0x00010000, 0x00020000, 0x00030000, 
-    0x00040000, 0x00050000, 0x00060000, 0x00070000, 
-    0x00080000, 0x00090000, 0x000a0000, 0x000b0000, 
-    0x000c0000, 0x000d0000, 0x000e0000, 0x000f0000, 
-    0x00100000, 0x00110000, 0x00120000, 0x00130000, 
-    0x00140000, 0x00150000, 0x00160000, 0x00170000, 
-    0x00180000, 0x00190000, 0x001a0000, 0x001b0000, 
-    0x001c0000, 0x001d0000, 0x001e0000, 0x001f0000, 
-    0x00200000, 0x00210000, 0x00220000, 0x00230000, 
-    0x00240000, 0x00250000, 0x00260000, 0x00270000, 
-    0x00280000, 0x00290000, 0x002a0000, 0x002b0000, 
-    0x002c0000, 0x002d0000, 0x002e0000, 0x002f0000, 
-    0x00300000, 0x00310000, 0x00320000, 0x00330000, 
-    0x00340000, 0x00350000, 0x00360000, 0x00370000, 
-    0x00380000, 0x00390000, 0x003a0000, 0x003b0000, 
+    0x00010000, 0x00020000, 0x00030000,
+    0x00040000, 0x00050000, 0x00060000, 0x00070000,
+    0x00080000, 0x00090000, 0x000a0000, 0x000b0000,
+    0x000c0000, 0x000d0000, 0x000e0000, 0x000f0000,
+    0x00100000, 0x00110000, 0x00120000, 0x00130000,
+    0x00140000, 0x00150000, 0x00160000, 0x00170000,
+    0x00180000, 0x00190000, 0x001a0000, 0x001b0000,
+    0x001c0000, 0x001d0000, 0x001e0000, 0x001f0000,
+    0x00200000, 0x00210000, 0x00220000, 0x00230000,
+    0x00240000, 0x00250000, 0x00260000, 0x00270000,
+    0x00280000, 0x00290000, 0x002a0000, 0x002b0000,
+    0x002c0000, 0x002d0000, 0x002e0000, 0x002f0000,
+    0x00300000, 0x00310000, 0x00320000, 0x00330000,
+    0x00340000, 0x00350000, 0x00360000, 0x00370000,
+    0x00380000, 0x00390000, 0x003a0000, 0x003b0000,
     0x003c0000, 0x003d0000, 0x003e0000, 0x003f0000,
 };
 
@@ -99,10 +99,10 @@ FLASH_DESC mx29lv320_dev =
 
 
 /*----------------------------------------------------------------------
- * ROUTINE NAME - disable_write                            
+ * ROUTINE NAME - disable_write
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	Disable writing to the flash main blocks  
+*	Disable writing to the flash main blocks
 *----------------------------------------------------------------------*/
 static void disable_write()
 {
@@ -122,10 +122,10 @@ static void disable_write()
 
 
 /*----------------------------------------------------------------------
- * ROUTINE NAME - enable_write                          
+ * ROUTINE NAME - enable_write
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	Enable writing to the flash main blocks  
+*	Enable writing to the flash main blocks
 *----------------------------------------------------------------------*/
 static void enable_write()
 {
@@ -140,7 +140,7 @@ static void enable_write()
 
 
 // Hardware profile generator ...
-    return;              
+    return;
 }
 
 
@@ -148,7 +148,7 @@ static void enable_write()
 * ROUTINE NAME - mx29lv320_erase_block
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	The routine is called by NV RAM driver or the image updating module 
+*	The routine is called by NV RAM driver or the image updating module
 *   to erase the blocks, whereafter this block can accept new data
 *   written.
 *
@@ -187,7 +187,7 @@ static int mx29lv320_erase_block(struct FLASH_DESC_S *cp, char *flash)
 
         /* When Erase operation is completed, DQ7 will produce 1 "1".
 		   and  DQ6 stops toggling. */
-        if ((val & 0x80) == 0x80) 
+        if ((val & 0x80) == 0x80)
         {
 			// Check DQ6 toggle
 			unsigned short s_val;
@@ -195,7 +195,7 @@ static int mx29lv320_erase_block(struct FLASH_DESC_S *cp, char *flash)
 			// Read the second time.
 			s_val = *block;
 
-			if ((s_val & 0x80) && 
+			if ((s_val & 0x80) &&
 				(s_val & 0x40) == (val & 0x40))
 			{
 	            *block = 0xf0;	 /* Do reset */
@@ -229,7 +229,7 @@ static int mx29lv320_erase_block(struct FLASH_DESC_S *cp, char *flash)
 * ROUTINE NAME - mx29lv320_erase
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	The routine is called by NV RAM driver or the image updating module 
+*	The routine is called by NV RAM driver or the image updating module
 *   to erase the blocks, whereafter this block can accept new data
 *   written.
 *
@@ -274,7 +274,7 @@ static int mx29lv320_erase(struct FLASH_DESC_S *cp, char *flash, int size)
 *-----------------------------------------------------------------------
 * DESCRIPTION:
 *	The routine is called by NV RAM driver to read NV data.
-*   
+*
 *
 * INPUT:
 *	flash   -- Address of the block to read.
@@ -289,7 +289,7 @@ static int mx29lv320_read(struct FLASH_DESC_S *cp, char *flash, char *dst, int s
 
 	/* Convert size in byte to size in word.*/
 	size = (size+1)/2;
-	
+
     /***********************/
     /* Read data           */
     /***********************/
@@ -306,7 +306,7 @@ static int mx29lv320_read(struct FLASH_DESC_S *cp, char *flash, char *dst, int s
 * ROUTINE NAME - mx29lv320_write
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	The routine is called by NV RAM driver or the image updating module 
+*	The routine is called by NV RAM driver or the image updating module
 *   to update the date content.
 *
 * INPUT:
@@ -340,8 +340,8 @@ static int mx29lv320_write(struct FLASH_DESC_S *cp, char *flash, char *src, int 
         *p555 = 0xaa;
         *p2aa = 0x55;
         *p555 = 0xa0;
-        *block = *data;  
-        
+        *block = *data;
+
         j = 0;
         while (1)
         {
@@ -385,7 +385,7 @@ exit_write:
  * ROUTINE NAME - mx29lv320_init
 *-----------------------------------------------------------------------
 * DESCRIPTION:
-*	Disable writing to the flash main blocks  
+*	Disable writing to the flash main blocks
 *----------------------------------------------------------------------*/
 int mx29lv320_init()
 {

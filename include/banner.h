@@ -17,7 +17,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common Plateform
-;    Creator : 
+;    Creator :
 ;    File    : banner.h
 ;    Abstract: defines the specific items that loader nedded.
 ;
@@ -59,7 +59,7 @@
 	#ifdef K9F6408U0C
 		#define	FLASH_SIZE		"8MB"
 	#endif
-#endif	
+#endif
 #define	BOOT_SYSTEM		"Linux-5120"
 #define	LOADER_VERSION		"1.00.03"
 #define	CREATE_DATE		"2004.06.04"

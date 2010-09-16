@@ -22,7 +22,7 @@
 ;    Abstract: Serial driver controller
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 #if __cplusplus

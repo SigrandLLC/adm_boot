@@ -17,12 +17,12 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : ADM5120
-;    Creator : 
+;    Creator :
 ;    File    : timer.c
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 #include <ctype.h>
@@ -57,7 +57,7 @@ UINT32 UpTime(void)
 		ADM5120_SW_REG(Timer_int_REG) = status;
 		timeticks++;
 	}
-	
+
 	return timeticks;
 }
 

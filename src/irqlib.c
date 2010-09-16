@@ -17,12 +17,12 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : ADM5120
-;    Creator : 
+;    Creator :
 ;    File    : irqlib.c
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 
@@ -71,7 +71,7 @@ void IrqEnable(int irql)
 {
 	int s;
 
-	// Disable all interrupts (FIQ/IRQ) 
+	// Disable all interrupts (FIQ/IRQ)
 	s = mips_int_lock();
 
 	if((irql < 0) || (irql > INT_LVL_MAX) ||
@@ -81,7 +81,7 @@ void IrqEnable(int irql)
 	_irq_enable(irql);
 
 err_exit:
-	// Restore the interrupts states 
+	// Restore the interrupts states
 	mips_int_unlock(s);
 }
 
@@ -93,17 +93,17 @@ void IrqDisable(int irql)
 {
 	int s;
 
-	// Disable all interrupts (FIQ/IRQ) 
+	// Disable all interrupts (FIQ/IRQ)
 	s = mips_int_lock();
 
-	if((irql < 0) || (irql > INT_LVL_MAX) || 
+	if((irql < 0) || (irql > INT_LVL_MAX) ||
 		(irq_tab[irql].status ==  IRQL_NOT_CONNECTED)) goto err_exit;
 
 	_irq_disable(irql);
 	irq_tab[irql].status = IRQL_DISABLED;
 
 err_exit:
-	// Restore the interrupts states 
+	// Restore the interrupts states
 	mips_int_unlock(s);
 }
 
@@ -115,18 +115,18 @@ UINT32 irqConnect(int irql, int mode, IRQ_HANDLER handler, UINT32 parm0, UINT32 
 {
 	int s;
 	UINT32 reg;
-	
+
 	if(irq_init == 0)	return FALSE;
 
 	if(mode != IRQ_INT_MODE && mode != FIQ_INT_MODE)
 		return FALSE;
-		
+
 	if((irql<0) || (irql > INT_LVL_MAX))
 		return FALSE;
-	
+
 	// Disable all interrupts (FIQ/IRQ)
 	s = mips_int_lock();
-	if(irq_tab[irql].status != IRQL_NOT_CONNECTED) 
+	if(irq_tab[irql].status != IRQL_NOT_CONNECTED)
 	{
 		mips_int_unlock(s);
 		return FALSE;
@@ -148,8 +148,8 @@ UINT32 irqConnect(int irql, int mode, IRQ_HANDLER handler, UINT32 parm0, UINT32 
 		reg = ADM5120_INTC_REG(IRQ_MODE_REG) & ~(1<< irql);
 		ADM5120_INTC_REG(IRQ_MODE_REG) = reg;
 	}
-	
-	// Restore the interrupts states 
+
+	// Restore the interrupts states
 	mips_int_unlock(s);
 	return TRUE;
 }
@@ -166,7 +166,7 @@ void irqDisconnect(int irql)
 
 	// Disable all interrupts (FIQ/IRQ)
 	s = mips_int_lock();
-	if((irql<0) || (irql > INT_LVL_MAX) || 
+	if((irql<0) || (irql > INT_LVL_MAX) ||
 		(irq_tab[irql].status == IRQL_NOT_CONNECTED)) goto ErrExit;
 
 	// Is the irql still enabled?
@@ -174,8 +174,8 @@ void irqDisconnect(int irql)
 	{
 		_irq_disable(irql);
 	}
-	
-	// Clear the IRQ OBJ entry	
+
+	// Clear the IRQ OBJ entry
 	irq_tab[irql].status = IRQL_NOT_CONNECTED;
 	irq_tab[irql].handler = NULL;
 	irq_tab[irql].parm0 = 0;
@@ -244,8 +244,8 @@ static void irq_handler(int intnum)
 			}
 			else
 			{
-				/* Unhandled irq */	
-	
+				/* Unhandled irq */
+
 				/* Disable the irql and try to limb */
 				_irq_disable(i);
 			}
@@ -275,8 +275,8 @@ void fiq_handler(int intnum)
 			}
 			else
 			{
-				/* Unhandled fiq */	
-	
+				/* Unhandled fiq */
+
 				/* Disable the irql and try to limb */
 				_irq_disable(i);
 			}

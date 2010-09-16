@@ -82,7 +82,7 @@
 	lw	t9,4(sp);					\
 	addiu	sp,sp,8;					\
 	addiu	t9,t9,40;					\
-	.set	pop;					
+	.set	pop;
 
 #ifdef GPROF
 #define MCOUNT _KERN_MCOUNT

@@ -19,10 +19,10 @@
 ;    Project : Common plateform
 ;    Creator : Sumei Chung
 ;    File    : xmodem.C
-;    Abstract: 
+;    Abstract:
 ;
 ;Modification History:
-; 
+;
 ;
 ;*****************************************************************************/
 #include "xmodem.h"
@@ -41,7 +41,7 @@ extern int buart_get(int);
 
 
 /*--------------------------------------------------------------
-* ROUTINE NAME - read_packet	                            
+* ROUTINE NAME - read_packet
 *---------------------------------------------------------------
 * FUNCTION: Get XMODEM_SIZE bytes from uart.  Timeout if 3
 *           seconds elapse
@@ -51,43 +51,43 @@ extern int buart_get(int);
 * RETURN:	0   -- OK
 *          -1   -- error
 *--------------------------------------------------------------*/
-static int  read_packet (char *buf) 
+static int  read_packet (char *buf)
 {
     register int i;         /* Number of characters read */
     register int c;         /* Next character read */
     register unsigned char chksum;   /* accumulate checksum here */
 
     chksum = 0;
-    for (i=0; i<XMODEM_SIZE; i++ ) 
+    for (i=0; i<XMODEM_SIZE; i++ )
     {
-        if ((c = buart_get(3)) == -1) 
+        if ((c = buart_get(3)) == -1)
         {
             return -1;
         }
-        else 
+        else
         {
             buf[i] = (char)c;
             chksum += c;
         }
     }
-    
+
     /* Read and confirm checksum */
-    if ( (c = buart_get(3)) == -1) 
+    if ( (c = buart_get(3)) == -1)
     {
         return -1;
     }
-    else if ((c & 0xff) != chksum) 
+    else if ((c & 0xff) != chksum)
     {
         /* chksum error, abort operation */
         return -1;
     }
-    
+
     return 0;
 }
 
 
 /*--------------------------------------------------------------
-* ROUTINE NAME - xmodem	                            
+* ROUTINE NAME - xmodem
 *---------------------------------------------------------------
 * FUNCTION: Get XMODEM_SIZE bytes from uart.  Timeout if 3
 *           seconds elapse
@@ -249,9 +249,9 @@ PreLoaded:
     }
     while (c != EOT && !fatalerror);
 
-  
+
     /*************************
-      End of transmission 
+      End of transmission
     **************************/
     if (c == EOT)
     {

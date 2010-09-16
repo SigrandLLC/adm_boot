@@ -16,7 +16,7 @@
 ;------------------------------------------------------------------------------
 ;
 ;    Project : Common plateform
-;    Creator : 
+;    Creator :
 ;    File    : bsp_cfg.h
 ;    Abstract: function library for application tasks.
 ;
@@ -87,7 +87,7 @@ typedef struct BOARD_CFG_S
     	UINT8 mac[8];
     	UINT32 macnum;
 
-	UINT32 idmagic;    
+	UINT32 idmagic;
    	UINT8 serial[BSP_STR_LEN+1];
 
   	UINT32 vermagic;
@@ -95,14 +95,14 @@ typedef struct BOARD_CFG_S
 
 	UINT32 ifmagic;
 	IF_CFG_T ifcfg[8];
-	
+
 	UINT32 btmagic;
 	BTMODE_CFG_T bootmode;
 
 	UINT32 tftploipmagic;
 	UINT32 tftpmagic;
 	TFTP_CFG_T tftp_param;	//For bootloader only, winder+
-	
+
 }
 BOARD_CFG_T;
 
