@@ -8,7 +8,7 @@ BYTE_ORDER = LITTLE_ENDIAN
 
 
 #==========================FLASH CONFIGURATION===========================
-# NOR_FLASH OR NAND_FLASH	
+# NOR_FLASH OR NAND_FLASH
 FLASH_TYPE = NAND_FLASH
 
 # 0x400000 OR 0x200000
@@ -21,7 +21,7 @@ CROSS_TOOLS = /home/vadim/openwrt/cross/bin/mipsisa32-elf
 AS	= $(CROSS_TOOLS)-as
 CC	= $(CROSS_TOOLS)-gcc
 LD	= $(CROSS_TOOLS)-ld
-AR  = $(CROSS_TOOLS)-ar
+AR      = $(CROSS_TOOLS)-ar
 
 
 #============================ Tools ==================================
@@ -29,7 +29,7 @@ RM	= rm
 MV	= mv
 CP	= cp
 OBJ_TO_COPY = $(CROSS_TOOLS)-objcopy
-OBJ_DUMP= $(CROSS_TOOLS)-objdump
+OBJ_DUMP    = $(CROSS_TOOLS)-objdump
 
 
 #=======================  Endian dependance  =========================
@@ -43,18 +43,18 @@ CCBYTE_ORDER = big-endian
 ENDIAN_FG = -EB
 LIB_PATH = -L. -L./lib/eb
 EDIR = eb
-endif 
+endif
 
 
 #=======================  Compiler Flags  ============================
 CC_FLAG 		= $(ENDIAN_FG) -Wcomment -Os
 CPU_FLAG		= -mips32
-#START_FLAGF			= -DFLASH_START
+#START_FLAGF		= -DFLASH_START
 
 ifeq ("$(FLASH_TYPE)", "NAND_FLASH")
-INCLUDE_DIR = -I. -I./include 
+INCLUDE_DIR = -I. -I./include
 else
-INCLUDE_DIR = -I./include -I/cross/include 
+INCLUDE_DIR =     -I./include
 endif
 
 
@@ -75,9 +75,9 @@ ifeq ("$(FLASH_TYPE)", "NAND_FLASH")
 LD_FLAG = -X -N
 LIBS = -lz -lc -lnosys
 
-BOOT_NAME = nand_bootinit
+BOOT_NAME     = nand_bootinit
 BOOT_NAME_RAM = nand_bootinit_ram
-BOOT_OBJS = $(OBJ_DIR)/nand_bootinit.o
+BOOT_OBJS     = $(OBJ_DIR)/nand_bootinit.o
 BOOT_OBJS_RAM = $(OBJ_DIR)/nand_bootinit_ram.o
 
 EXEC_NAME = nand_bootmain
@@ -90,7 +90,7 @@ EXEC_OBJS = $(OBJ_DIR)/nand_ldrinit.o $(OBJ_DIR)/bloader.o $(OBJ_DIR)/linuxld.o\
 		$(OBJ_DIR)/uartdrv.o $(OBJ_DIR)/tftp.o $(OBJ_DIR)/eth.o\
 		$(OBJ_DIR)/skbuff.o $(OBJ_DIR)/arp.o $(OBJ_DIR)/ip.o\
 		$(OBJ_DIR)/udp.o $(OBJ_DIR)/param.o $(OBJ_DIR)/nf.o
-			
+
 EXEC_NAME_RAM = nand_bootmain_ram
 EXEC_OBJS_RAM = $(OBJ_DIR)/nand_ldrinit.o $(OBJ_DIR)/bloader_ram.o $(OBJ_DIR)/linuxld.o\
 		$(OBJ_DIR)/xmodem.o $(OBJ_DIR)/nand.o $(OBJ_DIR)/nand_ecc.o\
@@ -101,17 +101,17 @@ EXEC_OBJS_RAM = $(OBJ_DIR)/nand_ldrinit.o $(OBJ_DIR)/bloader_ram.o $(OBJ_DIR)/li
 		$(OBJ_DIR)/uartdrv.o $(OBJ_DIR)/tftp.o $(OBJ_DIR)/eth.o\
 		$(OBJ_DIR)/skbuff.o $(OBJ_DIR)/arp.o $(OBJ_DIR)/ip.o\
 		$(OBJ_DIR)/udp.o $(OBJ_DIR)/param.o $(OBJ_DIR)/nf.o
-			
-ROM_NAME = nandloader
+
+ROM_NAME     = nandloader
 ROM_NAME_RAM = nandloader_ram
-CMM_CREATE = loadercmm
+CMM_CREATE   = loadercmm
 
 else
 #======================= NorFlash Linker Flags  ===========================
-LD_FLAG = -X -N 
-LIBS = -lz -lc -lnosys 
+LD_FLAG = -X -N
+LIBS = -lz -lc -lnosys
 
-BOOT_NAME = nor_bootinit
+BOOT_NAME =            nor_bootinit
 BOOT_OBJS = $(OBJ_DIR)/nor_bootinit.o
 
 EXEC_NAME = nor_bootmain
@@ -122,7 +122,7 @@ EXEC_OBJS = $(OBJ_DIR)/nor_ldrinit.o $(OBJ_DIR)/bloader.o $(OBJ_DIR)/linuxld.o \
 			$(OBJ_DIR)/tftp.o $(OBJ_DIR)/arp.o $(OBJ_DIR)/eth.o \
 			$(OBJ_DIR)/if_5120.o $(OBJ_DIR)/ip.o $(OBJ_DIR)/skbuff.o \
 			$(OBJ_DIR)/udp.o $(OBJ_DIR)/utils.o $(OBJ_DIR)/param.o $(OBJ_DIR)/nf.o
-			
+
 ifeq ($(BOARD_NOR_FLASH_SIZE), 0x400000)
 EXEC_OBJS += $(OBJ_DIR)/mx29lv320.o
 CC_FLAG += -DFLASH_4M
@@ -131,7 +131,7 @@ endif
 ifeq ($(BOARD_NOR_FLASH_SIZE), 0x200000)
 EXEC_OBJS += $(OBJ_DIR)/mx29lv160.o
 CC_FLAG += -DFLASH_2M
-endif	
+endif
 
 CC_FLAG += -DNOR_FLASH
 ROM_NAME = norloader
@@ -153,7 +153,7 @@ rom_img_ram: boot_img_ram main_img_ram
 
 boot_img_ram: $(BOOT_OBJS_RAM)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _nand_reset -Ttext 0x80800000 \
-			 	-Map $(OBJ_DIR)/$(BOOT_NAME_RAM).map -o $(OBJ_DIR)/$(BOOT_NAME_RAM).elf	\
+				-Map $(OBJ_DIR)/$(BOOT_NAME_RAM).map -o $(OBJ_DIR)/$(BOOT_NAME_RAM).elf	\
 				$(BOOT_OBJS_RAM) $(LIBS)
 	$(OBJ_TO_COPY) -O binary $(OBJ_DIR)/$(BOOT_NAME_RAM).elf  $(OBJ_DIR)/$(BOOT_NAME_RAM).bin
 	$(OBJ_TO_COPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME_RAM).bin \
@@ -174,7 +174,7 @@ rom_img: boot_img main_img
 
 boot_img: $(BOOT_OBJS)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _nand_reset -Ttext  0x80800000 \
-			 	-Map $(OBJ_DIR)/$(BOOT_NAME).map -o $(OBJ_DIR)/$(BOOT_NAME).elf	\
+				-Map $(OBJ_DIR)/$(BOOT_NAME).map -o $(OBJ_DIR)/$(BOOT_NAME).elf	\
 				$(BOOT_OBJS) $(LIBS)
 	$(OBJ_TO_COPY) -O binary $(OBJ_DIR)/$(BOOT_NAME).elf  $(OBJ_DIR)/$(BOOT_NAME).bin
 	$(OBJ_TO_COPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME).bin \
@@ -206,7 +206,7 @@ rom_img: boot_img main_img
 
 boot_img: $(BOOT_OBJS)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e romreset_except -Ttext 0x80800000 \
-			 	-Map $(OBJ_DIR)/$(BOOT_NAME).map -o $(OBJ_DIR)/$(BOOT_NAME).elf	\
+				-Map $(OBJ_DIR)/$(BOOT_NAME).map -o $(OBJ_DIR)/$(BOOT_NAME).elf	\
 				$(BOOT_OBJS) $(LIBS)
 	$(OBJ_TO_COPY) -O binary $(OBJ_DIR)/$(BOOT_NAME).elf  $(OBJ_DIR)/$(BOOT_NAME).bin
 	$(OBJ_TO_COPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME).bin \
@@ -236,5 +236,4 @@ cleanall: clean
 clean:
 	- $(RM) $(OBJ_DIR)/$(BOOT_NAME).* $(EXEC_OBJS) $(OBJ_DIR)/$(EXEC_NAME).* \
 			$(BIN_DIR)/$(ROM_NAME).img
-
 
