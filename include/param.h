@@ -38,4 +38,14 @@ void Set_Board_SerialNo(void);
 void Set_Board_Version(void);
 void Set_Mac(void);
 void Set_If_config(void);
-int check_ip(unsigned long,int);
+int  check_ip(unsigned long,int);
+void print_tftpc_param(void);
+int  set_tftpc_param(void);
+int  boot_param_init(void);
+int  set_boot_param(void);
+void PrintBspParam(void);
+int  bsp_GetMacBase(UINT8 *buf, int *macnum);
+int  bsp_GetTftpIp(UINT32 *tftpip);
+int  bsp_GetGwIp(UINT32 *gwip);
+int  get_tftp_param(UINT32 *servip, UINT32 *gwip, char *boot_file, char *sys_file);
+

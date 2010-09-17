@@ -25,6 +25,7 @@
 ;
 ;
 ;*****************************************************************************/
+#include <ctype.h>
 #include "xmodem.h"
 // #include "buart.h"
 
@@ -51,7 +52,7 @@ extern int buart_get(int);
 * RETURN:	0   -- OK
 *          -1   -- error
 *--------------------------------------------------------------*/
-static int  read_packet (char *buf)
+static int  read_packet (uchar *buf)
 {
     register int i;         /* Number of characters read */
     register int c;         /* Next character read */
@@ -97,7 +98,7 @@ static int  read_packet (char *buf)
 * RETURN:	0   -- OK
 *          -1   -- error
 *--------------------------------------------------------------*/
-int xmodem (char *buf, int buf_size)
+int xmodem (uchar *buf, int buf_size)
 {
     register int c=0;                /* 1st byte of packet */
     register int errors;             /* Running count of errors */
@@ -108,8 +109,8 @@ int xmodem (char *buf, int buf_size)
     register int pktcnt;             /* total # of packets received so far */
     register int initial_tries;
 
-    register char *buf_end = buf + buf_size;
-    register char *working = buf;
+    register uchar *buf_end = buf + buf_size;
+    register uchar *working = buf;
 
 
     fatalerror = FALSE;

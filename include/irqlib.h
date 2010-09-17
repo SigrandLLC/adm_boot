@@ -70,4 +70,6 @@ extern void irqDisconnect(int irql);
 extern void IrqEnable(int irql);
 extern void IrqDisable(int irql);
 
+int sys_irq_init(void);
+
 #endif

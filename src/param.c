@@ -27,12 +27,21 @@
 ;
 ;*****************************************************************************/
 #include <ctype.h>
+#include <string.h>
 #include <param.h>
+#include <buart.h>
 #include <uartdrv.h>
 #include <bsp_cfg.h>
 #include <adm5120.h>
+#include <if_5120.h>
 #include <linuxld.h>
 #include <mips4kc.h>
+#include <memlib.h>
+#include <nand.h>
+#include <arp.h>
+#include <ip.h>
+#include <udp.h>
+#include <utils.h>
 /*****************************************************************************************/
 void Set_Board_SerialNo(void);
 void Set_Board_Version(void);
@@ -52,7 +61,7 @@ int boot_param_init(void)
 	// Read the Network configuration data.
 	cfg = (BOARD_CFG_T *) MemAlloc(sizeof(BOARD_CFG_T), TRUE);
 	if (cfg != NULL)
-		err=nf_read((char *) cfg, (char *)LINUXLD_FLASH_BOOTPARAM_START, sizeof(BOARD_CFG_T));
+		err=nf_read((uchar *) cfg, (uchar *)LINUXLD_FLASH_BOOTPARAM_START, sizeof(BOARD_CFG_T));
 	return err;
 }
 
@@ -61,8 +70,7 @@ int boot_param_init(void)
 /*****************************************************************************************/
 int set_boot_param(void)
 {
-	UINT8 macaddr[6];
-	char *image = (char *)LINUXLD_DOWNLOAD_START;
+	uchar *image = (uchar *)LINUXLD_DOWNLOAD_START;
 
 	/* Print Item */
 	buart_print(SET_PARAM);
@@ -79,18 +87,18 @@ int set_boot_param(void)
 	/* Set bootloader ip */
 	Set_TFTP_IP();
 
-    /* Before Write back, backup original content */
-    if (nf_read(image, (char *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
-    {
-        buart_print("\n\rRead buffer error!!");
-        return -1;
-    }
-    memcpy(image, (char *)cfg, sizeof(BOARD_CFG_T));
+	/* Before Write back, backup original content */
+	if (nf_read(image, (uchar *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
+	{
+		buart_print("\n\rRead buffer error!!");
+		return -1;
+	}
+	memcpy(image, (char *)cfg, sizeof(BOARD_CFG_T));
 
 	/* Write back new parameter to flash */
-	if (nf_erase((char *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
+	if (nf_erase((uchar *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE, 1) != 0)
 		buart_print("\n\rErase flash error.");
-	else if (nf_write((char *)LINUXLD_FLASH_BOOTPARAM_START, image, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
+	else if (nf_write((uchar *)LINUXLD_FLASH_BOOTPARAM_START, image, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
 		buart_print("\n\rWrite flash error.");
 	if (cfg->tftploipmagic == TFTPLOIPMAGIC && cfg->macmagic == MAC_MAGIC)
 		arp_add_entry(cfg->mac, cfg->tftp_param.local_ip);
@@ -105,7 +113,7 @@ int set_boot_param(void)
 /*			Board Serial NO				  */
 /******************************************/
 
-int bsp_SetBoardSerialNo(UINT8 *s)
+int bsp_SetBoardSerialNo(char *s)
 {
 	int len;
 
@@ -113,22 +121,22 @@ int bsp_SetBoardSerialNo(UINT8 *s)
 	if((len=strlen(s)) > BSP_STR_LEN) return -1;
 
 	cfg->idmagic = ID_MAGIC;
-	strncpy(cfg->serial, s, BSP_STR_LEN+1);
+	strncpy((char*)cfg->serial, s, BSP_STR_LEN+1);
 
 	return 0;
 }
 
 
-int bsp_GetBoardSerialNo(UINT8 *buf, int buflen)
+int bsp_GetBoardSerialNo(char *buf, int buflen)
 {
 	int len;
 
 	if(buf == NULL) return -1;
 
 	if(cfg->idmagic != ID_MAGIC) return -1;
-	if((len = strlen(cfg->serial)) > buflen) return -1;
+	if((len = strlen((char*)cfg->serial)) > buflen) return -1;
 
-	strcpy(buf, cfg->serial);
+	strcpy(buf, (char*)cfg->serial);
 	return 0;
 }
 
@@ -167,7 +175,7 @@ void Set_Board_SerialNo(void)
 /*			Board Version				  */
 /******************************************/
 
-int bsp_SetBoardVersion(UINT8 *s)
+int bsp_SetBoardVersion(char *s)
 {
 	int len;
 
@@ -175,21 +183,21 @@ int bsp_SetBoardVersion(UINT8 *s)
 	if((len=strlen(s)) > BSP_STR_LEN) return -1;
 
 	cfg->vermagic = VER_MAGIC;
-	strncpy(cfg->ver, s, BSP_STR_LEN+1);
+	strncpy((char*)cfg->ver, s, BSP_STR_LEN+1);
 
 	return 0;
 }
 
-int bsp_GetBoardVersion(UINT8 *buf, int buflen)
+int bsp_GetBoardVersion(char *buf, int buflen)
 {
 	int len;
 
 	if(buf == NULL) return -1;
 
 	if(cfg->vermagic != VER_MAGIC) return -1;
-	if((len = strlen(cfg->ver)) > buflen) return -1;
+	if((len = strlen((char*)cfg->ver)) > buflen) return -1;
 
-	strcpy(buf, cfg->ver);
+	strcpy(buf, (char*)cfg->ver);
 	return 0;
 }
 
@@ -230,7 +238,7 @@ void Set_Board_Version(void)
 
 int bsp_SetMac(UINT8 *mac, int macnum)
 {
-	int len, i;
+	int i;
 	UINT32 sum;
 
 	if((mac == NULL) || (macnum < 1) || (macnum > BSP_MAX_MAC_NUM))
@@ -274,8 +282,6 @@ int bsp_SetMac(UINT8 *mac, int macnum)
 
 int bsp_GetMacBase(UINT8 *buf, int *macnum)
 {
-	int len;
-
 	if(buf == NULL) return -1;
 
 	if(cfg->macmagic != MAC_MAGIC) return -1;
@@ -301,7 +307,7 @@ void Set_Mac(void)
 	#define FLAG_MAC_NUM_MODIFIED	4
 
 
-	if(bsp_GetMacBase(mac, &macnum) == 0)
+	if(bsp_GetMacBase((uchar*)mac, &macnum) == 0)
 	{
 		flags |= FLAG_OLD_MAC_VALID;
 		mactostr(mac,mactmp);
@@ -356,15 +362,15 @@ num_again:
 			macnum = 1;
 		}
 
-		if(bsp_SetMac(mac, macnum) != 0)
+		if(bsp_SetMac((uchar*)mac, macnum) != 0)
 		{
 			buart_print("\n\rFailed to change MAC address.");
 		}
 		else
 		{
 			memcpy(mactmp,cfg->mac,6);
-			ProgramMac(0,mactmp);		// Change current MAC addr.
-			eth_reinit(mactmp);
+			ProgramMac(0, (uchar*)mactmp); // Change current MAC addr.
+			eth_reinit(/*mactmp*/);
 			buart_print("\n\rMAC address updated successfully.");
 		}
 	}
@@ -436,9 +442,9 @@ int bsp_GetGwIp(UINT32 *gwip)
 void PrintBspParam(void)
 {
 	UINT32 tftpip;
-	unsigned char buf[BOOT_LINE_SIZE + 1];
-	unsigned char mactmp[]="00-00-00-00-00-00-";
-	unsigned char ipstr[]="xxx.xxx.xxx.xxx";
+	char buf[BOOT_LINE_SIZE + 1];
+	char mactmp[]="00-00-00-00-00-00-";
+	char ipstr[]="xxx.xxx.xxx.xxx";
 	int macnum;
 
 	/* Print Item */
@@ -461,14 +467,14 @@ void PrintBspParam(void)
 //	buart_print(buf);
 
 	/* Print Mac address */
-	if(bsp_GetMacBase(buf, &macnum) != 0)
+	if(bsp_GetMacBase((uchar*)buf, &macnum) != 0)
 	{
 		buart_print("\n\rMac address:");
 		buart_print("\n\rNumber of Mac address: 0");
 	}
 	else
 	{
-		mactostr(buf,mactmp);
+		mactostr(buf, mactmp);
 		mactmp[17]='\0';
 		buart_print("\n\rMac addres:");
 		buart_print(mactmp);
@@ -510,16 +516,14 @@ void print_tftpc_param(void)
 	}
 }
 
-//int get_tftp_param(UINT32 *servip,UINT32 *gwip,char *boot_file, char *sys_file)
-int get_tftp_param(UINT32 *servip,UINT32 *gwip, char *sys_file)
+int get_tftp_param(UINT32 *servip, UINT32 *gwip, char *boot_file, char *sys_file)
 {
-	//if(servip == NULL || boot_file == NULL || sys_file == NULL) return -1;
-	if(servip == NULL ||  sys_file == NULL) return -1;
+	if(servip == NULL || boot_file == NULL || sys_file == NULL) return -1;
 	if(cfg->tftpmagic != TFTPMAGIC) return -1;
 	*servip = cfg->tftp_param.server_ip;
 	*gwip = cfg->tftp_param.gw_ip;
-	//strcpy(boot_file,cfg->tftp_param.remote_file_boot);
-	strcpy(sys_file,cfg->tftp_param.remote_file_sys);
+	strcpy(boot_file,cfg->tftp_param.remote_file_boot);
+	strcpy(sys_file ,cfg->tftp_param.remote_file_sys);
 	return 0;
 }
 
@@ -527,7 +531,7 @@ int set_tftpc_param(void)
 {
 	UINT32 servip, gwip;
 	char buf[BOOT_LINE_SIZE+1];
-	char *image = (char *)LINUXLD_DOWNLOAD_START;
+	uchar *image = (uchar *)LINUXLD_DOWNLOAD_START;
 
 servip_again:
 	buf[0] = 0;
@@ -610,17 +614,17 @@ filename_sys:
 	cfg->tftpmagic = TFTPMAGIC;
 
     /* Before Write back, backup original content */
-    if (nf_read(image, (char *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
+    if (nf_read(image, (uchar *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
     {
         buart_print("\n\rRead buffer error!!");
         return -1;
     }
-    memcpy(image, (char *)cfg, sizeof(BOARD_CFG_T));
+    memcpy(image, cfg, sizeof(BOARD_CFG_T));
 
 	/* Write back new parameter to flash */
-	if (nf_erase((char *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
+	if (nf_erase((uchar *)LINUXLD_FLASH_BOOTPARAM_START, LINUXLD_FLASH_BOOTPARAM_SIZE, 1) != 0)
 		buart_print("\n\rErase flash error.");
-	else if (nf_write((char *)LINUXLD_FLASH_BOOTPARAM_START, image, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
+	else if (nf_write((uchar *)LINUXLD_FLASH_BOOTPARAM_START, image, LINUXLD_FLASH_BOOTPARAM_SIZE) != 0)
 		buart_print("\n\rWrite flash error.");
 
 	buart_print("\n\r");

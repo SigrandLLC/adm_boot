@@ -34,7 +34,15 @@
 #include <ip.h>
 #include <udp.h>
 #include <if_5120.h>
+#include <string.h>
+#include <buart.h>
+#include <utils.h>
+#include <param.h>
+#include <timer.h>
+#include <except.h>
 //#include <linuxld.h>
+
+int tftp_rcv_packet(struct sk_buff *skb);
 
 static UINT32 remote_ip;	// TFTP server ip
 static UINT32 gw_ip;	// TFTP server gateway ip
@@ -42,8 +50,8 @@ static unsigned short remote_port;	// TFTP server port
 static unsigned short remote_block;	// TFTP server data block number
 static int tftpc_read_start;
 
-static UINT8 ostr[20];
-static inline void print_val(UINT8 *str, int val){
+static char ostr[20];
+static inline void print_val(char *str, int val){
 	ostr[8]=0;
 	buart_print("\n\r");
 	buart_print(str);
@@ -61,7 +69,7 @@ int tftp_send_ack(int block)
 	skb_headerinit(&skb);
 	udp_skb_reserve(&skb);
 	tftp_ack = (struct tftphdr *)skb_put(&skb, sizeof(struct tftphdr));
-	tftp_ack->th_opcode = htons(ACK);
+	tftp_ack->th_opcode = htons(TFTP_ACK);
 	tftp_ack->th_block = htons(block);
 
 	udp_send(&skb, remote_ip, TFTP, remote_port);
@@ -75,14 +83,14 @@ int tftp_send_rrq(UINT32 servip, char *filename)
 	char *temp;
 	unsigned int rrqlen;
 	short *opCode;
-	int fileNameLen,i;
+	int fileNameLen;
 	skb_headerinit(&skb);
 	udp_skb_reserve(&skb);
 	temp = (char *)skb.data;
 
 	// operating code
 	opCode = (short *)temp;
-	*opCode = htons(RRQ);
+	*opCode = htons(TFTP_RRQ);
 	temp += 2;
 
 	// remote file name
@@ -112,7 +120,7 @@ int tftp_send_rrq(UINT32 servip, char *filename)
 	return 0;
 }
 
-int rcv_imgpkt(char *buf,int *buf_len)
+int rcv_imgpkt(UINT8 *buf, int *buf_len)
 {
 	struct sk_buff skb;
 	int status;
@@ -137,13 +145,13 @@ int rcv_imgpkt(char *buf,int *buf_len)
 int tftp_rcv_packet(struct sk_buff *skb)
 {
 	struct tftphdr *tftp_hdr;
-	int data_flag,len;
+	int data_flag;
 
 	data_flag = 0;
 	if(udp_rcv_packet(skb) == 1)
 	{
 		tftp_hdr = (struct tftphdr *)skb->data;
-		if(ntohs(tftp_hdr->th_opcode) == DATA)
+		if(ntohs(tftp_hdr->th_opcode) == TFTP_DATA)
 		{
 			if (remote_ip != ip_get_source_ip(skb)) // || gw_ip != ip_get_source_ip(skb))
 			{
@@ -170,18 +178,20 @@ int tftp_rcv_packet(struct sk_buff *skb)
 	return data_flag;
 }
 
-UINT32 tftpc(char *buf, int buf_size, int boot)
+UINT32 tftpc(UINT8 *buf, int buf_size, int boot)
 {
 	UINT32 ticks,servip, gwip, total_len;
 	char file_boot[15];
 	char file_sys[15];
 	int transmit_flag, pkt_len=0, rrqcount=0;
-	char *working = buf;
+	UINT8 *working = buf;
+
+        (void)buf_size;
 
 	if(get_tftp_param(&servip,&gwip,file_boot,file_sys) != 0)
 	{
 		buart_print("\n\rTFTP server IP or filenames Error.");
-		return;
+		return 0;
 	}
 
 	gw_ip = gwip;

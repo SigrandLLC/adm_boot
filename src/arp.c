@@ -27,9 +27,12 @@
 ;
 ;*****************************************************************************/
 #include <ctype.h>
+#include <string.h>
 #include <skbuff.h>
 #include <eth.h>
 #include <arp.h>
+#include <param.h>
+#include <utils.h>
 
 #define ARP_CACHE_SIZE	16
 
@@ -132,7 +135,7 @@ int arp_send_rsp(struct arphdr *arp_hdr)
 
 int arp_get_eth_addr(unsigned long ip, unsigned char *ha)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < ARP_CACHE_SIZE; i++)
 	{

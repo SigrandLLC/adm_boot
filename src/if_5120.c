@@ -26,12 +26,17 @@
 ;
 ;*****************************************************************************/
 #include <ctype.h>
+#include <stdlib.h>
 #include <adm5120.h>
 #include <irqlib.h>
 #include <mips4kc.h>
 #include <cachelib.h>
 #include <memlib.h>
 #include <if_5120.h>
+#include <buart.h>
+#include <eth.h>
+#include <except.h>
+#include <param.h>
 /********************************************************************/
 
 /***************************************************************************************/
@@ -391,7 +396,7 @@ static int ProcessRxLInt(void)
 		pstat->RxPktCnt++;
 		pstat->RxBytes += Pkt->PktLen;
 
-        IndicateRxPacketL(Pkt);
+		IndicateRxPacketL(Pkt);
 
 		if(++idx >= ifp->NumRxDescL)  idx = 0;
 
@@ -442,13 +447,10 @@ static void ProcessTxLInt(void)
 /**********************************************************************************/
 void SendPacketsL(PDRV_PACKET_DESC Pkt)
 {
-	UINT32 Idx, IdxNext, reg;
+	UINT32 Idx, IdxNext;
 	UINT32 TxCnt = 0;
 	TX_DESC_T *TxDesc;
 	UINT8 *buf;
-	char str[]="XXXXXXXXXXXX";
-	char protocol[]="XXXX";
-
 
 	if(ifp->TxL_QueueHead != NULL)  //The txL Queue has already some packet, send them first..
 	{
@@ -597,17 +599,16 @@ inline void SetPktAlign(PDRV_PACKET_DESC Pkt)
 int if5120_init(void)
 {
 	int i,eth_num;
-	static int init=0;
 	UINT32 reg1, reg2;
 	UINT8 MacAddr[6];
 
 	// install exception handler
-    install_exception();
+	install_exception();
 
 	// Init irq
 	sys_irq_init();
 
-    // Per port PHY reset and enable auto-negotiation.
+	// Per port PHY reset and enable auto-negotiation.
 	ADM5120_SW_REG(PHY_cntl2_REG) |= SW_PHY_AN_MASK | SW_PHY_NORMAL_MASK;
 
 	//Enable MII AN monitor via MDIO.(Dumb Mode)
@@ -638,7 +639,7 @@ int if5120_init(void)
 	else
 		ADM5120_SW_REG(CPUp_conf_REG) = CPU_PORT_DEFAULT | SW_PADING_CRC;
 
-    // Daniel fix
+	// Daniel fix
 	// Disable all port, enable MC, BP and FC
 	ADM5120_SW_REG(Port_conf0_REG) = SW_DISABLE_PORT_MASK |SW_EN_MC_MASK |
                                     SW_EN_BP_MASK | SW_EN_FC_MASK;
@@ -700,15 +701,14 @@ void if5120shutdown(void)
 {
 	int i, s;
 
-    s = mips_int_lock();
+	s = mips_int_lock();
 
 	ADM5120_SW_REG(Port_conf0_REG) |= SW_DISABLE_PORT_MASK;
 	ADM5120_SW_REG(CPUp_conf_REG) |= SW_CPU_PORT_DISABLE;
 
-    mips_int_unlock(s);
+	mips_int_unlock(s);
 
 	for(i=0; i<1000000; i++);
-
 }
 
 /**********************************************************************************/
@@ -719,17 +719,16 @@ void if5120turnon(void)
 	int i, s;
 	UINT32 reg;
 
-    s = mips_int_lock();
+	s = mips_int_lock();
 	// Re-enable ports
 	reg = ADM5120_SW_REG(Port_conf0_REG) & ~SW_DISABLE_PORT_MASK;
 	ADM5120_SW_REG(Port_conf0_REG) = reg;
 	// Re-enable CPU port
 	reg = ADM5120_SW_REG(CPUp_conf_REG) & ~SW_CPU_PORT_DISABLE;
 	ADM5120_SW_REG(CPUp_conf_REG) = reg;
-    mips_int_unlock(s);
+	mips_int_unlock(s);
 
 	for(i=0; i<1000000; i++);
-
 }
 
 /**********************************************************************************/
@@ -773,14 +772,15 @@ void Am5120_RefreePkt(PDRV_PACKET_DESC Pkt)
 /**********************************************************************************/
 void Am5120Isr(int intLev)
 {
-	UINT32 IntReg, IntMask, reg;
+	UINT32 IntReg, IntMask;
 	int	LoopCnt=0, RxFull = 0;
+	(void)intLev;
 
 	// Disable Switch Interrupts
 	ADM5120_SW_REG(SW_Int_mask_REG) = 0xFFFFFFF;
 
 	// Clear watchdot timer 1
-// 	reg = ADM5120_SW_REG(Watchdog1_REG);
+//	reg = ADM5120_SW_REG(Watchdog1_REG);
 	// Ack all interrupts
 	IntReg = ADM5120_SW_REG(SW_Int_st_REG);
 	ADM5120_SW_REG(SW_Int_st_REG) = IntReg;
@@ -790,8 +790,8 @@ void Am5120Isr(int intLev)
 	{
 //		if(IntReg &  GLOBAL_QUE_FULL_INT) ifp->DropFlag = TRUE;
 		//buart_put('I');
-		if(IntReg & LINK_INT)	;//ProcessLinkInt(ifp);
-		if(IntReg & TX_H_INT)	;//ProcessTxHInt(ifp);
+		if(IntReg & LINK_INT) IntReg=IntReg; //ProcessLinkInt(ifp);
+		if(IntReg & TX_H_INT) IntReg=IntReg; //ProcessTxHInt(ifp);
 		if(IntReg & TX_L_INT)	ProcessTxLInt();
 		if(IntReg & RX_H_INT)
 		{

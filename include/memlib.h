@@ -35,8 +35,9 @@ extern "C" {
 
 
 
-extern void *MemAlloc(UINT32 NumOfByte, UINT32 clear);
-extern void *SharedMemAlloc(UINT32 NumOfByte, UINT32 clear);
+void *MemAlloc(UINT32 NumOfByte, UINT32 clear);
+void *SharedMemAlloc(UINT32 NumOfByte, UINT32 clear);
+void memlib_init(void);
 
 
 #endif

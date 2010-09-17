@@ -39,10 +39,13 @@
 #endif
 #include <img_header.h>
 #include <xmodem.h>
-#include <uartdrv.h>
+#include <buart.h>
 #include <stdlib.h>
 #include <zlib.h>
 #include <linuxld.h>
+#include <utils.h>
+#include <tftp.h>
+#include <timer.h>
 
 //#define AM5120_VINETIC  0
 
@@ -72,8 +75,8 @@ char *fail = "\n\rFAIL";
 
 int ungzip(Byte * compr);
 extern void _icache_sync_all(void);
-void jump_up_map();
-void jump_low_map();
+void jump_up_map(void);
+void jump_low_map(void);
 
 /*
  * Update bootloader
@@ -85,13 +88,13 @@ void flash_erase(UINT32 start)
 	nand_erase((UINT8 *)start, NAND_FLASH_SIZE-start,1);
 }
 
-void flash_erase_all()
+void flash_erase_all(void)
 {
 	buart_print("\n\rEraseing flash.......\n\r");
 	nand_erase((UINT8 *)LINUXLD_FLASH_LOADER_START, NAND_FLASH_SIZE,0);
 }
 
-void check_for_bad()
+void check_for_bad(void)
 {
 	buart_print("\n\rChecking flash.......\n\r");
 	check_bad_block();
@@ -103,61 +106,61 @@ void find_bad_blocks(UINT32 start)
 	scan_bad_blocks((UINT8 *)start);
 }
 
-create_bad_blocks()
+void create_bad_blocks(void)
 {
 	buart_print("\n\rCreating bad blocks.......\n\r");
 	bad_block();
 }
 
-int update_bootloader()
+int update_bootloader(void)
 {
-   	void *flash = (void *)LINUXLD_FLASH_LOADER_START;
-    	char *image	= (char *)LINUXLD_DOWNLOAD_START;
-   	int  len, rc = 0;
+	void *flash  = (void *)LINUXLD_FLASH_LOADER_START;
+	UINT8 *image = (UINT8*)LINUXLD_DOWNLOAD_START;
+	int  len, rc = 0;
 
-   	 /* download loader image to temp using xmodem */
-   	buart_print("\n\rDownloading..........");
-    	if ((len = xmodem(image, LINUXLD_FLASH_LOADER_SIZE)) == -1)
-       		goto fail;
-    	else
-       		buart_print (pass);
+	/* download loader image to temp using xmodem */
+	buart_print("\n\rDownloading..........");
+	if ((len = xmodem(image, LINUXLD_FLASH_LOADER_SIZE)) == -1)
+		goto fail;
+	else
+		buart_print (pass);
 
-   	/* erase flash */
+	/* erase flash */
 	buart_print("\n\rEraseing flash.......");
-    	if (nf_erase(flash , len, 1) != 0)
-     	  	goto fail;
+	if (nf_erase(flash , len, 1) != 0)
+		goto fail;
 	else
 		buart_print (pass);
 
 	/* write flash */
-    	buart_print("\n\rProgramming flash....");
+	buart_print("\n\rProgramming flash....");
 	if (nf_write_boot(flash, image, len) != 0)
-        goto fail;
+		goto fail;
 	else
 		buart_print (pass);
 
-    	goto ok;
+	goto ok;
 
 fail:
-    	buart_print(fail);
-    	rc = -1;
+	buart_print(fail);
+	rc = -1;
 
 ok:
-    return (rc);
+	return (rc);
 }
 
 int tftpc_download_boot(void)
 {
-	void *flash = (void *)LINUXLD_FLASH_LOADER_START;
-   	char *image	= (char *)LINUXLD_DOWNLOAD_START;
- 	char lenstr[9];
+	void *flash  = (void *)LINUXLD_FLASH_LOADER_START;
+	UINT8 *image = (UINT8*)LINUXLD_DOWNLOAD_START;
+	char lenstr[9];
 	UINT32	len;
 
 	buart_print("\n\rStarting the TFTP download(ESC to stop)..");
 	if ((len = tftpc(image, LINUXLD_FLASH_LOADER_SIZE,0)) == 0)
 		goto fail;
-    	else
-        buart_print (pass);
+	else
+		buart_print (pass);
 
 	//print image length and starting address in sdram.
 	ultoa(len,lenstr);
@@ -168,74 +171,70 @@ int tftpc_download_boot(void)
 	//buart_print("  Starting address: ");
 	//buart_print(lenstr);
 
-    	//erase flash
-    	buart_print("\n\r\n\rEraseing flash.......");
+	//erase flash
+	buart_print("\n\r\n\rEraseing flash.......");
 	if (nf_erase(flash,len,1) != 0) goto fail;
 
-ERASE_PASS:
 	buart_print (pass);
 
-    	//write flash
-   	buart_print("\n\rProgramming flash....");
+	//write flash
+	buart_print("\n\rProgramming flash....");
 	if (nf_write_boot(flash, image, len) != 0) goto fail;
 
-WRITE_PASS:
 	buart_print (pass);
 	goto ok;
 
 fail:
 	jump_low_map();
-    	buart_print(fail);
-   	return -1;
+	buart_print(fail);
+	return -1;
 
 ok:
-    	return 0;
+	return 0;
 }
 
 int tftpc_download_sys(void)
 {
-	void *flash = (void *)LINUXLD_FLASH_KERNEL_START;
-   	char *image	= (char *)LINUXLD_DOWNLOAD_START;
- 	char lenstr[9];
+	void  *flash = (void *)LINUXLD_FLASH_KERNEL_START;
+	UINT8 *image = (UINT8*)LINUXLD_DOWNLOAD_START;
+	char lenstr[9];
 	UINT32	len;
 
 	buart_print("\n\rStarting the TFTP download(ESC to stop)..");
 	if ((len = tftpc(image, LINUXLD_FLASH_KERNEL_SIZE,1)) == 0)
 		goto fail;
-    	else
-        buart_print (pass);
+	else
+		buart_print (pass);
 
 	//print image length and starting address in sdram.
 	ultoa(len,lenstr);
 	lenstr[8]=0;
 	buart_print("\n\rFile total Length: ");
 	buart_print(lenstr);
-	ultoa(image,lenstr);
+	ultoa((unsigned long)image,lenstr);
 	buart_print("  Starting address: ");
 	buart_print(lenstr);
 
-    	//erase flash
-    	buart_print("\n\r\n\rEraseing flash.......");
+	//erase flash
+	buart_print("\n\r\n\rEraseing flash.......");
 	if (nf_erase(flash,NAND_FLASH_SIZE-LINUXLD_FLASH_KERNEL_START,1) != 0) goto fail;
 
-ERASE_PASS:
 	buart_print (pass);
 
-    	//write flash
-   	buart_print("\n\rProgramming flash....");
+	//write flash
+	buart_print("\n\rProgramming flash....");
 	if (nf_write(flash, image, len) != 0) goto fail;
 
-WRITE_PASS:
 	buart_print (pass);
 	goto ok;
 
 fail:
 	jump_low_map();
-    	buart_print(fail);
-   	return -1;
+	buart_print(fail);
+	return -1;
 
 ok:
-    	return 0;
+	return 0;
 }
 
 /*
@@ -243,49 +242,47 @@ ok:
  */
 int xmodem_download(void)
 {
-	void *flash = (void *)LINUXLD_FLASH_KERNEL_START;
-    char *image   = (char *)LINUXLD_DOWNLOAD_START;
-    int  len, rc = 0;
+	void  *flash = (void *)LINUXLD_FLASH_KERNEL_START;
+	UINT8 *image = (UINT8*)LINUXLD_DOWNLOAD_START;
+	int  len, rc = 0;
 
-    /* download linux image to temp using xmodem */
-    buart_print("\n\rDownloading..........");
-    if ((len = xmodem(image, LINUX_IMAGE_SIZE)) == -1)
-        goto fail;
-    else
-        buart_print (pass);
+	/* download linux image to temp using xmodem */
+	buart_print("\n\rDownloading..........");
+	if ((len = xmodem(image, LINUX_IMAGE_SIZE)) == -1)
+		goto fail;
+	else
+		buart_print (pass);
 
-    /* erase flash */
-    buart_print("\n\rEraseing flash.......");
+	/* erase flash */
+	buart_print("\n\rEraseing flash.......");
 
-    if (nf_erase(flash , len,1) != 0)
-        goto fail;
+	if (nf_erase(flash , len,1) != 0)
+		goto fail;
 
-ERASE_PASS:
 	buart_print (pass);
 
-    /* write flash */
-    buart_print("\n\rProgramming flash....");
+	/* write flash */
+	buart_print("\n\rProgramming flash....");
 
 	if (nf_write(flash, image, len) != 0)
-        goto fail;
+		goto fail;
 
-WRITE_PASS:
-        buart_print (pass);
+	buart_print (pass);
 
-    goto ok;
+	goto ok;
 
 fail:
-    buart_print(fail);
-    rc = -1;
+	buart_print(fail);
+	rc = -1;
 
 ok:
-    return (rc);
+	return (rc);
 }
 
 /*
  * linux boot function
  */
-void boot_linux()
+void boot_linux(void)
 {
 	int status;
 	void (*funcptr)(void);
@@ -307,7 +304,7 @@ void boot_linux()
 	DisableTimer();
 	funcptr = (void *)LINUX_ENTRY_POINT;
 	_icache_sync_all();
-    	funcptr();
+	funcptr();
 }
 
 
@@ -316,8 +313,8 @@ void boot_linux()
  */
 int ungzip(unsigned char *zimg)
 {
-    int i, err, gzflags;
-    z_stream d_stream;          // decompression stream
+	int i, err, gzflags;
+	z_stream d_stream;          // decompression stream
 
 	if((zimg[0] != gz_magic[0]) || (zimg[1] != gz_magic[1]))
 		return (Z_DATA_ERROR);
@@ -329,50 +326,51 @@ int ungzip(unsigned char *zimg)
 	// Skip the gzip header
 	zimg += 10;
 
-    if ((gzflags & EXTRA_FIELD) != 0)
-    {  	 /* skip the extra field */
-		i =  (*zimg++) + (*zimg++)<<8 ;
+	if ((gzflags & EXTRA_FIELD) != 0)
+	{  	 /* skip the extra field */
+		i =  (*zimg++);
+		i += (*zimg++)<<8;
 		while ((i-- != 0) && (*zimg++) != Z_EOF);
-    }
+	}
 
-    if ((gzflags & ORIG_NAME) != 0)
-    {  	/* skip the original file name */
+	if ((gzflags & ORIG_NAME) != 0)
+	{  	/* skip the original file name */
 		while (*zimg++ != Z_EOF);
-    }
+	}
 
-    if ((gzflags & COMMENT) != 0)
-    {   /* skip the .gz file comment */
+	if ((gzflags & COMMENT) != 0)
+	{   /* skip the .gz file comment */
 		while (*zimg++ != Z_EOF);
-    }
+	}
 
-    if ((gzflags & HEAD_CRC) != 0)
-    {  /* skip the header crc */
+	if ((gzflags & HEAD_CRC) != 0)
+	{  /* skip the header crc */
 		zimg += 2;
-    }
+	}
 
 	/* Decompress the image now */
-    d_stream.zalloc = NULL;
-    d_stream.zfree = NULL;
-    d_stream.opaque = (voidpf)0;
+	d_stream.zalloc = NULL;
+	d_stream.zfree = NULL;
+	d_stream.opaque = (voidpf)0;
 
-    d_stream.next_in  = zimg;               // address of compress image
-    d_stream.avail_in = LINUX_IMAGE_SIZE;   // size of compress image
+	d_stream.next_in  = zimg;               // address of compress image
+	d_stream.avail_in = LINUX_IMAGE_SIZE;   // size of compress image
 
-    if((err = inflateInit2(&d_stream, -MAX_WBITS)) != Z_OK)
-    {
-    	return err;
-    }
+	if((err = inflateInit2(&d_stream, -MAX_WBITS)) != Z_OK)
+	{
+		return err;
+	}
 
-    d_stream.next_out = (char *)LINUXLD_KERNEL_START; // address of decompress image
+	d_stream.next_out = (unsigned char *)LINUXLD_KERNEL_START; // address of decompress image
 	d_stream.avail_out = LINUXLD_KERNEL_SIZE; // size of decompress space
-    if((err = inflate(&d_stream, Z_NO_FLUSH)) != Z_STREAM_END)
-    {
-    	return err;
-    }
+	if((err = inflate(&d_stream, Z_NO_FLUSH)) != Z_STREAM_END)
+	{
+		return err;
+	}
 
-    err = inflateEnd(&d_stream);
+	err = inflateEnd(&d_stream);
 
-  	return err;
+	return err;
 }
 
 
@@ -408,7 +406,7 @@ void * calloc(size_t items, size_t size)
 /*
  * Jump to no-flash upper 2MB
  */
-void jump_up_map()
+void jump_up_map(void)
 {
     int i;
 
@@ -423,7 +421,7 @@ void jump_up_map()
 /*
  * Jump to no-flash upper 2MB
  */
- void jump_low_map()
+void jump_low_map(void)
 {
     int i;
 
@@ -432,5 +430,4 @@ void jump_up_map()
     ADM5120_SW_REG(GPIO_conf0_REG) = 0x3ff;
     for (i = 0; i < 10000; i++);
 }
-
 

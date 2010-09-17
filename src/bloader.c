@@ -50,8 +50,8 @@
 #define LOADER_START_HINT       '@'
 
 
-char hexdigit[] = "0123456789abcdef";
-char bt_name[] = "\r\nADM0000 Boot:";
+static char hexdigit[] = "0123456789abcdef";
+static char bt_name[] = "\r\nADM0000 Boot:";
 void *_heap_h;
 
 extern void _icache_sync_all(void);

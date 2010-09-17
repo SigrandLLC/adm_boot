@@ -40,7 +40,7 @@ extern "C" {
 #### System Map (SDRAM 16 Mbyte at least) ####
 
       0x0           +------------------------------------+	LINUXLD_SDRAM_START
-                    |     Exception (8 KB)				 |
+                    |     Exception (8 KB)               |
       0x2000        +------------------------------------+	LINUXLD_KERNEL_START
                     |     Linux Kernel                   |
                     |       Code & Data Segment          |
@@ -56,8 +56,8 @@ extern "C" {
                     |       Code & Data Segement         |
                     |       (64 KB)                      |
       0x810000      +------------------------------------+
-                    |	  Reserve Area (64KB)			 |
-                    |									 |
+                    |     Reserve Area (64KB)            |
+                    |                                    |
       0x820000      +------------------------------------+	LINUXLD_DOWNLOAD_START
                     |     Download Buffer                |
                     |       (4 MB)                       |
@@ -115,15 +115,15 @@ extern "C" {
 /********************************************************************************************
 #### System Map (NAND Flash) ####
 
-					+-------------------------+  LINUXLD_NANDFLASH_LOADER_START
-					|	Linuxld (64k)		  |
-					+-------------------------+  LINUXLD_NANDFLASH_BOOTPARAM_START
-					|	Boot param (64k)	  |
-					+-------------------------+  LINUXLD_NANDFLASH_KERNEL_START
-					|						  |
-					|	Linux kernel (4MB)	  |
-					|						  |
-					+-------------------------+
+	+-------------------------+  LINUXLD_NANDFLASH_LOADER_START
+	|     Linuxld (64k)       |
+	+-------------------------+  LINUXLD_NANDFLASH_BOOTPARAM_START
+	|     Boot param (64k)    |
+	+-------------------------+  LINUXLD_NANDFLASH_KERNEL_START
+	|                         |
+	|     Linux kernel (4MB)  |
+	|                         |
+	+-------------------------+
 *********************************************************************************************/
 
 #define LINUXLD_NANDFLASH_LOADER_SIZE		0x14000
@@ -172,6 +172,19 @@ extern "C" {
 #define LINUXLD_NORFLASH_MAP_SIZE   0x200000
 
 /********************************************************************************************/
+
+int tftpc_download_boot(void);
+int tftpc_download_sys (void);
+int update_bootloader(void);
+int xmodem_download(void);
+void check_for_bad(void);
+void find_bad_blocks(UINT32 start);
+void flash_erase(UINT32 start);
+void flash_erase_all(void);
+void create_bad_blocks(void);
+void boot_linux(void);
+
+
 #endif /* _LINUXLD_H */
 
 #if __cplusplus

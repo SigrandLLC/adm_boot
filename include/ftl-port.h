@@ -15,8 +15,7 @@ typedef unsigned short	__u16;
 typedef unsigned int	__u32;
 typedef unsigned long   __u64;
 
-typedef unsigned char	u_char;
-typedef long			loff_t;
+typedef long		loff_t;
 typedef unsigned int	size_t;
 
 #define min_t(type,x,y) \

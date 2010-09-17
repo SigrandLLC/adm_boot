@@ -31,13 +31,16 @@
 #include <mips.h>
 #include <mips4kc.h>
 #include <adm5120.h>
+#include <buart.h>
+#include <buart.h>
+#include <utils.h>
 
 #include "nand.h"
 #include "ftl-port.h"	//porting by ProChao, 10/8/2003
 
 //---------------------------------------------------------
 volatile UINT8  *base = (UINT8 *) NAND_REG_BASE;
-UINT8 ostr[20];
+char ostr[20];
 
 static struct nand_oobinfo  oobinfo_buf = {	// init'ed by ProChao
         1,
@@ -47,7 +50,7 @@ static struct nand_oobinfo  oobinfo_buf = {	// init'ed by ProChao
 static u_char  databuf[NAND_PAGE_SIZE], oobbuf[NAND_PAGE_OOB_SIZE] =
 { 0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x85,0x19,0x03,0x20,0x08,0x00,0x00,0x00 };
 
-static inline void print_val(UINT8 *str, int val){
+static inline void print_val(char *str, int val){
 	ostr[8]=0;
 	buart_print("\n\r");
 	buart_print(str);
@@ -55,7 +58,7 @@ static inline void print_val(UINT8 *str, int val){
 	buart_print(" = ");
     	buart_print(ostr);
 }
-static inline void print_val1(UINT8 *str, int val){
+static inline void print_val1(char *str, int val){
 	ostr[8]=0;
 	buart_print("\r");
 	buart_print(str);
@@ -191,13 +194,13 @@ static void nand_command( UINT command, UINT32 column, UINT32 page_addr)
 	/* Set ALE and clear CLE to start address cycle */
 	nand_hwcontrol( NAND_CTL_CLRCLE);
 
-	if (column != -1 || page_addr != -1)
+	if (column != (UINT32)-1 || page_addr != (UINT32)-1)
 	{
 		nand_hwcontrol( NAND_CTL_SETALE);
 		/* Serially input address */
-		if (column != -1)
+		if (column != (UINT32)-1)
 			nand_write_byte( column);
-		if (page_addr != -1)
+		if (page_addr != (UINT32)-1)
 		{
 			nand_write_byte((unsigned char) (page_addr & 0xff));
 			nand_write_byte((unsigned char) ((page_addr >> 8) & 0xff));
@@ -250,7 +253,6 @@ static int nand_verify_buf( const UINT8 *buf, int len)
 static int read_status()
 {
 	UINT8 status;
-	int j=0;
 	nand_command( NAND_CMD_STATUS, -1, -1);
 	while( !( (status=nand_read_byte()) & 0x40 ) );
 	if(status & 0x01) return -1;
@@ -287,7 +289,8 @@ static int nand_mark_bad_block( UINT32 page)
 
 static int nand_read_page( UINT8 *data_poi, UINT32 page, UINT32 from, UINT32 len)
 {
-	int j, ecc_status, *oob_config = oobinfo_buf.eccpos;
+	int ecc_status, *oob_config = oobinfo_buf.eccpos;
+        size_t j;
 	UINT8  ecc_calc[6], ecc_code[6];
 
 	nand_command( NAND_CMD_READ0, 0x00, page);
@@ -322,8 +325,10 @@ static int nand_read_page( UINT8 *data_poi, UINT32 page, UINT32 from, UINT32 len
  */
 static int nand_write_page( const UINT8 *data, UINT32 page,UINT32 len)
 {
-	int     i, status;
-	UINT8  ecc_code[6], *data_poi;
+	int status;
+	size_t i;
+	UINT8  ecc_code[6];
+	UINT8  const *data_poi;
 	int     *oob_config = oobinfo_buf.eccpos;
 
 	//for (i = 0; i < NAND_PAGE_OOB_SIZE; i++) oobbuf[i] = 0xff;
@@ -418,8 +423,8 @@ static int nand_write_boot_page( const UINT8 *data_poi, UINT32 page)
 /* NAND read with ECC */
 int nand_read_ecc( UINT8 *from, UINT32 len, UINT32 *retlen, UINT8 *buf)
 {
-	int     i, j, col, page, page1st, page_count, col1, len1;//, ret;
-	int     read = 0;
+	int     page, page1st, page_count, col1, len1;//, ret;
+	UINT32  read = 0, col;
 	int     *oob_config;
 
 	oob_config = oobinfo_buf.eccpos;
@@ -481,8 +486,8 @@ int nand_read_ecc( UINT8 *from, UINT32 len, UINT32 *retlen, UINT8 *buf)
 int nand_write_ecc( UINT8 *to, UINT32 len, UINT32 *retlen, const UINT8 * buf)
 {
 	unsigned long	page1st;
-	int 	page, written = 0, page_count=-1;
-	UINT32	col;
+	int 	page, page_count=-1;
+	UINT32	col, written = 0;
 
 	/* Do not allow write past end of device */
 	if (((UINT32)to + len) > NAND_FLASH_SIZE)
@@ -550,8 +555,8 @@ int nand_write_ecc( UINT8 *to, UINT32 len, UINT32 *retlen, const UINT8 * buf)
 
 int nand_write_boot( UINT8 *to, UINT32 len, UINT32 *retlen, const UINT8 * buf)
 {
-	unsigned long	page1st, blkAddr = -1;
-	int 	page, ret = 0, oob = 0, written = 0, page_count=-1;
+	int 	page;
+        UINT32 written = 0;
 	//UINT8	*data_poi;
 
 	/* reject writes, which are not page aligned */
@@ -593,8 +598,8 @@ int nand_write_boot( UINT8 *to, UINT32 len, UINT32 *retlen, const UINT8 * buf)
 // note that, the addr must be the block starting address
 int nand_erase(UINT8 *addr, UINT32 len, UINT32 scan)
 {
-	unsigned long	page1st;
-	int 	page, written = 0, page_count=-1;
+	int 	page;
+        UINT32 written = 0;
 
 	/* Do not allow erase past end of device */
 	/* Shift to get page */
@@ -651,7 +656,7 @@ void check_bad_block(void)
 void scan_bad_blocks(UINT8 *addr)
 {
 	int i,j,page,size = NAND_PAGE_SIZE + NAND_PAGE_OOB_SIZE, page_num = NAND_FLASH_BLOCK_NO*NAND_BLK_PER_PAGE;
-	char data[size];
+	UINT8 data[size];
 	for(j=0; j < size; j++) data[j] = 0;
 	nand_select_chip( 0);
 	nand_hwcontrol(NAND_CTL_CLRWP);

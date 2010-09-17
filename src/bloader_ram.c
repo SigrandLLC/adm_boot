@@ -38,11 +38,16 @@
 #endif
 #include <bconfig.h>
 #include <uartdrv.h>
+#include <buart.h>
 #include <if_5120.h>
 #include <linuxld.h>
 #include <banner.h>
 #include <param.h>
 #include <bsp_cfg.h>
+#include <timer.h>
+#include <memlib.h>
+#include <except.h>
+#include <tftp.h>
 
 #define LOADER_BACK_DOOR_TIME   3
 #define LOADER_BACK_DOOR_HINT   (' ')
@@ -50,8 +55,8 @@
 #define LOADER_START_HINT       '@'
 
 
-char hexdigit[] = "0123456789abcdef";
-char bt_name[] = "\r\nADM0000 Boot:";
+static char hexdigit[] = "0123456789abcdef";
+static char bt_name[] = "\r\nADM0000 Boot:";
 void *_heap_h;
 
 extern void _icache_sync_all(void);
@@ -92,7 +97,6 @@ static void print_tftpc_menu(void)
 void tftp_client_menu(void)
 {
 	char key;
-	UINT32 ticks;
 	while (1)
 	{
 		print_tftpc_param();
@@ -146,7 +150,6 @@ static void print_xmodem_menu(void)
 void xmodem_client_menu(void)
 {
 	char key;
-	UINT32 ticks;
 	while (1)
 	{
 		print_xmodem_menu();
@@ -191,7 +194,6 @@ static void print_flash_menu(void)
 void flash_client_menu(void)
 {
 	char key;
-	UINT32 ticks;
 	while (1)
 	{
 		print_flash_menu();
@@ -238,12 +240,10 @@ void flash_client_menu(void)
 
 void c_entry(void)
 {
-    int type;
     register int i;
     register int c;
     unsigned long   tick1,tick2;
-    void    (*funcptr)( int );
-	int countdown=3;
+    int countdown=3;
 
     /* initialize uart, timer and flash */
     buart_init();
@@ -341,7 +341,7 @@ main_menu:
     {
         print_menu();
 
-        (char)c=buart_getchar();
+        c=buart_getchar();
 
         buart_put(c);
 

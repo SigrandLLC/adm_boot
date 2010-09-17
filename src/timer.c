@@ -28,6 +28,7 @@
 #include <ctype.h>
 #include <mips4kc.h>
 #include <adm5120.h>
+#include <timer.h>
 
 static UINT32 timeticks = 0;
 
@@ -66,6 +67,5 @@ void DisableTimer(void)
 	/*buart_print("\n\rTimer irqdisable..");
 	irqDisconnect(INT_LVL_TIMER);
 	IrqDisable(INT_LVL_TIMER);*/
-	return 0;
 }
 

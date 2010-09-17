@@ -26,11 +26,16 @@
 ;
 ;*****************************************************************************/
 #include <ctype.h>
+#include <string.h>
 #include <irqlib.h>
 #include <memlib.h>
 #include <eth.h>
+#include <arp.h>
 #include <skbuff.h>
 #include <if_5120.h>
+#include <param.h>
+#include <utils.h>
+#include <except.h>
 
 #define DEF_BRG_CTRL_FLAG			0x00
 
@@ -47,7 +52,7 @@ extern void DbgUartPutChar(char);
 #endif
 
 PEthPktQueue_OBJ EthPktQueue;
-static char local_mac[6];
+static UINT8 local_mac[6];
 
 /**********************************************************************************/
 /* InitBridge:																	  */
@@ -103,7 +108,7 @@ int eth_reinit(void)
 
 int eth_send(struct sk_buff *skb, unsigned char *dest_addr, unsigned short proto)
 {
-	int s,i;
+	int i;
 	UINT8 *buf;
 	PDRV_PACKET_DESC Pkt;
 	struct ethhdr *eth_hdr;
@@ -131,18 +136,20 @@ int eth_send(struct sk_buff *skb, unsigned char *dest_addr, unsigned short proto
 	}
 
 	SendPacketsL(Pkt);
+
+	return 0;
 }
 
 int eth_rcv(struct sk_buff *skb)
 {
 	static int rxcount=0;
 	PDRV_PACKET_DESC Pkt;
-	UINT32 srcport, srcvlan;
+	UINT32 srcport;
 	UINT8 *buf;
 	int irq_state;
 
    	irq_state = mips_int_lock();
-    Pkt = EthPktQueue->iqL_head;
+	Pkt = EthPktQueue->iqL_head;
 	if(EthPktQueue->iqL_head != NULL)
 	{
 		if(EthPktQueue->iqL_head == EthPktQueue->iqL_tail)
@@ -152,7 +159,7 @@ int eth_rcv(struct sk_buff *skb)
 
 		Pkt->Next = NULL;
 	}
-    mips_int_unlock(irq_state);
+	mips_int_unlock(irq_state);
 
 	if(Pkt != NULL)
 	{

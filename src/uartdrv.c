@@ -28,8 +28,9 @@
 #include <mips4kc.h>
 #include <adm5120.h>
 #include <buart.h>
-//#include "btimer.h"
+#include <timer.h>
 #include <uartdrv.h>
+#include <string.h>
 
 //{HARDWARE_PROFILE include file
 
@@ -90,6 +91,8 @@ int InitUart(int port, int rate)
 
 	/* Enable uart port */
 	UART_REG_WRITE(&uart, UART_CR_REG, UART_PORT_EN);
+
+	return FALSE;
 }
 
 

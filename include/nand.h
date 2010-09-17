@@ -98,11 +98,25 @@ typedef enum {
 	FL_SYNCING
 } nand_state_t;
 
-int nand_read(UINT8 *dst, UINT8 *src, UINT32 len);
-int nand_write(UINT8 *dst, UINT8 *src, UINT32 size);
-int nand_erase(UINT8 *addr, UINT32 len, UINT32 scan);
-//int nand_write_boot UINT8 *to, UINT32 len, UINT32 *retlen, const UINT8 * buf
-int nand_write_boot1(UINT8 *dst, UINT8 *src, UINT32 size);
+int  nand_read (UINT8 *dst, UINT8 *src, UINT32 len);
+int  nand_write(UINT8 *dst, UINT8 *src, UINT32 size);
+int  nand_erase(UINT8 *addr, UINT32 len, UINT32 scan);
+int  nand_erase_block(UINT32 page);
+int  nand_write_boot (UINT8 *to, UINT32 len, UINT32 *retlen, const UINT8 * buf);
+int  nand_write_boot1(UINT8 *dst, UINT8 *src, UINT32 size);
+void nand_calculate_ecc(const u_char *dat, u_char *ecc_code);
+int  nand_write_ecc(UINT8 *to, UINT32 len, UINT32 *retlen, const UINT8 * buf);
+int  nand_read_ecc(UINT8 *from, UINT32 len, UINT32 *retlen, UINT8 *buf);
+int  nand_correct_data(u_char *dat, u_char *read_ecc, u_char *calc_ecc);
+
+void check_bad_block(void);
+void scan_bad_blocks(UINT8 *addr);
+void bad_block(void);
+
+int  nf_erase(UINT8 *addr, UINT32 len, UINT32 scan);
+int  nf_write(UINT8 *dst, UINT8 *src, UINT32 len);
+int  nf_write_boot(UINT8 *dst, UINT8 *src, UINT32 len);
+int  nf_read(UINT8 *dst, UINT8 *src, UINT32 len);
 
 #endif
 

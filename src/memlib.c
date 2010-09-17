@@ -31,9 +31,8 @@
 #include <adm5120.h>
 #include <except.h>
 #include <linuxld.h>
-
-void *MemAlloc(UINT32 NumOfByte, UINT32 clear);
-void *SharedMemAlloc(UINT32 NumOfByte, UINT32 clear);
+#include <memlib.h>
+#include <string.h>
 
 
 /*********  Global Variables ********/
@@ -144,8 +143,7 @@ void *SharedMemAlloc(UINT32 NumOfByte, UINT32 clear)
 /****************************************************************************/
 void memlib_init(void)
 {
-	int s, i;
-	unsigned long reg_offset, reg;
+	int s;
 	_heap_h=(void *)LINUXLD_MEMPOOL_STATR;
 	s = mips_int_lock();
 

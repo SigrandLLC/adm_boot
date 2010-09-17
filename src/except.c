@@ -31,8 +31,10 @@
 #include <mips4kc.h>
 #include <adm5120.h>
 #include <except.h>
+#include <cachelib.h>
 
 #include <ctype.h>
+#include <string.h>
 
 #define MIPS_INT_UNREGISTERD	0
 #define MIPS_INT_REGISTERD		1
@@ -97,6 +99,7 @@ void int_hdl(UINT32 status_reg, UINT32 cause_reg)
 void gexcept_hdl(UINT32 status_reg, UINT32 cause_reg, UINT32 epc_reg)
 {
 	int exc_code;
+	(void)epc_reg;
 
 	exc_code = (cause_reg & CP0_CAUSE_EXCCODE_MASK) >> CP0_CAUSE_EXCCODE_SHIFT;
 
@@ -117,7 +120,7 @@ void gexcept_hdl(UINT32 status_reg, UINT32 cause_reg, UINT32 epc_reg)
 void install_exception(void)
 {
 	static int installed = 0;
-	UINT32 status_val, addr;
+	UINT32 status_val;
 	int len;
 
 extern char TLBrefill_except[], TLBrefill_exceptEnd[];
@@ -137,7 +140,7 @@ extern char int_except[], int_exceptEnd[];
 		addr += 0x10;
 	}
 #else
-	icache_invalidate_block(MIPS_TLBRIFLL_VECTOR, len);
+	icache_invalidate_block((void *)MIPS_TLBRIFLL_VECTOR, len);
 #endif
 
 #endif
@@ -154,7 +157,7 @@ extern char int_except[], int_exceptEnd[];
 		addr += 0x10;
 	}
 #else
-	icache_invalidate_block(MIPS_GENERAL_VECTOR, len);
+	icache_invalidate_block((void *)MIPS_GENERAL_VECTOR, len);
 #endif
 #endif
 
@@ -169,7 +172,7 @@ extern char int_except[], int_exceptEnd[];
 		addr += 0x10;
 	}
 #else
-	icache_invalidate_block(MIPS_INTERRUPT_VECTOR, len);
+	icache_invalidate_block((void *)MIPS_INTERRUPT_VECTOR, len);
 #endif
 
 #endif

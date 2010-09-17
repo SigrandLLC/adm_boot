@@ -226,11 +226,15 @@ void fiq_unlock(void)
 /**********************************************************************************/
 /* irq_handler:																	  */
 /**********************************************************************************/
-static void irq_handler(int intnum)
+static void irq_handler(int intnum, UINT32 parm0, UINT32 parm1)
 {
 	UINT32 intsrc;
 	int i;
 	IRQ_OBJ *pIRQ;
+
+	(void)intnum;
+	(void)parm0;
+	(void)parm1;
 
 	intsrc = ADM5120_INTC_REG(IRQ_STATUS_REG) & IRQ_MASK;
 	for(i=0; intsrc; intsrc >>= 1, i++)
@@ -257,11 +261,15 @@ static void irq_handler(int intnum)
 /**********************************************************************************/
 /* fiq_handler:																	  */
 /**********************************************************************************/
-void fiq_handler(int intnum)
+void fiq_handler(int intnum, UINT32 parm0, UINT32 parm1)
 {
 	UINT32 intsrc;
 	IRQ_OBJ *pIRQ;
 	int i;
+
+	(void)intnum;
+	(void)parm0;
+	(void)parm1;
 
 	intsrc = ADM5120_INTC_REG(FIQ_STATUS_REG) & IRQ_MASK;
 	for(i=0; intsrc; intsrc >>= 1, i++)

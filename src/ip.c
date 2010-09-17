@@ -29,14 +29,17 @@
 #include <skbuff.h>
 #include <eth.h>
 #include <ip.h>
+#include <arp.h>
 #include <checksum.h>
-//#include "utils.h"
+#include <buart.h>
+#include <utils.h>
+#include <param.h>
 
 static UINT32 local_ip = 0;
 static UINT32 gw_ip = 0;
 
-static UINT8 ostr[20];
-static inline void print_val(UINT8 *str, int val){
+static char ostr[20];
+static inline void print_val(char *str, int val){
 	ostr[8]=0;
 	buart_print("\n\r");
 	buart_print(str);
@@ -54,6 +57,7 @@ int ip_init(void)
 
 int ip_reinit(unsigned long ip)
 {
+	(void)ip;
 	bsp_GetTftpIp(&local_ip);
 	return 0;
 }

@@ -41,6 +41,7 @@ struct sk_buff {
 	unsigned int len;			/* Length of actual data			*/
 };
 
+void skb_headerinit(struct sk_buff *skb);
 int skb_init(void);
 struct sk_buff *alloc_skb(void);
 void free_skb(struct sk_buff *skb);

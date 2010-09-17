@@ -60,4 +60,7 @@ typedef struct _UART_OBJ_
 	int	baudrate;
 } UART_OBJ, *PUART_OBJ;
 
+
+void ReadLine(char *buf, int num);
+
 #endif

@@ -48,7 +48,7 @@ extern "C" {
 #define FILE_CORRUPT            0x80
 
 
-int     xmodem(char *buf, int buf_size);
+int xmodem(uchar *buf, int buf_size);
 
 
 #endif /* _XMODEM_H */
