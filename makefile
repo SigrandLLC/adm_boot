@@ -63,7 +63,7 @@ endif
 
 
 #=======================  Compiler Flags  ============================
-CC_FLAG 		= $(ENDIAN_FG) -Wcomment -Os
+CC_FLAG 		= -Wa,$(ENDIAN_FG) -Wcomment -Os
 CPU_FLAG		= -mips32
 #START_FLAGF		= -DFLASH_START
 
