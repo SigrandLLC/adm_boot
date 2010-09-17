@@ -54,30 +54,30 @@ This release supports ADM5120 TestBoard fetures.
 
       0x0           +------------------------------------+	LINUXLD_SDRAM_START
                     |     Exception (8 KB)               |
-      0x2000        +------------------------------------+	LINUXLD_KERNEL_START
+      0x00002000    +------------------------------------+	LINUXLD_KERNEL_START
                     |     Linux Kernel                   |
                     |       Code & Data Segment          |
                     |       (6 MB)                       |
                     |                                    |
                     |                                    |
-      0x600000      +------------------------------------+	LINUXLD_MEMPOOL_STATR
+      0x00600000    +------------------------------------+	LINUXLD_MEMPOOL_STATR
                     |     Bootloader memory pool         |
                     |       (2 MB)                       |
                     |                                    |
-      0x800000      +------------------------------------+	LINUXLD_LOADER_START
+      0x00800000    +------------------------------------+	LINUXLD_LOADER_START
                     |     Boot loader                    |
                     |       Code & Data Segement         |
                     |       (64 KB)                      |
-      0x810000      +------------------------------------+
+      0x00810000    +------------------------------------+
                     |     Reserve Area (64KB)            |
                     |                                    |
-      0x820000      +------------------------------------+	LINUXLD_DOWNLOAD_START
+      0x00820000    +------------------------------------+	LINUXLD_DOWNLOAD_START
                     |     Download Buffer                |
                     |       (4 MB)                       |
                     |                                    |
-      0xc00000      +------------------------------------+	LINUXLD_GZIP_HEAP
+      0x00c00000    +------------------------------------+	LINUXLD_GZIP_HEAP
                     |     gzip heap                      |
                     |       (3 MB)                       |
                     |                                    |
-      0x1000000     +------------------------------------+
+      0x01000000    +------------------------------------+
 
