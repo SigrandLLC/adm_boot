@@ -16,18 +16,34 @@ BOARD_NOR_FLASH_SIZE = 0x200000
 
 
 
+#============================ Make ==============================
+# Don't define any builtin rules and variables.
+MAKEFLAGS := $(MAKEFLAGS)R
+
+# Delete default suffixes
+.SUFFIXES:
+
+# Delete default rules
+.DEFAULT:
+
+.DEFAULT:
+	$(error $(i)no rules for target "$@")
+
+# Tell GNU make 3.79 not to run in parallel
+.NOTPARALLEL:
+
 #============================ Compilers ==============================
 CROSS_TOOLS ?= mipsel-linux
-AS	?= $(CROSS_TOOLS)-as
-CC	?= $(CROSS_TOOLS)-gcc
-LD	?= $(CROSS_TOOLS)-ld
-AR	?= $(CROSS_TOOLS)-ar
+AS	= $(CROSS_TOOLS)-as
+CC	= $(CROSS_TOOLS)-gcc
+LD	= $(CROSS_TOOLS)-ld
+AR	= $(CROSS_TOOLS)-ar
 
 
 #============================ Tools ==================================
-RM	= rm
+RM	= rm -f
 MV	= mv
-CP	= cp
+CP	= cp -a
 OBJ_TO_COPY ?= $(CROSS_TOOLS)-objcopy
 OBJ_DUMP    ?= $(CROSS_TOOLS)-objdump
 
@@ -234,6 +250,6 @@ endif
 .PHONY : cleanall clean
 cleanall: clean
 clean:
-	- $(RM) $(OBJ_DIR)/$(BOOT_NAME).* $(EXEC_OBJS) $(OBJ_DIR)/$(EXEC_NAME).* \
-			$(BIN_DIR)/$(ROM_NAME).img
+	@$(RM) -v $(OBJ_DIR)/$(BOOT_NAME).* $(EXEC_OBJS) $(OBJ_DIR)/$(EXEC_NAME).* \
+			$(BIN_DIR)/$(ROM_NAME).img $(OBJ_DIR)/*.o
 
