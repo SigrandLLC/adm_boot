@@ -33,19 +33,19 @@ MAKEFLAGS := $(MAKEFLAGS)R
 .NOTPARALLEL:
 
 #============================ Compilers ==============================
-CROSS_TOOLS ?= mipsel-linux
-AS	= $(CROSS_TOOLS)-as
-CC	= $(CROSS_TOOLS)-gcc
-LD	= $(CROSS_TOOLS)-ld
-AR	= $(CROSS_TOOLS)-ar
+CROSS_PREFIX ?= mipsel-linux-
+AS	= $(CROSS_PREFIX)as
+CC	= $(CROSS_PREFIX)gcc
+LD	= $(CROSS_PREFIX)ld
+AR	= $(CROSS_PREFIX)ar
+OBJCOPY = $(CROSS_PREFIX)objcopy
+OBJDUMP = $(CROSS_PREFIX)objdump
 
 
 #============================ Tools ==================================
 RM	= rm -f
 MV	= mv
 CP	= cp -a
-OBJ_TO_COPY ?= $(CROSS_TOOLS)-objcopy
-OBJ_DUMP    ?= $(CROSS_TOOLS)-objdump
 
 
 #=======================  Endian dependance  =========================
@@ -164,22 +164,22 @@ all : rom_img_ram rom_img
 
 rom_img_ram: boot_img_ram main_img_ram
 	cat  $(OBJ_DIR)/$(BOOT_NAME_RAM).img $(OBJ_DIR)/$(EXEC_NAME_RAM).img > $(BIN_DIR)/$(ROM_NAME_RAM).img
-	$(OBJ_TO_COPY) --set-start=0x80800000 -O srec -I binary  $(BIN_DIR)/$(ROM_NAME_RAM).img $(BIN_DIR)/$(ROM_NAME_RAM).srec
+	$(OBJCOPY) --set-start=0x80800000 -O srec -I binary  $(BIN_DIR)/$(ROM_NAME_RAM).img $(BIN_DIR)/$(ROM_NAME_RAM).srec
 #	$(BIN_DIR)/$(CMM_CREATE) $(BIN_DIR)/$(ROM_NAME).img  $(BIN_DIR)/$(ROM_NAME).cmm
 
 boot_img_ram: $(BOOT_OBJS_RAM)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _nand_reset -Ttext 0x80800000 \
 				-Map $(OBJ_DIR)/$(BOOT_NAME_RAM).map -o $(OBJ_DIR)/$(BOOT_NAME_RAM).elf	\
 				$(BOOT_OBJS_RAM) $(LIBS)
-	$(OBJ_TO_COPY) -O binary $(OBJ_DIR)/$(BOOT_NAME_RAM).elf  $(OBJ_DIR)/$(BOOT_NAME_RAM).bin
-	$(OBJ_TO_COPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME_RAM).bin \
+	$(OBJCOPY) -O binary $(OBJ_DIR)/$(BOOT_NAME_RAM).elf  $(OBJ_DIR)/$(BOOT_NAME_RAM).bin
+	$(OBJCOPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME_RAM).bin \
 				$(OBJ_DIR)/$(BOOT_NAME_RAM).img
 
 main_img_ram: $(EXEC_OBJS_RAM)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _ldrinit -Ttext 0x80801000 \
 			-Map $(OBJ_DIR)/$(EXEC_NAME_RAM).map -o $(OBJ_DIR)/$(EXEC_NAME_RAM).elf \
 			$(EXEC_OBJS_RAM) $(LIBS)
-	$(OBJ_TO_COPY) -O binary $(OBJ_DIR)/$(EXEC_NAME_RAM).elf  $(OBJ_DIR)/$(EXEC_NAME_RAM).bin
+	$(OBJCOPY) -O binary $(OBJ_DIR)/$(EXEC_NAME_RAM).elf  $(OBJ_DIR)/$(EXEC_NAME_RAM).bin
 	$(CP) $(OBJ_DIR)/$(EXEC_NAME_RAM).bin $(OBJ_DIR)/$(EXEC_NAME_RAM).img
 
 
@@ -192,15 +192,15 @@ boot_img: $(BOOT_OBJS)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _nand_reset -Ttext  0x80800000 \
 				-Map $(OBJ_DIR)/$(BOOT_NAME).map -o $(OBJ_DIR)/$(BOOT_NAME).elf	\
 				$(BOOT_OBJS) $(LIBS)
-	$(OBJ_TO_COPY) -O binary $(OBJ_DIR)/$(BOOT_NAME).elf  $(OBJ_DIR)/$(BOOT_NAME).bin
-	$(OBJ_TO_COPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME).bin \
+	$(OBJCOPY) -O binary $(OBJ_DIR)/$(BOOT_NAME).elf  $(OBJ_DIR)/$(BOOT_NAME).bin
+	$(OBJCOPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME).bin \
 				$(OBJ_DIR)/$(BOOT_NAME).img
 
 main_img: $(EXEC_OBJS)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _ldrinit -Ttext 0x80801000 \
 			-Map $(OBJ_DIR)/$(EXEC_NAME).map -o $(OBJ_DIR)/$(EXEC_NAME).elf \
 			$(EXEC_OBJS) $(LIBS)
-	$(OBJ_TO_COPY) -O binary $(OBJ_DIR)/$(EXEC_NAME).elf  $(OBJ_DIR)/$(EXEC_NAME).bin
+	$(OBJCOPY) -O binary $(OBJ_DIR)/$(EXEC_NAME).elf  $(OBJ_DIR)/$(EXEC_NAME).bin
 	$(CP) $(OBJ_DIR)/$(EXEC_NAME).bin $(OBJ_DIR)/$(EXEC_NAME).img
 
 
@@ -224,15 +224,15 @@ boot_img: $(BOOT_OBJS)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e romreset_except -Ttext 0x80800000 \
 				-Map $(OBJ_DIR)/$(BOOT_NAME).map -o $(OBJ_DIR)/$(BOOT_NAME).elf	\
 				$(BOOT_OBJS) $(LIBS)
-	$(OBJ_TO_COPY) -O binary $(OBJ_DIR)/$(BOOT_NAME).elf  $(OBJ_DIR)/$(BOOT_NAME).bin
-	$(OBJ_TO_COPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME).bin \
+	$(OBJCOPY) -O binary $(OBJ_DIR)/$(BOOT_NAME).elf  $(OBJ_DIR)/$(BOOT_NAME).bin
+	$(OBJCOPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME).bin \
 				$(OBJ_DIR)/$(BOOT_NAME).img
 
 main_img: $(EXEC_OBJS)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _ldrinit -Ttext 0x80801000 \
 			-Map $(OBJ_DIR)/$(EXEC_NAME).map -o $(OBJ_DIR)/$(EXEC_NAME).elf \
 			$(EXEC_OBJS) $(LIBS)
-	$(OBJ_TO_COPY) -O binary $(OBJ_DIR)/$(EXEC_NAME).elf  $(OBJ_DIR)/$(EXEC_NAME).bin
+	$(OBJCOPY) -O binary $(OBJ_DIR)/$(EXEC_NAME).elf  $(OBJ_DIR)/$(EXEC_NAME).bin
 	$(CP) $(OBJ_DIR)/$(EXEC_NAME).bin $(OBJ_DIR)/$(EXEC_NAME).img
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
