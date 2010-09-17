@@ -247,8 +247,7 @@ endif
 
 
 #========================== Clean rules ==============================
-.PHONY : cleanall clean
-cleanall: clean
+.PHONY : clean
 clean:
 	@$(RM) -v $(OBJ_DIR)/$(BOOT_NAME).* $(EXEC_OBJS) $(OBJ_DIR)/$(EXEC_NAME).* \
 			$(BIN_DIR)/$(ROM_NAME).img $(OBJ_DIR)/*.o
