@@ -1,0 +1,3 @@
+At some version the check for sign extensions was broken for MIPS
+binutils, in that case the workaround was to specify the full sign
+extension for 64 bit, that is 0xffffffffa0000000.
