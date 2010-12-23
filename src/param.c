@@ -508,8 +508,8 @@ void print_tftpc_param(void)
 		buart_print("\n\rGateway IP: ");
 		IpAddrToStr(cfg->tftp_param.gw_ip,str);
 		buart_print(str);
-		//buart_print("\n\rRemote File bootloader: ");
-		//buart_print(cfg->tftp_param.remote_file_boot);
+		buart_print("\n\rRemote File bootloader: ");
+		buart_print(cfg->tftp_param.remote_file_boot);
 		buart_print("\n\rRemote File system: ");
 		buart_print(cfg->tftp_param.remote_file_sys);
 		buart_print("\n\r");
@@ -579,21 +579,21 @@ gwip_again:
 	{
 		buart_print("Gateway IP unchanged..\n\r");
 	}
-//filename_boot:
-//	buf[0] = 0;
-//	buart_print("Enter remote bootloader file name : ");
-//	ReadLine(buf, BOOT_LINE_SIZE);
-//	if(buf[0] != 0)
-//	{
-//		if(strlen(buf) > BSP_IFNAME_MAX_LEN)
-//		{
-//			buart_print("Ifname is too long. Maximum name length is 15 characters.\n\r");
-//			goto filename_boot;
-//		}
-//		strcpy(cfg->tftp_param.remote_file_boot, buf);
-//	}
-//	else
-//		buart_print("Remote file unchanged.\n\r");
+filename_boot:
+	buf[0] = 0;
+	buart_print("Enter remote bootloader file name : ");
+	ReadLine(buf, BOOT_LINE_SIZE);
+	if(buf[0] != 0)
+	{
+		if(strlen(buf) > BSP_IFNAME_MAX_LEN)
+		{
+			buart_print("Ifname is too long. Maximum name length is 15 characters.\n\r");
+			goto filename_boot;
+		}
+		strcpy(cfg->tftp_param.remote_file_boot, buf);
+	}
+	else
+		buart_print("Remote file unchanged.\n\r");
 
 filename_sys:
 	buf[0] = 0;
