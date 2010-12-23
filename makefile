@@ -3,16 +3,6 @@
 #
 # boot loader make file
 #=====================================================================
-# LITTLE_ENDIAN OR BIG_ENDIAN
-BYTE_ORDER = LITTLE_ENDIAN
-
-
-#==========================FLASH CONFIGURATION===========================
-# NOR_FLASH OR NAND_FLASH
-FLASH_TYPE = NAND_FLASH
-
-# 0x400000 OR 0x200000
-BOARD_NOR_FLASH_SIZE = 0x200000
 
 
 
@@ -32,8 +22,12 @@ MAKEFLAGS := $(MAKEFLAGS)R
 # Tell GNU make 3.79 not to run in parallel
 .NOTPARALLEL:
 
+# Set V=something for verbose building messages
+#V = 1
+v = $(if $(V),,@)
+
 #============================ Compilers ==============================
-CROSS_PREFIX ?= mipsel-linux-
+CROSS_PREFIX ?= $(HOME)/gnutools/mipsisa32-elf/bin/mipsisa32-elf-
 AS	= $(CROSS_PREFIX)as
 CC	= $(CROSS_PREFIX)gcc
 LD	= $(CROSS_PREFIX)ld
@@ -43,50 +37,38 @@ OBJDUMP = $(CROSS_PREFIX)objdump
 
 
 #============================ Tools ==================================
-RM	= rm -f
-MV	= mv
-CP	= cp -a
+RM	= rm    $(if $(V),-v) -f
+RM_R	= rm    $(if $(V),-v) -fr
+MV	= mv    $(if $(V),-v)
+CP	= cp    $(if $(V),-v) -a
+MKDIR   = mkdir $(if $(V),-v)
+MKDIR_P = mkdir $(if $(V),-v) -p
 
 
 #=======================  Endian dependance  =========================
-ifeq ("$(BYTE_ORDER)", "LITTLE_ENDIAN")
-CCBYTE_ORDER = little-endian
 ENDIAN_FG = -EL
-LIB_PATH = -L. -L./lib/el
-EDIR = el
-else
-CCBYTE_ORDER = big-endian
-ENDIAN_FG = -EB
-LIB_PATH = -L. -L./lib/eb
-EDIR = eb
-endif
+EDIR      = el
+LIB_PATH  = -L./lib/$(EDIR)
 
 
 #=======================  Compiler Flags  ============================
-CC_FLAG 		= -Wa,$(ENDIAN_FG) -Wall -W -Os
-CPU_FLAG		= -mips32
-#START_FLAGF		= -DFLASH_START
-
-ifeq ("$(FLASH_TYPE)", "NAND_FLASH")
-INCLUDE_DIR = -I. -I./include
-else
-INCLUDE_DIR =     -I./include
-endif
+CC_FLAG 	= $(ENDIAN_FG) -Wall -W -Os
+CPU_FLAG	= -mips32
+INCLUDE_DIR	= -I./include
 
 
-#=======================  Directorys  ================================
-ifeq ("$(FLASH_TYPE)", "NAND_FLASH")
-OBJ_DIR = ./build/$(EDIR)/$(FLASH_TYPE)
-BIN_DIR = ./bin/$(EDIR)/$(FLASH_TYPE)
+#=======================  Directories  ===============================
+OBJ_DIR = ./build
+BIN_DIR = ./bin
 SRC_DIR = ./src
-else
-OBJ_DIR = ./build/$(EDIR)/$(FLASH_TYPE)
-BIN_DIR = ./bin/$(EDIR)/$(FLASH_TYPE)
-SRC_DIR = ./src
-endif
+
+TFTPBOOT = $(HOME)/tftpboot
+
+ OBJ_DIR_STAMP =  $(OBJ_DIR)/.dir
+ BIN_DIR_STAMP =  $(BIN_DIR)/.dir
+TFTPBOOT_STAMP = $(TFTPBOOT)/.dir
 
 
-ifeq ("$(FLASH_TYPE)", "NAND_FLASH")
 #==================== NandFlash Linker Flags  ===========================
 LD_FLAG = -X -N
 LIBS = -lz -lc -lnosys
@@ -122,52 +104,18 @@ ROM_NAME     = nandloader
 ROM_NAME_RAM = nandloader_ram
 CMM_CREATE   = loadercmm
 
-else
-#======================= NorFlash Linker Flags  ===========================
-LD_FLAG = -X -N
-LIBS = -lz -lc -lnosys
 
-BOOT_NAME =            nor_bootinit
-BOOT_OBJS = $(OBJ_DIR)/nor_bootinit.o
-
-EXEC_NAME = nor_bootmain
-EXEC_OBJS = $(OBJ_DIR)/nor_ldrinit.o $(OBJ_DIR)/bloader.o $(OBJ_DIR)/linuxld.o \
-			$(OBJ_DIR)/xmodem.o $(OBJ_DIR)/timer.o $(OBJ_DIR)/uartdrv.o	\
-			$(OBJ_DIR)/flash.o $(OBJ_DIR)/memlib.o $(OBJ_DIR)/irqlib.o \
-			$(OBJ_DIR)/cachelib.o $(OBJ_DIR)/vector.o $(OBJ_DIR)/except.o \
-			$(OBJ_DIR)/tftp.o $(OBJ_DIR)/arp.o $(OBJ_DIR)/eth.o \
-			$(OBJ_DIR)/if_5120.o $(OBJ_DIR)/ip.o $(OBJ_DIR)/skbuff.o \
-			$(OBJ_DIR)/udp.o $(OBJ_DIR)/utils.o $(OBJ_DIR)/param.o $(OBJ_DIR)/nf.o
-
-ifeq ($(BOARD_NOR_FLASH_SIZE), 0x400000)
-EXEC_OBJS += $(OBJ_DIR)/mx29lv320.o
-CC_FLAG += -DFLASH_4M
-endif
-
-ifeq ($(BOARD_NOR_FLASH_SIZE), 0x200000)
-EXEC_OBJS += $(OBJ_DIR)/mx29lv160.o
-CC_FLAG += -DFLASH_2M
-endif
-
-CC_FLAG += -DNOR_FLASH
-ROM_NAME = norloader
-
-endif
-
-
-
-ifeq ("$(FLASH_TYPE)", "NAND_FLASH")
 #====================== NandFlash Rules  =============================
 .PHONY : all rom_img rom_img_ram
 
 all : rom_img_ram rom_img
 
-rom_img_ram: boot_img_ram main_img_ram
+rom_img_ram: boot_img_ram main_img_ram $(BIN_DIR_STAMP)
 	cat  $(OBJ_DIR)/$(BOOT_NAME_RAM).img $(OBJ_DIR)/$(EXEC_NAME_RAM).img > $(BIN_DIR)/$(ROM_NAME_RAM).img
-	$(OBJCOPY) --set-start=0x80800000 -O srec -I binary  $(BIN_DIR)/$(ROM_NAME_RAM).img $(BIN_DIR)/$(ROM_NAME_RAM).srec
+#	$(OBJCOPY) --set-start=0x80800000 -O srec -I binary  $(BIN_DIR)/$(ROM_NAME_RAM).img $(BIN_DIR)/$(ROM_NAME_RAM).srec
 #	$(BIN_DIR)/$(CMM_CREATE) $(BIN_DIR)/$(ROM_NAME).img  $(BIN_DIR)/$(ROM_NAME).cmm
 
-boot_img_ram: $(BOOT_OBJS_RAM)
+boot_img_ram: $(BOOT_OBJS_RAM) $(OBJ_DIR_STAMP)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _nand_reset -Ttext 0x80800000 \
 				-Map $(OBJ_DIR)/$(BOOT_NAME_RAM).map -o $(OBJ_DIR)/$(BOOT_NAME_RAM).elf	\
 				$(BOOT_OBJS_RAM) $(LIBS)
@@ -175,7 +123,7 @@ boot_img_ram: $(BOOT_OBJS_RAM)
 	$(OBJCOPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME_RAM).bin \
 				$(OBJ_DIR)/$(BOOT_NAME_RAM).img
 
-main_img_ram: $(EXEC_OBJS_RAM)
+main_img_ram: $(EXEC_OBJS_RAM) $(OBJ_DIR_STAMP)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _ldrinit -Ttext 0x80801000 \
 			-Map $(OBJ_DIR)/$(EXEC_NAME_RAM).map -o $(OBJ_DIR)/$(EXEC_NAME_RAM).elf \
 			$(EXEC_OBJS_RAM) $(LIBS)
@@ -184,11 +132,11 @@ main_img_ram: $(EXEC_OBJS_RAM)
 
 
 
-rom_img: boot_img main_img
+rom_img: boot_img main_img $(BIN_DIR_STAMP)
 	cat $(OBJ_DIR)/$(BOOT_NAME).img $(OBJ_DIR)/$(EXEC_NAME).img > $(BIN_DIR)/$(ROM_NAME).img
 #	$(BIN_DIR)/$(CMM_CREATE) $(BIN_DIR)/$(ROM_NAME).img  $(BIN_DIR)/$(ROM_NAME).cmm
 
-boot_img: $(BOOT_OBJS)
+boot_img: $(BOOT_OBJS) $(OBJ_DIR_STAMP)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _nand_reset -Ttext  0x80800000 \
 				-Map $(OBJ_DIR)/$(BOOT_NAME).map -o $(OBJ_DIR)/$(BOOT_NAME).elf	\
 				$(BOOT_OBJS) $(LIBS)
@@ -196,7 +144,7 @@ boot_img: $(BOOT_OBJS)
 	$(OBJCOPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME).bin \
 				$(OBJ_DIR)/$(BOOT_NAME).img
 
-main_img: $(EXEC_OBJS)
+main_img: $(EXEC_OBJS) $(OBJ_DIR_STAMP)
 	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _ldrinit -Ttext 0x80801000 \
 			-Map $(OBJ_DIR)/$(EXEC_NAME).map -o $(OBJ_DIR)/$(EXEC_NAME).elf \
 			$(EXEC_OBJS) $(LIBS)
@@ -204,51 +152,23 @@ main_img: $(EXEC_OBJS)
 	$(CP) $(OBJ_DIR)/$(EXEC_NAME).bin $(OBJ_DIR)/$(EXEC_NAME).img
 
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(OBJ_DIR_STAMP)
 	$(CC) $(CC_FLAG) $(INCLUDE_DIR) $(CPU_FLAG) $(EXT_DEF) $(EXTRA_DEFINE) -c $< -o $@
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.S
+$(OBJ_DIR)/%.o : $(SRC_DIR)/%.S $(OBJ_DIR_STAMP)
 	$(CC) $(CC_FLAG) $(INCLUDE_DIR) $(CPU_FLAG) $(EXT_DEF) $(EXTRA_DEFINE) -c $< -o $@
 
 
-else
-#==========================  NorFlash Rules  ==================================
-.PHONY : all rom_img
-
-all : rom_img
-
-rom_img: boot_img main_img
-	cat  $(OBJ_DIR)/$(BOOT_NAME).img $(OBJ_DIR)/$(EXEC_NAME).img > $(BIN_DIR)/$(ROM_NAME).img
-
-boot_img: $(BOOT_OBJS)
-	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e romreset_except -Ttext 0x80800000 \
-				-Map $(OBJ_DIR)/$(BOOT_NAME).map -o $(OBJ_DIR)/$(BOOT_NAME).elf	\
-				$(BOOT_OBJS) $(LIBS)
-	$(OBJCOPY) -O binary $(OBJ_DIR)/$(BOOT_NAME).elf  $(OBJ_DIR)/$(BOOT_NAME).bin
-	$(OBJCOPY) -I binary -O binary --pad-to 0x1000  $(OBJ_DIR)/$(BOOT_NAME).bin \
-				$(OBJ_DIR)/$(BOOT_NAME).img
-
-main_img: $(EXEC_OBJS)
-	$(LD) $(ENDIAN_FG) $(LD_FLAG) $(LIB_PATH) -e _ldrinit -Ttext 0x80801000 \
-			-Map $(OBJ_DIR)/$(EXEC_NAME).map -o $(OBJ_DIR)/$(EXEC_NAME).elf \
-			$(EXEC_OBJS) $(LIBS)
-	$(OBJCOPY) -O binary $(OBJ_DIR)/$(EXEC_NAME).elf  $(OBJ_DIR)/$(EXEC_NAME).bin
-	$(CP) $(OBJ_DIR)/$(EXEC_NAME).bin $(OBJ_DIR)/$(EXEC_NAME).img
-
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
-	$(CC) $(CC_FLAG) $(INCLUDE_DIR) $(CPU_FLAG) $(EXT_DEF) $(EXTRA_DEFINE) -c $< -o $@
-
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.S
-	$(CC) $(CC_FLAG) $(INCLUDE_DIR) $(CPU_FLAG) $(EXT_DEF) $(EXTRA_DEFINE) -c $< -o $@
-
-endif
-
-
+#======================== Directory rules ============================
+%/.dir :
+	@echo "> Creating directory $@"
+	$(v)$(MKDIR_P)        $(dir $@)
+	$(v)touch                   $@
 
 
 #========================== Clean rules ==============================
 .PHONY : clean
 clean:
-	@$(RM) -v $(OBJ_DIR)/$(BOOT_NAME).* $(EXEC_OBJS) $(OBJ_DIR)/$(EXEC_NAME).* \
-			$(BIN_DIR)/$(ROM_NAME).img $(OBJ_DIR)/*.o
+	@echo "> Cleaning $(OBJ_DIR) $(BIN_DIR)"
+	$(v)$(RM_R)       $(OBJ_DIR) $(BIN_DIR)
 
