@@ -20,14 +20,12 @@ MAKEFLAGS := $(MAKEFLAGS)R
 .DEFAULT:
 
 #.DEFAULT:
-#	$(error $(i)no rules for target "$@")
-
-# Tell GNU make 3.79 not to run in parallel
-.NOTPARALLEL:
+#	$(error no rules for target "$@")
 
 # Set V=something for verbose building messages
 #V = 1
 v = $(if $(V),,@)
+
 
 #============================ Compilers ==============================
 CROSS_PREFIX ?= $(HOME)/gnutools/mipsisa32-elf/bin/mipsisa32-elf-
@@ -61,6 +59,7 @@ INCLUDE_DIR	= -I./include
 
 ALL_C_FLAGS	= $(CC_FLAG) $(INCLUDE_DIR) $(CPU_FLAG) $(EXT_DEF) $(EXTRA_DEFINE)
 
+
 #=======================  Directories  ===============================
 OBJ_DIR  = ./build
 BIN_DIR  = ./bin
@@ -75,7 +74,6 @@ TFTPBOOT_STAMP = $(TFTPBOOT)/.dir
 #==================== NandFlash Linker Flags  ===========================
 LD_FLAG = -X -N
 LIBS = -lz -lc -lnosys
-#LIBS = -lz -lc -lgcc -lnosys
 
 BOOT_NAME     = nand_bootinit
 BOOT_NAME_RAM = nand_bootinit_ram
@@ -85,22 +83,20 @@ BOOT_OBJS_RAM = $(OBJ_DIR)/nand_bootinit_ram.o
 
 EXEC_NAME = nand_bootmain
 
-exec_objs  = nand_ldrinit.o bloader.o linuxld.o
-exec_objs += xmodem.o nand.o nand_ecc.o
+exec_objs  = nand_ldrinit.o bloader.o linuxld.o xmodem.o nand.o nand_ecc.o
 exec_objs += cachelib.o irqlib.o timer.o vector.o except.o utils.o
-exec_objs += if_5120.o memlib.o uartdrv.o tftp.o eth.o
-exec_objs += skbuff.o arp.o ip.o udp.o param.o nf.o
+exec_objs += if_5120.o memlib.o uartdrv.o tftp.o eth.o skbuff.o arp.o ip.o
+exec_objs += udp.o param.o nf.o
 
 EXEC_OBJS = $(addprefix $(OBJ_DIR)/,$(exec_objs))
 
 
 EXEC_NAME_RAM = nand_bootmain_ram
 
-exec_objs_ram  = nand_ldrinit.o bloader_ram.o linuxld.o
-exec_objs_ram += xmodem.o nand.o nand_ecc.o
+exec_objs_ram  = nand_ldrinit.o bloader_ram.o linuxld.o xmodem.o nand.o nand_ecc.o
 exec_objs_ram += cachelib.o irqlib.o timer.o vector.o except.o utils.o
-exec_objs_ram += if_5120.o memlib.o uartdrv.o tftp.o eth.o
-exec_objs_ram += skbuff.o arp.o ip.o udp.o param.o nf.o
+exec_objs_ram += if_5120.o memlib.o uartdrv.o tftp.o eth.o skbuff.o arp.o ip.o
+exec_objs_ram += udp.o param.o nf.o
 
 EXEC_OBJS_RAM = $(addprefix $(OBJ_DIR)/,$(exec_objs_ram))
 
@@ -127,6 +123,7 @@ ALL_OBJS = $(BOOT_OBJS) $(BOOT_OBJS_RAM) $(EXEC_OBJS) $(EXEC_OBJS_RAM)
 .PHONY  : all %install
 all     : $(ROM_IMG) $(RAM_IMG)
 install : rom_img_install ram_img_install
+
 
 rom_img_install : $(BOOT_IMG) $(MAIN_IMG) $(ROM_IMG) $(TFTPBOOT_STAMP)
 	@echo "> Copying $(ROM_IMG) to $(TFTPBOOT)"
@@ -156,9 +153,6 @@ $(MAIN_IMG) : $(EXEC_OBJS) $(OBJ_DIR_STAMP)
 ram_img_install : $(BOOT_RAM_IMG) $(MAIN_RAM_IMG) $(RAM_IMG) $(TFTPBOOT_STAMP)
 	@echo "> Copying $(RAM_IMG) to $(TFTPBOOT)"
 	$(v)$(CP) $(RAM_IMG) $(TFTPBOOT)
-
-ram_img: boot_img_ram main_img_ram $(BIN_DIR_STAMP)
-	cat  $(OBJ_DIR)/$(BOOT_NAME_RAM).img $(OBJ_DIR)/$(EXEC_NAME_RAM).img > $(BIN_DIR)/$(ROM_NAME_RAM).img
 
 $(RAM_IMG) : $(BOOT_RAM_IMG) $(MAIN_RAM_IMG) $(BIN_DIR_STAMP)
 	@echo "> Constructing $@"
