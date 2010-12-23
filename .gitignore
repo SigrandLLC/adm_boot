@@ -1,4 +1,4 @@
-vssver.scc
-*.o
+/bin
+/build
 /tags
 
