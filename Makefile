@@ -157,7 +157,7 @@ ram_img_install : $(BOOT_RAM_IMG) $(MAIN_RAM_IMG) $(RAM_IMG) $(TFTPBOOT_STAMP)
 $(RAM_IMG) : $(BOOT_RAM_IMG) $(MAIN_RAM_IMG) $(BIN_DIR_STAMP)
 	@echo "> Constructing $@"
 	$(v)cat $(BOOT_RAM_IMG) $(MAIN_RAM_IMG) > $(RAM_IMG)
-	#$(OBJCOPY) --set-start=0x80800000 -O srec -I binary  $(BIN_DIR)/$(RAM_NAME).img $(BIN_DIR)/$(RAM_NAME).srec
+	#$(OBJCOPY) --set-start=$(LOADER_OFFSET) -O srec -I binary  $(BIN_DIR)/$(RAM_NAME).img $(BIN_DIR)/$(RAM_NAME).srec
 	#$(BIN_DIR)/$(CMM_CREATE) $(BIN_DIR)/$(ROM_NAME).img  $(BIN_DIR)/$(ROM_NAME).cmm
 
 $(BOOT_RAM_IMG) : $(BOOT_OBJS_RAM) $(OBJ_DIR_STAMP)
